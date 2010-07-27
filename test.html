@@ -1,0 +1,45 @@
+<html>
+<head>
+  <script type="text/javascript" src="lib/foo/core.js"></script>
+  <script type="text/javascript">
+    foo.unit.add(function (keywords) { with(keywords) {
+
+      describe('group 0', function (){
+        before(function(){
+        });
+
+        it('group 0 example 0', function (){
+        });
+
+        it('group 0 example 1', function (){
+          expect(true).to(beTrue);
+        });
+
+        describe('group 0.1', function (){
+          it('group 0.1 example 0', function (){
+          });
+        });
+      });
+
+      describe('group 1', function (){
+        describe('group 1.0', function (){
+          describe('group 1.0.0', function (){
+            it('group 1.0.0 example 0', function (){
+            });
+          });
+          it('group 1.0 example 0', function (){
+          });
+
+          it('group 1.0 example 1', function (){
+          });
+        });
+        it('group 1 example 0', function (){
+        });
+      });
+
+    }});
+
+    foo.puts(foo.unit.build());
+  </script>
+</head>
+</html>
