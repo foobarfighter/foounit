@@ -1,5 +1,3 @@
-var sys = require('sys');
-
 /*
   ParseOpts grepped and lightly modified from:
   http://github.com/mde/geddy/raw/master/geddy-core/lib/parseopts.js
@@ -49,18 +47,4 @@ var parseopts = new function () {
 };
 /* end of parseopts */
 
-var options = {
-  help:            ['-h', '--help',         null, 'Displays the help page']
-  , version:       ['-v', '--version',      null, 'Displays the foo-unit version number']
-  , specdir:       ['-d', '--dir',          null, 'Directory to look for spec files']
-  , specsearch:    ['-s', '--search',       null, 'File pattern to match against when finding specs']
-  , code:          ['-c', '--code',         null, 'Root code directory']
-
-  // platform specific
-  airAdl:          [null,   '--adl',        null, 'Path to Adobe Air adl binary']
-  , airDescriptor: [null,   '--descriptor', null, 'Adobe Air spec application descriptor'
-}
-
-var args = parseopts.parse(options, process.argv);
-sys.puts(args.cmds);
-sys.puts(args.opts.specs);
+module.exports = parseopts
