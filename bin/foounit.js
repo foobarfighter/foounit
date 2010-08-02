@@ -20,14 +20,15 @@ function usage (){
     "\tlaunch\t\t\tLaunches the foo-unit runner\n";
 }
 
-function generate (cmd, options){
-  var generator = new GenerateCmd(cmd, options);
+function generate (cmd, parsedOptions){
+  var Generator = require(__dirname + '/../lib/generator/' + cmd);
+  var generator = new Generator(parsedOptions);
   generator.validate();
   return generator.run();
 }
 
-function launch (cmd, options){
-  var launcher = new LaunchCmd(cmd, options);
+function launch (cmd, parsedOptions){
+  var launcher = new LaunchCmd(cmd, parsedOptions);
   launcher.validate();
   return launcher.run();
 }
@@ -37,30 +38,18 @@ function help (cmd){
 
 ///////////////////////////////////////////////////////////////////////////
 
-var GenerateCmd = function (cmd, options){
-  this._generator = this._create(cmd, options);
-
-  this._create = function (type, options){
-    var Generator = require(__dirname + '/../lib/generators/' + type);
-    return new Generator(options);
-  }
-
-  this.run = function (){
-    this._generator.generate();
-  }
-}
-
 var LaunchCmd = function (cmd, options){
-  this._launcher = this._create(cmd, options);
 
   this._create = function (type, options){
-    var Launcher = require(__dirname + '/../lib/launchers/' + type);
+    var Launcher = require(__dirname + '/../lib/launcher/' + type);
     return new Launcher(options);
   }
 
   this.run = function (){
     this._launcher.launch();
   }
+
+  this._launcher = this._create(cmd, options);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -71,12 +60,14 @@ var cmd = o.cmds[2];
 var subcmd = o.cmds[3];
 
 try {
+  var doLaunch = false, doGenerate = false;
+
   switch(cmd){
     case 'generate':
-      generate(subcmd, o.opts);
+      doGenerate = true;
       break;
     case 'launch':
-      launch(subcmd, o.opts);
+      doLaunch = true;
       break;
     case 'help':
       help(subcmd);
@@ -91,3 +82,7 @@ try {
   sys.debug(e.message);
   process.exit(1);
 }
+
+if (doLaunch)  { launch(subcmd, o); }
+if (doGenerate){ generate(subcmd, o); }
+
