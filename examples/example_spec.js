@@ -1,6 +1,7 @@
+try { foo = require('path/to/foo-unit/lib/foo-unit'); } catch (e){}
 foo.require('my.awesome.Widget', 'code/path/to/widget.js');
 
-foo.unit.export(my.awesome.Widget, function (kw){ with(kw){
+foo.unit.exports(my.awesome.Widget, function (kw){ with(kw){
   describe('top level description', function (){
     var widget;
 
