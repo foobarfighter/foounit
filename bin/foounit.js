@@ -41,7 +41,7 @@ var GenerateCmd = function (cmd, options){
   this._generator = this._create(cmd, options);
 
   this._create = function (type, options){
-    var Generator = require(__dirname + '../lib/generators/' + type);
+    var Generator = require(__dirname + '/../lib/generators/' + type);
     return new Generator(options);
   }
 
@@ -54,7 +54,7 @@ var LaunchCmd = function (cmd, options){
   this._launcher = this._create(cmd, options);
 
   this._create = function (type, options){
-    var Launcher = require(__dirname + '../lib/launchers/' + type);
+    var Launcher = require(__dirname + '/../lib/launchers/' + type);
     return new Launcher(options);
   }
 
