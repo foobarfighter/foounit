@@ -28,7 +28,8 @@ function generate (cmd, parsedOptions){
 }
 
 function launch (cmd, parsedOptions){
-  var launcher = new LaunchCmd(cmd, parsedOptions);
+  var Launcher = require(__dirname + '/../lib/generator/' + cmd);
+  var launcher = new Launcher(parsedOptions);
   launcher.validate();
   return launcher.run();
 }
