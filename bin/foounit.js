@@ -28,29 +28,13 @@ function generate (cmd, parsedOptions){
 }
 
 function launch (cmd, parsedOptions){
-  var Launcher = require(__dirname + '/../lib/generator/' + cmd);
+  var Launcher = require(__dirname + '/../lib/launcher/' + cmd);
   var launcher = new Launcher(parsedOptions);
   launcher.validate();
   return launcher.run();
 }
 
 function help (cmd){
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-var LaunchCmd = function (cmd, options){
-
-  this._create = function (type, options){
-    var Launcher = require(__dirname + '/../lib/launcher/' + type);
-    return new Launcher(options);
-  }
-
-  this.run = function (){
-    this._launcher.launch();
-  }
-
-  this._launcher = this._create(cmd, options);
 }
 
 ///////////////////////////////////////////////////////////////////////////

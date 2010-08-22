@@ -8,6 +8,7 @@
   <script type="text/javascript" src="vendor/foo-unit/lib/air.js"></script>
 
   <script type="text/javascript">
+    foo.suite.src = '${srclink}';
     foo.suite.files = ${testfiles};
   </script>
 
