@@ -39,7 +39,9 @@ function help (cmd){
 
 ///////////////////////////////////////////////////////////////////////////
 
-var options = {};
+// -t used in: foounit generate foo -t air
+var options = { 'type': ['-t', '--type' ] };
+
 var o = parseopts.parse(options, process.argv);
 var cmd = o.cmds[2];
 var subcmd = o.cmds[3];
