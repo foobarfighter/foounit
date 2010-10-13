@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <application xmlns="http://ns.adobe.com/air/application/2.0"> 
-  <id>foo.unit.SpecRunner</id> 
+  <id>foounit.SpecRunner</id> 
   <version>0.1</version> 
   <filename>Spec</filename> 
   <initialWindow> 
