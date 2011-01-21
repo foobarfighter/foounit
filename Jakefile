@@ -6,7 +6,7 @@ namespace('build', function (params) {
 
   function resetDist(){
     if (!fsh.existsSync('dist')){
-      fsh.mkdirpSync('dist', 0644);
+      fsh.mkdirpSync('dist', 0755);
     }
   }
   
@@ -16,7 +16,9 @@ namespace('build', function (params) {
   task('clean', [], function (params){
     console.log('--> Clean');
     var files = fsh.findSync('dist', '.*', { includeDirs: true });
-    for (var i = 0, ii = files.length; i < ii; ++i){
+
+    // Reverse order so files get deleted before directories
+    for (var i = files.length - 1; i >= 0; --i){
       var file = files[i];
       if (fsh.isDirectorySync(file)){
         fs.rmdirSync(file);
