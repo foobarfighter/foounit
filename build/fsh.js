@@ -53,23 +53,37 @@ fsh.copyFileSync = function (source, dest){
 
 
 // TODO: Add option for following symlinks
-fsh.findSync = function (basedir, pattern){
-  var matches = [];
+fsh.findSync = function (basedir, pattern, options){
+  var matches = []
+    , defaults = { includeDirs: false };
 
-  var _find = function (dir){
+  var _mixin = function (target, source){
+    for (var p in source){
+      if (source.hasOwnProperty(p)){
+        target[p] = source[p];
+      }
+    }
+    return target;
+  }
+
+  var _find = function (dir, options){
     var files = fs.readdirSync(dir);
     for (var i = 0, ii = files.length; i < ii; ++i){
       var file = files[i];
       var fullPath = fsh.join(dir, file);
       if (!fsh.isSymbolicLinkSync(fullPath) && fsh.isDirectorySync(fullPath)){
-        _find(fullPath);
+        if (options.includeDirs){
+          matches.push(fullPath);
+        }
+        _find(fullPath, options);
       } else if (file.match(pattern)){
         matches.push(fullPath);
       }
     }
   }
 
-  _find(basedir);
+  options = _mixin(defaults, options || {});
+  _find(basedir, options);
   return matches;
 }
 

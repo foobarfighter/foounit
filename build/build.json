@@ -2,4 +2,8 @@
   "foo-unit.js": [
     "src/base.js"
   ]
+
+  , "foo-unit-node.js": [
+    "src/adapters/node.js"
+  ]
 }

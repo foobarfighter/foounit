@@ -3,22 +3,43 @@ var fs = require('fs')
   , PacMan = require('./build/pacman').PacMan;
 
 namespace('build', function (params) {
-  desc('Builds the core bundle');
-  task('core', [], function (params){
-    console.log('--> Building foo-unit.js');
 
-    var pacman = PacMan.create('./build/build.json');
-    var concated = pacman.concat('foo-unit.js');
-
+  function resetDist(){
     if (!fsh.existsSync('dist')){
-      fsh.mkdirpSync('dist', 0755);
+      fsh.mkdirpSync('dist', 0644);
     }
+  }
+  
+  var pacman = PacMan.create('./build/build.json')
+
+  desc('Cleans the build');
+  task('clean', [], function (params){
+    console.log('--> Clean');
+    var files = fsh.findSync('dist', '.*', { includeDirs: true });
+    for (var i = 0, ii = files.length; i < ii; ++i){
+      var file = files[i];
+      if (fsh.isDirectorySync(file)){
+        fs.rmdirSync(file);
+      } else {
+        fs.unlinkSync(file);
+      }
+    }
+  });
+
+  desc('Builds the core bundle');
+  task('core', ['build:clean'], function (params){
+    console.log('--> Building foo-unit.js');
+    var concated = pacman.concat('foo-unit.js');
     fs.writeFileSync('dist/foo-unit.js', concated);
   });
 
+
   desc('Builds the core and the node adapter');
   task('node', ['build:core'], function (params){
-    console.log('This is the build:node task');
+    console.log('--> Building foo-unit-node.js');
+
+    var concated = pacman.concat('foo-unit-node.js');
+    fs.writeFileSync('dist/foo-unit-node.js', concated);
   });
 });
 
