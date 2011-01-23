@@ -43,9 +43,33 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
     return target;
   };
 
+
+  /**
+   * Function used while building up the tests
+   */
+  var _buildContext;
+  foounit.setBuildContext = function (context){
+    _buildContext = context;
+  }
+
+  foounit.getBuildContext = function (){
+    _buildContext = _buildContext || new foounit.BuildContext();
+    return _buildContext;
+  }
+
+  /**
+   * Adds groups / tests to the root level ExampleGroup
+   */
+  foounit.add = function (func){
+    var context = foounit.getBuildContext();
+    context.setCurrentGroup(context.getRoot());
+    func.call(context, foounit.keywords);
+  }
+
 })(foounit);
 
-// If this is node then make sure we export foounit
+// If this is node then we need to mixin and include
+// the node adapter immediately.
 if (foounit.hostenv.type == 'node'){
   module.exports = foounit;
 }

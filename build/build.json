@@ -1,9 +1,14 @@
 {
   "foo-unit.js": [
     "src/base.js"
+    , "src/example.js"
+    , "src/example_group.js"
+    , "src/keywords.js"
+    , "src/build_context.js"
   ]
 
   , "foo-unit-node.js": [
-    "src/adapters/node.js"
+    { "file": "build/fsh.js", "scope": "function", "variable": "fsh" }
+    , "src/adapters/node.js"
   ]
 }
