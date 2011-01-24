@@ -1,20 +1,19 @@
-foounit.BuildContext = (function (){
+foounit.BuildContext = function (){
+  this,_currentGroup = null;
+  this._root = null;
+};
 
-  // Private variables
-  var _currentGroup, _root;
-
-  // Constructor
-  return function (){
-    this.getRoot = function (){
-      _root = _root || new foounit.ExampleGroup('root', function (){});
-    }
-
-    this.setCurrentGroup = function (group){
-      _currentGroup = group;
-    }
-
-    this.getCurrentGroup = function (){
-      return _currentGroup;
-    }
+foounit.mixin(foounit.BuildContext.prototype, {
+  getRoot: function (){
+    this._root = this._root || new foounit.ExampleGroup('root', function (){});
+    return this._root;
   }
-})();
+
+  , setCurrentGroup: function (group){
+    this._currentGroup = group;
+  }
+
+  , getCurrentGroup: function (){
+    return this._currentGroup;
+  }
+});

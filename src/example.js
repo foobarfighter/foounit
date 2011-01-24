@@ -1,33 +1,26 @@
-foounit.Example = (function (test){
-  var SUCCESS = 1, FAILURE = 2, PENDING = 3;
+foounit.Example = function (test){
+  this._test = test;
+  this._status = 0;
+}
 
-  // Private variables
-  var _test
-    , _status;
+foounit.mixin(foounit.Example.prototype, {
+  SUCCESS:    1
+  , FAILURE:  2
+  , PENDING:  3
 
-  // Constructor
-  var init = function (test){
-    _test = test;
+  , isSuccess: function (){
+    return this._status === this.SUCCESS;
   }
 
-  return function (){
-    this.isSuccess = function (){
-      return _status === SUCCESS;
-    }
-
-    this.isFailure = function (){
-      return _status === FAILURE;
-    }
-
-    this.run = function (runContext){
-      try {
-        _test.apply(runContext, []);
-        _status = SUCCESS;
-      } catch (e){
-        _status = FAILURE;
-      }
-    }
-
-    init.apply(this, arguments);
+  , isFailure: function (){
+    return this._status === this.FAILURE;
   }
-})();
+  , run: function (runContext){
+    try {
+      this._test.apply(runContext, []);
+      this._status = this.SUCCESS;
+    } catch (e){
+      this._status = this.FAILURE;
+    }
+  }
+});

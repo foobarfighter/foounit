@@ -1,36 +1,32 @@
-foounit.ExampleGroup = (function (){
+foounit.ExampleGroup = function (description, builder){
+  this._description = description;
+  this._builder = builder;
+  this._examples = [];
+  this._groups = [];
+}
 
-  // Private variables
-  var _examples = []
-    , _groups = []
-    , _description = '';
-
-  // Constructor
-  var init = function (description, builder){
-    _description = description;
-
-    var context = foounit.getBuildContext();
-    context.setCurrentGroup(this);
-    builder.apply(context, []);
+foounit.mixin(foounit.ExampleGroup.prototype, {
+  build: function (){
+    this._builder();
   }
 
-  return function (){
-    this.getExamples = function (){
-      return _examples;
-    }
-
-    this.addExample = function (example){
-      _examples.push(example);
-    }
-
-    this.addGroup = function (group){
-      _groups.push(group);
-    }
-
-    this.getGroups = function (){
-      return _groups;
-    }
-
-    init.apply(this, arguments);
+  , getExamples: function (){
+    return this._examples;
   }
-})();
+
+  , addExample: function (example){
+    this._examples.push(example);
+  }
+
+  , addGroup: function (group){
+    this._groups.push(group);
+  }
+
+  , getGroups: function (){
+    return this._groups;
+  }
+
+  , getDescription: function (){
+    return this._description;
+  }
+});

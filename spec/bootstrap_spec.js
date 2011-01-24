@@ -7,24 +7,6 @@ var foo = foounit.require(':src/foo-unit');
 // We are also not using node's assertions because
 // these tests need to run in the browser.
 
-/**
- * Asserts if two things are ===.  Note we aren't using
- * node assertions because these tests need to run in
- * the browser as well.
- */
-var assertEqual = function (expected, actual, message){
-  if (expected !== actual){
-    throw new Error(message || 'assertion failed');
-  }
-}
-
-var report = function (message){
-  if (foounit.hostenv.type == 'node'){
-    console.log(message);
-  } else {
-    document.body.innerHTML = message;
-  }
-}
 
 /************** Bootstrap tests **************/
 var testExample = function (){
@@ -44,26 +26,33 @@ var testExample = function (){
 }
 
 var testExampleGroup = function (){
+  var initGroup = function (group){
+    foounit.getBuildContext().setCurrentGroup(group);
+    group.build();
+  }
+
   var exampleGroup;
 
-  exampleGroup = new foounit.ExampleGroup('test group', function (){
+  exampleGroup = new foounit.ExampleGroup('test group 1', function (){
     foounit.keywords.it('example', function (){});
     foounit.keywords.it('example2', function (){});
   });
+  initGroup(exampleGroup);
   assertEqual(2, exampleGroup.getExamples().length);
 
-  exampleGroup = new foounit.ExampleGroup('test group', function (){
-    foounit.keywords.describe('group1', function (){
-      foounit.keywords.describe('group1.1', function(){
+  exampleGroup = new foounit.ExampleGroup('test group 2', function (){
+    with(foounit.keywords){
+      describe('group1', function (){
+        describe('group1.1', function(){});
       });
-    });
-
-    foounit.keywords.describe('group2', function (){
-    });
+      describe('group2', function (){});
+    }
   });
+
+  initGroup(exampleGroup);
   assertEqual(2, exampleGroup.getGroups().length);
-  assertEqual(1, exampleGroup.getGroups()[0].length);
-  assertEqual(2, exampleGroup.getGroups()[1].length);
+  assertEqual(1, exampleGroup.getGroups()[0].getGroups().length);
+  assertEqual(0, exampleGroup.getGroups()[1].getGroups().length);
 }
 
 var testFoounitAdd = function (){
@@ -71,11 +60,9 @@ var testFoounitAdd = function (){
     describe('group1', function (){
       it('example1.1', function (){
       });
-
       it('example1.2', function (){
       });
     });
-
     describe('group2', function (){
       it('example2.1', function (){
       });
@@ -88,11 +75,46 @@ var testFoounitAdd = function (){
 
 /************** /Bootstrap tests **************/
 
+/****************** Helpers *******************/
+
+/**
+ * Asserts if two things are ===.  Note we aren't using
+ * node assertions because these tests need to run in
+ * the browser as well.
+ */
+var assertEqual = function (expected, actual, message){
+  if (expected !== actual){
+    message = message || 'assertion failed';
+    message += ': expected ' + expected + ', but got ' + actual;
+    throw new Error(message);
+  }
+}
+
+var report = function (message){
+  if (foounit.hostenv.type == 'node'){
+    console.log(message);
+  } else {
+    document.body.innerHTML = message;
+  }
+}
+
+var reset = function (){
+  foounit.setBuildContext(new foounit.BuildContext());
+}
+/***************** /Helpers *******************/
+
+
 try {
+  reset();
   testExample();
+
+  reset();
   testExampleGroup();
+  
+  reset();
   testFoounitAdd();
 
+  report('Bootstrap tests PASSED');
 } catch (e){
   report('!!!!! Bootstrap tests FAILED: ' + e.message);
   report(e.stack);

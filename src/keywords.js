@@ -8,9 +8,14 @@ foounit.keywords = {
   }
 
   , describe: function (description, builder){
-    var parentGroup = foounit.getBuildContext().getCurrentGroup();
-    var group = new foounit.ExampleGroup(description, builder);
+    var context = foounit.getBuildContext()
+      , parentGroup = context.getCurrentGroup()
+      , group = new foounit.ExampleGroup(description, builder);
+
     parentGroup.addGroup(group);
-    //foounit.getBuildContext().setCurrentGroup(parentGroup);
+
+    context.setCurrentGroup(group);
+    group.build();
+    context.setCurrentGroup(parentGroup);
   }
 };
