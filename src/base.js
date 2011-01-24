@@ -66,6 +66,42 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
     func.call(context, foounit.keywords);
   }
 
+  /**
+   * Builds an array of tests to be run
+   */
+  foounit.build = function (){
+    var addExamples = function (group){
+      var examples = group.getExamples();
+      for (var i = 0, ii = examples.length; i < ii; ++i){
+        runners.push(examples[i]);
+      }
+    }
+
+    var recurseGroup = function (group){
+      var groups = group.getGroups();
+      for (var i = 0, ii = groups.length; i < ii; ++i){
+        addExamples(groups[i]);
+        recurseGroup(groups[i]);
+      }
+    }
+
+    var runners = []
+      , root = foounit.getBuildContext().getRoot();
+    addExamples(root);
+    recurseGroup(root);
+
+    return runners;
+  }
+
+  /**
+   * Executes an array of tests
+   */
+  foounit.execute = function (runners){
+    for (var i = 0, ii = runners.length; i < ii; ++i){
+      runners[i].run();
+    }
+  }
+
 })(foounit);
 
 // If this is node then we need to mixin and include

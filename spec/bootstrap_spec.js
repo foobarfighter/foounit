@@ -71,7 +71,41 @@ var testFoounitAdd = function (){
 
   var root = foounit.getBuildContext().getRoot();
   assertEqual(2, root.getGroups().length);
+  assertEqual(2, root.getGroups()[0].getExamples().length);
+  assertEqual(1, root.getGroups()[1].getExamples().length);
 }
+
+var testFoounitBuild = function (){
+  foounit.add(function (kw){ with(kw){
+    it('fails', function (){
+      throw new Error('fail!');
+    });
+    describe('group1', function (){
+      it('passes', function (){});
+    });
+  }});
+
+  assertEqual(2, foounit.build().length);
+}
+
+var testFoounitRun = function (){
+  foounit.add(function (kw){ with(kw){
+    it('fails', function (){
+      throw new Error('fail!');
+    });
+    describe('group1', function (){
+      it('passes', function (){});
+    });
+  }});
+
+  var runners = foounit.build();
+  foounit.execute(runners);
+
+  var root = foounit.getBuildContext().getRoot();
+  assertEqual(false, root.getExamples()[0].isSuccess());
+  assertEqual(true,  root.getExamples()[0].isFailure());
+}
+
 
 /************** /Bootstrap tests **************/
 
@@ -113,6 +147,12 @@ try {
   
   reset();
   testFoounitAdd();
+
+  reset();
+  testFoounitBuild();
+
+  reset();
+  testFoounitRun();
 
   report('Bootstrap tests PASSED');
 } catch (e){
