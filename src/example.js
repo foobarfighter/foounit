@@ -1,6 +1,7 @@
 foounit.Example = function (test){
   this._test = test;
   this._status = 0;
+  this._exception = null;
 }
 
 foounit.mixin(foounit.Example.prototype, {
@@ -15,11 +16,20 @@ foounit.mixin(foounit.Example.prototype, {
   , isFailure: function (){
     return this._status === this.FAILURE;
   }
+
+  , getException: function (){
+    return this._exception;
+  }
+
+  , setBefores: function (){
+  }
+
   , run: function (runContext){
     try {
       this._test.apply(runContext, []);
       this._status = this.SUCCESS;
     } catch (e){
+      this._exception = e;
       this._status = this.FAILURE;
     }
   }

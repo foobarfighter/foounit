@@ -18,4 +18,8 @@ foounit.keywords = {
     group.build();
     context.setCurrentGroup(parentGroup);
   }
+
+  , expect: function (actual){
+    return new foounit.Expectation(actual);
+  }
 };

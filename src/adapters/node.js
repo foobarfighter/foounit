@@ -40,7 +40,7 @@ var adapter = (function (){
       var specFile = specs[i].replace(/\.js$/, '');
       var spec = require(specFile);
     }
-    //foounit.run(foounit.build());
+    foounit.execute(foounit.build());
   }
 
   return self;

@@ -69,8 +69,9 @@ fsh.findSync = function (basedir, pattern, options){
   var _find = function (dir, options){
     var files = fs.readdirSync(dir);
     for (var i = 0, ii = files.length; i < ii; ++i){
-      var file = files[i];
-      var fullPath = fsh.join(dir, file);
+      var file = files[i]
+        , fullPath = fsh.join(dir, file);
+
       if (!fsh.isSymbolicLinkSync(fullPath) && fsh.isDirectorySync(fullPath)){
         if (options.includeDirs){
           matches.push(fullPath);

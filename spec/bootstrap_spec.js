@@ -18,11 +18,12 @@ var testExample = function (){
   assertEqual(false, example.isFailure());
 
   example = new foo.Example(function (){
-    throw new Error('fail!');
+    throwExpected();
   });
   example.run(context);
   assertEqual(false, example.isSuccess());
   assertEqual(true, example.isFailure());
+  assertEqual(true, example.getException().message.length > 0);
 }
 
 var testExampleGroup = function (){
@@ -78,7 +79,7 @@ var testFoounitAdd = function (){
 var testFoounitBuild = function (){
   foounit.add(function (kw){ with(kw){
     it('fails', function (){
-      throw new Error('fail!');
+      throw new Error('expected failure');
     });
     describe('group1', function (){
       it('passes', function (){});
@@ -88,10 +89,10 @@ var testFoounitBuild = function (){
   assertEqual(2, foounit.build().length);
 }
 
-var testFoounitRun = function (){
+var testFoounitExecute = function (){
   foounit.add(function (kw){ with(kw){
     it('fails', function (){
-      throw new Error('fail!');
+      throwExpected();
     });
     describe('group1', function (){
       it('passes', function (){});
@@ -104,6 +105,19 @@ var testFoounitRun = function (){
   var root = foounit.getBuildContext().getRoot();
   assertEqual(false, root.getExamples()[0].isSuccess());
   assertEqual(true,  root.getExamples()[0].isFailure());
+}
+
+var testFoounitIsFailure = function (){
+  assertEqual(false, foounit.isFailure());
+
+  foounit.add(function (kw){ with (kw){
+    it('fails', function (){
+      throwExpected();
+    });
+  }});
+  foounit.execute(foounit.build());
+
+  assertEqual(true, foounit.isFailure());
 }
 
 
@@ -132,27 +146,46 @@ var report = function (message){
   }
 }
 
+var throwExpected = function (){
+  throw new Error('!!expected failure');
+}
+
 var reset = function (){
   foounit.setBuildContext(new foounit.BuildContext());
+}
+
+var rethrowUnexpected = function (func){
+  try {
+    func();
+  } catch (e){
+    if (e.message.indexOf('!!expected failure') == -1){
+      throw new Error(e);
+    }
+  }
 }
 /***************** /Helpers *******************/
 
 
 try {
   reset();
-  testExample();
+  rethrowUnexpected(testExample);
 
   reset();
-  testExampleGroup();
+  rethrowUnexpected(testExampleGroup);
   
   reset();
-  testFoounitAdd();
+  rethrowUnexpected(testFoounitAdd);
 
   reset();
-  testFoounitBuild();
+  rethrowUnexpected(testFoounitBuild);
 
   reset();
-  testFoounitRun();
+  rethrowUnexpected(testFoounitExecute);
+
+  reset();
+  rethrowUnexpected(testFoounitIsFailure);
+
+  reset();
 
   report('Bootstrap tests PASSED');
 } catch (e){

@@ -94,13 +94,33 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
   }
 
   /**
+   * Returns true if the test suite has failed
+   */
+  foounit.isFailure = function (){
+    return foounit.getBuildContext().isFailure();
+  }
+
+  /**
    * Executes an array of tests
    */
   foounit.execute = function (runners){
     for (var i = 0, ii = runners.length; i < ii; ++i){
-      runners[i].run();
+      var runner = runners[i];
+      runner.run();
+      // TODO: Implement report
+      if (runner.isFailure()){
+        foounit.getBuildContext().setFailure(true);
+        throw new Error(runner.getException());
+        //foounit.report(runner);
+        //console.log('test failed: ' + Error(runner.getException()));
+      }
     }
   }
+
+  /**
+   * Matcher namespace
+   */
+  foounit.matchers = {};
 
 })(foounit);
 

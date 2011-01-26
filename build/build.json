@@ -3,7 +3,9 @@
     "src/base.js"
     , "src/example.js"
     , "src/example_group.js"
+    , "src/expectation.js"
     , "src/keywords.js"
+    , "src/matchers/be.js"
     , "src/build_context.js"
   ]
 
