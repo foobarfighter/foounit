@@ -1,6 +1,7 @@
 foounit.ExampleGroup = function (description, builder){
   this._description = description;
   this._builder = builder;
+  this._before = null;
   this._examples = [];
   this._groups = [];
 }
@@ -20,6 +21,14 @@ foounit.mixin(foounit.ExampleGroup.prototype, {
 
   , addGroup: function (group){
     this._groups.push(group);
+  }
+
+  , setBefore: function (func){
+    this._before = func;
+  }
+
+  , getBefore: function (){
+    return this._before;
   }
 
   , getGroups: function (){

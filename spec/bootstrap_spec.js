@@ -12,7 +12,7 @@ var foo = foounit.require(':src/foo-unit');
 var testExample = function (){
   var example, context;
 
-  example = new foo.Example(function (){}); 
+  example = new foo.Example('description', function (){}); 
   example.run(context);
   assertEqual(true, example.isSuccess());
   assertEqual(false, example.isFailure());
@@ -187,9 +187,9 @@ try {
 
   reset();
 
-  report('Bootstrap tests PASSED');
+  report("\nBootstrap tests PASSED");
 } catch (e){
-  report('!!!!! Bootstrap tests FAILED: ' + e.message);
+  report("\n!!!!! Bootstrap tests FAILED: " + e.message);
   report(e.stack);
 }
 

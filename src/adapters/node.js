@@ -38,6 +38,7 @@ var adapter = (function (){
     var specs = fsh.findSync(_specdir, pattern);
     for (var i = 0, ii = specs.length; i < ii; ++i){
       var specFile = specs[i].replace(/\.js$/, '');
+      console.log('running spec: ', specFile);
       var spec = require(specFile);
     }
     foounit.execute(foounit.build());

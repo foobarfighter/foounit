@@ -110,17 +110,33 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
       // TODO: Implement report
       if (runner.isFailure()){
         foounit.getBuildContext().setFailure(true);
-        throw new Error(runner.getException());
-        //foounit.report(runner);
-        //console.log('test failed: ' + Error(runner.getException()));
+        console.log('test failed: ' + runner.getException().stack);
+      } else if (runner.isSuccess()){
+        var sys = require('sys');
+        sys.print('.');
       }
     }
+
+    console.log('');
+    // TODO: This doesn't work
+    //if (foounit.isFailure()){
+    //  console.log('!!FAIL');
+    //} else {
+    //  console.log('All tests passed.');
+    //}
   }
 
   /**
-   * Matcher namespace
+   * foounit keyword context
    */
-  foounit.matchers = {};
+  foounit.keywords = {};
+
+  /**
+   * Adds a keyword and some definition of functionality
+   */
+  foounit.addKeyword = function (keyword, definition){
+    foounit.keywords[keyword] = definition;
+  }
 
 })(foounit);
 
