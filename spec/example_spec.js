@@ -27,11 +27,25 @@ foounit.add(function (kw){ with(kw){
 
       describe('when a before fails', function (){
         it('fails the example', function (){
+          var example = new footest.Example('test', function (){});
+          example.setBefores([function (){
+            throw new Error('fail');
+          }]);
+          example.run();
+          expect(example.isFailure()).to(be, true);
+        });
+
+        it('runs the afters', function (){
         });
       });
 
       describe('when the test fails', function (){
         it('fails the test', function (){
+          var example = new footest.Example('test', function (){
+            throw new Error('fail');
+          });
+          example.run();
+          expect(example.isFailure()).to(be, true);
         });
       });
 

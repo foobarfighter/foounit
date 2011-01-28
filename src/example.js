@@ -47,6 +47,8 @@ foounit.mixin(foounit.Example.prototype, {
     } catch (e){
       this._exception = e;
       this._status = this.FAILURE;
+    } finally {
+      // this._runAfters();
     }
   }
 
