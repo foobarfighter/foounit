@@ -70,25 +70,31 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
    * Builds an array of tests to be run
    */
   foounit.build = function (){
+    var befores = [], afters = [];
+
     var addExamples = function (group){
       var examples = group.getExamples();
       for (var i = 0, ii = examples.length; i < ii; ++i){
+        examples[i].setBefores(befores.concat());
         runners.push(examples[i]);
       }
     }
 
     var recurseGroup = function (group){
+      var hasBefore = !!group.getBefore();
+      if (hasBefore){ befores.push(group.getBefore()); }
+
+      addExamples(group);
+
       var groups = group.getGroups();
       for (var i = 0, ii = groups.length; i < ii; ++i){
-        addExamples(groups[i]);
         recurseGroup(groups[i]);
       }
+      if (hasBefore){ befores.pop(); }
     }
 
-    var runners = []
-      , root = foounit.getBuildContext().getRoot();
-    addExamples(root);
-    recurseGroup(root);
+    var runners = [];
+    recurseGroup(foounit.getBuildContext().getRoot());
 
     return runners;
   }

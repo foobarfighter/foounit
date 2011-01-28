@@ -29,6 +29,14 @@ foounit.mixin(foounit.Example.prototype, {
     this._befores = befores;
   }
 
+  , getBefores: function (){
+    return this._befores;
+  }
+
+  , getTest: function (){
+    return this._test;
+  }
+
   , run: function (runContext){
     runContext = runContext || {};
 

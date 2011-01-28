@@ -30,7 +30,9 @@ foounit.add(function (kw){ with(kw){
 
     describe('.before', function (){
       it('adds a before callback to current group context', function (){
+        var bc = footest.getBuildContext();
         footest.setBuildContext(new footest.BuildContext());
+
         footest.add(function (kw){ with(kw){
           before(function (){ return 'root'; });
 
@@ -52,6 +54,8 @@ foounit.add(function (kw){ with(kw){
         expect(root.getGroups()[0].getBefore()()).to(be, 'group1');
         expect(root.getGroups()[0].getGroups()[0].getBefore()()).to(be, 'group1.1');
         expect(root.getGroups()[1].getBefore()()).to(be, 'group2');
+
+        footest.setBuildContext(bc);
       });
     });
 
