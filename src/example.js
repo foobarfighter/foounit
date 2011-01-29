@@ -56,7 +56,7 @@ foounit.mixin(foounit.Example.prototype, {
       this._exception = e;
       this._status = this.FAILURE;
     } finally {
-      // this._runAfters();
+       this._runAfters();
     }
   }
 
@@ -64,6 +64,13 @@ foounit.mixin(foounit.Example.prototype, {
     var befores = this._befores;
     for (var i = 0; i < befores.length; ++i){
       befores[i].apply(runContext, []);;
+    }
+  }
+
+  , _runAfters: function (runContext){
+    var afters = this._afters;
+    for (var i = afters.length - 1; i >= 0; --i){
+      afters[i].apply(runContext, []);;
     }
   }
 });

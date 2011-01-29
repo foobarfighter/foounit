@@ -16,16 +16,23 @@ foounit.add(function (kw){ with(kw){
           function (){ log.push('before1'); }
         , function (){ log.push('before2'); }
         ]);
+        example.setAfters([
+          function (){ log.push('after1'); }
+        , function (){ log.push('after2'); }
+        ]);
 
         example.run();
 
-        expect(log.length).to(be, 3);
+        expect(log.length).to(be, 5);
         expect(log[0]).to(be, 'before1');
         expect(log[1]).to(be, 'before2');
         expect(log[2]).to(be, 'test');
+        expect(log[3]).to(be, 'after2');
+        expect(log[4]).to(be, 'after1');
       });
 
       describe('when a before fails', function (){
+
         it('fails the example', function (){
           var example = new footest.Example('test', function (){});
           example.setBefores([function (){
@@ -36,21 +43,61 @@ foounit.add(function (kw){ with(kw){
         });
 
         it('runs the afters', function (){
+          var example = new footest.Example('test', function (){});
+          example.setBefores([function (){
+            throw new Error('fail');
+          }]);
+
+          var afterCalled = false;
+          example.setAfters([function (){
+            afterCalled = true;
+          }]);
+          example.run();
+          expect(example.isFailure()).to(be, true);
+          expect(afterCalled).to(be, true);
         });
       });
 
       describe('when the test fails', function (){
         it('fails the test', function (){
           var example = new footest.Example('test', function (){
-            throw new Error('fail');
+            throw new error('fail');
           });
           example.run();
           expect(example.isFailure()).to(be, true);
         });
+
+        it('runs the afters', function (){
+          var example = new footest.Example('test', function (){
+            throw new error('fail');
+          });
+
+          var afterCalled = false;
+          example.setAfters([
+            function (){ afterCalled = true; }
+          ]);
+
+          example.run();
+          expect(example.isFailure()).to(be, true);
+          expect(afterCalled).to(be, true);
+        });
       });
 
-      describe('when the after fails', function (){
-        it('fails the test', function (){
+      describe('when the after throws', function (){
+        it('throws', function (){
+          var example = new footest.Example('test', function (){});
+          example.setAfters([function (){
+            throw new Error('expected');
+          }]);
+
+          var thrown;
+          try {
+            example.run();
+            throw new Error('unexpected');
+          } catch (e){
+            thrown = e;
+          }
+          expect(thrown.message).to(be, 'expected');
         });
       });
     });
