@@ -18,6 +18,15 @@ foounit.addKeyword('before', function (func){
 });
 
 /**
+ * Defines an after function in the context of the current group
+ */
+foounit.addKeyword('after', function (func){
+  var group = foounit.getBuildContext().getCurrentGroup();
+  group.setAfter(func);
+});
+
+
+/**
  * Defines a group in the BuildContext
  */
 foounit.addKeyword('describe', function (description, builder){
@@ -39,34 +48,3 @@ foounit.addKeyword('expect', function (actual){
   return new foounit.Expectation(actual);
 });
 
-
-//foounit.keywords = {
-//  it: function (description, test){
-//    var example = new foounit.Example(test);
-//    foounit
-//      .getBuildContext()
-//      .getCurrentGroup()
-//      .addExample(example);
-//  }
-//
-//  , before: function (func){
-//    var group = foounit.getBuildContext().getCurrentGroup();
-//    group.setBefore(func);
-//  }
-//
-//  , describe: function (description, builder){
-//    var context = foounit.getBuildContext()
-//      , parentGroup = context.getCurrentGroup()
-//      , group = new foounit.ExampleGroup(description, builder);
-//
-//    parentGroup.addGroup(group);
-//
-//    context.setCurrentGroup(group);
-//    group.build();
-//    context.setCurrentGroup(parentGroup);
-//  }
-//
-//  , expect: function (actual){
-//    return new foounit.Expectation(actual);
-//  }
-//};

@@ -76,13 +76,17 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
       var examples = group.getExamples();
       for (var i = 0, ii = examples.length; i < ii; ++i){
         examples[i].setBefores(befores.concat());
+        examples[i].setAfters(afters.concat());
         runners.push(examples[i]);
       }
     }
 
     var recurseGroup = function (group){
-      var hasBefore = !!group.getBefore();
+      var hasBefore = !!group.getBefore()
+        , hasAfter  = !!group.getAfter();
+
       if (hasBefore){ befores.push(group.getBefore()); }
+      if (hasAfter) { afters.push(group.getAfter()); }
 
       addExamples(group);
 
@@ -91,6 +95,7 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
         recurseGroup(groups[i]);
       }
       if (hasBefore){ befores.pop(); }
+      if (hasAfter) { afters.pop(); }
     }
 
     var runners = [];

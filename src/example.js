@@ -33,6 +33,14 @@ foounit.mixin(foounit.Example.prototype, {
     return this._befores;
   }
 
+  , setAfters: function (afters){
+    this._afters = afters;
+  }
+
+  , getAfters: function (){
+    return this._afters;
+  }
+
   , getTest: function (){
     return this._test;
   }

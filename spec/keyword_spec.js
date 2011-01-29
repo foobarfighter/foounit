@@ -59,5 +59,36 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
+    describe('.after', function (){
+      it('adds a after callback to current group context', function (){
+        var bc = footest.getBuildContext();
+        footest.setBuildContext(new footest.BuildContext());
+
+        footest.add(function (kw){ with(kw){
+          after(function (){ return 'root'; });
+
+          describe('group1', function (){
+            after(function (){ return 'group1'; });
+
+            describe('group1.1', function (){
+              after(function (){ return 'group1.1'; });
+            });
+          });
+
+          describe('group2', function (){
+            after(function (){ return 'group2'; });
+          });
+        }});
+
+        var root = footest.getBuildContext().getRoot();
+        expect(root.getAfter()()).to(be, 'root');
+        expect(root.getGroups()[0].getAfter()()).to(be, 'group1');
+        expect(root.getGroups()[0].getGroups()[0].getAfter()()).to(be, 'group1.1');
+        expect(root.getGroups()[1].getAfter()()).to(be, 'group2');
+
+        footest.setBuildContext(bc);
+      });
+    });
+
   });
 }});
