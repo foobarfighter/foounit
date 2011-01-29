@@ -3,6 +3,17 @@ if (foounit.hostenv.type == 'node'){
 }
 
 /**
+ * Asserts that a function throws an error
+ */
+foounit.addKeyword('throwError', function (){
+  this.match = function (expected, actual){
+    // actual == block
+    // expected == error
+    assert.throws(actual, expected);
+  }
+});
+
+/**
  * Asserts type and object
  */
 foounit.addKeyword('be', function (){
