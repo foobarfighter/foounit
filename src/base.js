@@ -140,12 +140,11 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
     }
 
     console.log('');
-    // TODO: This doesn't work
-    //if (foounit.isFailure()){
-    //  console.log('!!FAIL');
-    //} else {
-    //  console.log('All tests passed.');
-    //}
+    if (foounit.isFailure()){
+      console.log('!!FAIL');
+    } else {
+      console.log('All tests passed.');
+    }
   }
 
   /**
