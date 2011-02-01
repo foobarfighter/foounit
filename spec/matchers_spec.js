@@ -36,17 +36,17 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
-    //describe('.beGt', function (){
-    //  it('asserts expected is greater than actual', function (){
-    //    throw new Error('todo');
-    //  });
-    //});
+    describe('.beGt', function (){
+      xit('asserts expected is greater than actual', function (){
+        throw new Error('todo');
+      });
+    });
 
-    //describe('.beLt', function (){
-    //  it('asserts expected is less than actual', function (){
-    //    throw new Error('todo');
-    //  });
-    //});
+    describe('.beLt', function (){
+      xit('asserts expected is less than actual', function (){
+        throw new Error('todo');
+      });
+    });
 
     describe('.beTrue', function (){
       it('asserts that actual is === true', function (){
@@ -56,24 +56,20 @@ foounit.add(function (kw){ with(kw){
         expect(function (){
           matcher.match('unused', false);
         }).to(throwError);
-        //var thrown;
-        //try {  }
-        //catch(e) { thrown = e; }
-        //if (!thrown){throw new Error('expected error to be thrown');}
       });
     });
 
-    //describe('.beFalse', function (){
-    //  it('asserts that actual is === false', function (){
-    //    throw new Error('todo');
-    //  });
-    //});
+    describe('.beFalse', function (){
+      xit('asserts that actual is === false', function (){
+        throw new Error('todo');
+      });
+    });
 
-    //describe('.include', function (){
-    //  it('asserts that the actual array has an element === to expected', function (){
-    //    throw new Error('todo');
-    //  });
-    //});
+    describe('.include', function (){
+      xit('asserts that the actual array has an element === to expected', function (){
+        throw new Error('todo');
+      });
+    });
 
     describe('.be', function (){
       it('does a strict equal', function (){

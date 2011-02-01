@@ -37,6 +37,10 @@ foounit.mixin(foounit.Example.prototype, {
     this._befores = befores;
   }
 
+  , getDescription: function (){
+    return this._description;
+  }
+
   , getBefores: function (){
     return this._befores;
   }

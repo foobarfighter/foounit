@@ -115,17 +115,28 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
    * Executes an array of tests
    */
   foounit.execute = function (runners){
+    var pending = [];
+
+    console.log('');
     for (var i = 0, ii = runners.length; i < ii; ++i){
       var runner = runners[i];
       runner.run();
       // TODO: Implement report
+      var sys = require('sys');
       if (runner.isFailure()){
         foounit.getBuildContext().setFailure(true);
         console.log('test failed: ' + runner.getException().stack);
       } else if (runner.isSuccess()){
-        var sys = require('sys');
         sys.print('.');
+      } else if (runner.isPending()){
+        sys.print('P');
+        pending.push(runner.getDescription());
       }
+    }
+
+    console.log("\n");
+    for (var i = 0, ii = pending.length; i < ii; ++i){
+      console.log('PENDING: ' + pending[i]);
     }
 
     console.log('');
