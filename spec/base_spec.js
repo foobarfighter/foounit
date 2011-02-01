@@ -74,5 +74,7 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
+    //describe('.getFullDescription'
+
   });
 }});

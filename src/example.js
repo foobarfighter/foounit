@@ -1,4 +1,4 @@
-foounit.Example = function (description, test){
+foounit.Example = function (description, test, pending){
   this._befores = [];
   this._test = test;
   this._afters  = [];
@@ -6,6 +6,10 @@ foounit.Example = function (description, test){
 
   this._status = 0;
   this._exception = null;
+
+  if (pending === true) {
+    this._status = this.PENDING;
+  }
 }
 
 foounit.mixin(foounit.Example.prototype, {
@@ -19,6 +23,10 @@ foounit.mixin(foounit.Example.prototype, {
 
   , isFailure: function (){
     return this._status === this.FAILURE;
+  }
+
+  , isPending: function (){
+    return this._status === this.PENDING;
   }
 
   , getException: function (){
@@ -46,6 +54,8 @@ foounit.mixin(foounit.Example.prototype, {
   }
 
   , run: function (runContext){
+    if (this.isPending()){ return; }
+
     runContext = runContext || {};
 
     try {

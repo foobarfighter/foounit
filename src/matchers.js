@@ -9,6 +9,7 @@ foounit.addKeyword('throwError', function (){
   this.match = function (expected, actual){
     // actual == block
     // expected == error
+    expected = expected || Error;
     assert.throws(actual, expected);
   }
 });
@@ -19,6 +20,16 @@ foounit.addKeyword('throwError', function (){
 foounit.addKeyword('be', function (){
   this.match = function (expected, actual){
     assert.strictEqual(actual, expected);
+  }
+});
+
+/**
+ * Asserts === on true
+ */
+foounit.addKeyword('beTrue', function (){
+  // expected is unused
+  this.match = function (expected, actual){
+    assert.strictEqual(actual, true);
   }
 });
 

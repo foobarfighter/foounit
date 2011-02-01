@@ -7,6 +7,19 @@ foounit.addKeyword('it', function (description, test){
     .getBuildContext()
     .getCurrentGroup()
     .addExample(example);
+  return example;
+});
+
+/**
+ * Creates a pending example
+ */
+foounit.addKeyword('xit', function (description, test){
+  var example = new foounit.Example(description, test, true);
+  foounit
+    .getBuildContext()
+    .getCurrentGroup()
+    .addExample(example);
+  return example;
 });
 
 /**

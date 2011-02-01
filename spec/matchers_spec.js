@@ -8,39 +8,72 @@ foounit.add(function (kw){ with(kw){
 
     describe('.throwError', function (){
       it('asserts that an error is thrown', function (){
-        throw new Error('todo');
+        var thrown = false
+          , throwError = new footest.keywords.throwError();
+
+        // Should pass because the block throws
+        throwError.match('expected error', function (){
+          thrown = true;
+          throw new Error('expected error');
+        });
+        expect(thrown).to(beTrue);
+
+        // Should throw an expected error
+        try {
+          throwError.match('should fail match', function (){});
+          throw new Error('unexpected');
+        } catch (e){
+          expect(e.toString()).to(be, 'AssertionError:   "Missing expected exception. should fail match"');
+        }
+
+        // Should throw any error
+        try {
+          throwError.match(null, function (){});
+          throw new Error('unexpected');
+        } catch (e){
+          expect(e.toString()).to(be, 'AssertionError:   "Missing expected exception (Error)."');
+        }
       });
     });
 
-    describe('.beGt', function (){
-      it('asserts expected is greater than actual', function (){
-        throw new Error('todo');
-      });
-    });
+    //describe('.beGt', function (){
+    //  it('asserts expected is greater than actual', function (){
+    //    throw new Error('todo');
+    //  });
+    //});
 
-    describe('.beLt', function (){
-      it('asserts expected is less than actual', function (){
-        throw new Error('todo');
-      });
-    });
+    //describe('.beLt', function (){
+    //  it('asserts expected is less than actual', function (){
+    //    throw new Error('todo');
+    //  });
+    //});
 
     describe('.beTrue', function (){
       it('asserts that actual is === true', function (){
-        throw new Error('todo');
+        var matcher = new footest.keywords.beTrue();
+        matcher.match(true, true);
+
+        expect(function (){
+          matcher.match('unused', false);
+        }).to(throwError);
+        //var thrown;
+        //try {  }
+        //catch(e) { thrown = e; }
+        //if (!thrown){throw new Error('expected error to be thrown');}
       });
     });
 
-    describe('.beFalse', function (){
-      it('asserts that actual is === false', function (){
-        throw new Error('todo');
-      });
-    });
+    //describe('.beFalse', function (){
+    //  it('asserts that actual is === false', function (){
+    //    throw new Error('todo');
+    //  });
+    //});
 
-    describe('.include', function (){
-      it('asserts that the actual array has an element === to expected', function (){
-        throw new Error('todo');
-      });
-    });
+    //describe('.include', function (){
+    //  it('asserts that the actual array has an element === to expected', function (){
+    //    throw new Error('todo');
+    //  });
+    //});
 
     describe('.be', function (){
       it('does a strict equal', function (){
