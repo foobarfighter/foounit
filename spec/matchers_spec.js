@@ -7,92 +7,128 @@ foounit.add(function (kw){ with(kw){
   describe('foounit.matchers', function (){
 
     describe('.throwError', function (){
-      it('asserts that an error is thrown', function (){
-        var thrown = false
-          , throwError = new footest.keywords.throwError();
+      describe('.notMatch', function (){
+        xit('asserts that an error is NOT thrown');
+      });
 
-        // Should pass because the block throws
-        throwError.match('expected error', function (){
-          thrown = true;
-          throw new Error('expected error');
+      describe('.match', function (){
+        it('asserts that an error is thrown', function (){
+          var thrown = false
+            , throwError = new footest.keywords.throwError();
+
+          // Should pass because the block throws
+          throwError.match('expected error', function (){
+            thrown = true;
+            throw new Error('expected error');
+          });
+          expect(thrown).to(beTrue);
+
+          // Should throw an expected error
+          try {
+            throwError.match('should fail match', function (){});
+            throw new Error('unexpected');
+          } catch (e){
+            expect(e.toString()).to(be, 'AssertionError:   "Missing expected exception. should fail match"');
+          }
+
+          // Should throw any error
+          try {
+            throwError.match(null, function (){});
+            throw new Error('unexpected');
+          } catch (e){
+            expect(e.toString()).to(be, 'AssertionError:   "Missing expected exception (Error)."');
+          }
         });
-        expect(thrown).to(beTrue);
-
-        // Should throw an expected error
-        try {
-          throwError.match('should fail match', function (){});
-          throw new Error('unexpected');
-        } catch (e){
-          expect(e.toString()).to(be, 'AssertionError:   "Missing expected exception. should fail match"');
-        }
-
-        // Should throw any error
-        try {
-          throwError.match(null, function (){});
-          throw new Error('unexpected');
-        } catch (e){
-          expect(e.toString()).to(be, 'AssertionError:   "Missing expected exception (Error)."');
-        }
       });
     });
 
     describe('.beGt', function (){
-      xit('asserts expected is greater than actual', function (){
-        throw new Error('todo');
+      describe('.notMatch', function (){
+        xit('asserts expected is NOT greater than actual');
+      });
+      describe('.match', function (){
+        xit('asserts expected is greater than actual');
       });
     });
 
     describe('.beLt', function (){
-      xit('asserts expected is less than actual', function (){
-        throw new Error('todo');
+      describe('.notMatch', function (){
+        xit('asserts that expected is NOT less than actual');
+      });
+      describe('.match', function (){
+        xit('asserts expected is less than actual');
       });
     });
 
     describe('.beTrue', function (){
-      it('asserts that actual is === true', function (){
-        var matcher = new footest.keywords.beTrue();
-        matcher.match(true, true);
+      describe('.notMatch', function (){
+        xit('asserts that actual is !== true');
+      });
 
-        expect(function (){
-          matcher.match('unused', false);
-        }).to(throwError);
+      describe('.match', function (){
+        it('asserts that actual is === true', function (){
+          var matcher = new footest.keywords.beTrue();
+          matcher.match(true, true);
+
+          expect(function (){
+            matcher.match('unused', false);
+          }).to(throwError);
+        });
       });
     });
 
     describe('.beFalse', function (){
-      xit('asserts that actual is === false', function (){
-        throw new Error('todo');
+      describe('.notMatch', function (){
+        xit('asserts that actual is !== false');
+      });
+      describe('.match', function (){
+        xit('asserts that actual is === false');
       });
     });
 
     describe('.include', function (){
-      xit('asserts that the actual array has an element === to expected', function (){
-        throw new Error('todo');
+      describe('.notMatch', function (){
+        xit('asserts that the actual array does NOT have an element === to expected');
+      });
+      describe('.match', function (){
+        xit('asserts that the actual array has an element === to expected');
       });
     });
 
     describe('.be', function (){
-      it('does a strict equal', function (){
-        var matcher = new footest.keywords.be();
-        matcher.match('a', 'a');
+      describe('.notMatch', function (){
+        xit('does NOT ===');
+      });
 
-        var thrown;
-        try { matcher.match(undefined, null); }
-        catch(e) { thrown = e; }
-        if (!thrown){throw new Error('expected error to be thrown');}
+      describe('.match', function (){
+        it('does a strict equal', function (){
+          var matcher = new footest.keywords.be();
+          matcher.match('a', 'a');
+
+          var thrown;
+          try { matcher.match(undefined, null); }
+          catch(e) { thrown = e; }
+          if (!thrown){throw new Error('expected error to be thrown');}
+        });
       });
     });
 
     describe('equal', function (){
-      it('does a deep ==', function (){
-        var value = [1, { foo: 'bar' }, 3]
-          , matcher = new footest.keywords.equal();
-        matcher.match(value, value.concat());
+      describe('.notMatch', function (){
+        xit('does NOT deep equal');
+      });
 
-        var thrown;
-        try { matcher.match(value, value.concat([1])); }
-        catch(e) { thrown = e; }
-        if (!thrown){throw new Error('expected error to be thrown');}
+      describe('.match', function (){
+        it('does a deep ==', function (){
+          var value = [1, { foo: 'bar' }, 3]
+            , matcher = new footest.keywords.equal();
+          matcher.match(value, value.concat());
+
+          var thrown;
+          try { matcher.match(value, value.concat([1])); }
+          catch(e) { thrown = e; }
+          if (!thrown){throw new Error('expected error to be thrown');}
+        });
       });
     });
 
