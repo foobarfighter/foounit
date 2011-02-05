@@ -36,7 +36,7 @@ foounit.add(function (kw){ with(kw){
             throwError.match(null, function (){});
             throw new Error('unexpected');
           } catch (e){
-            expect(e.toString()).to(be, 'AssertionError:   "Missing expected exception (Error)."');
+            expect(e.toString()).to(be, 'AssertionError:   "Missing expected exception.."');
           }
         });
       });
@@ -62,7 +62,11 @@ foounit.add(function (kw){ with(kw){
 
     describe('.beTrue', function (){
       describe('.notMatch', function (){
-        xit('asserts that actual is !== true');
+        it('asserts that actual is !== true', function (){
+          expect(function (){
+            expect(true).toNot(beTrue);
+          }).to(throwError, 'sdfasfdsfsdfa');
+        });
       });
 
       describe('.match', function (){
