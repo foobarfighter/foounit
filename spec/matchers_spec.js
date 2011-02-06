@@ -51,6 +51,79 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
+    describe('.be', function (){
+      describe('.notMatch', function (){
+        it('does NOT ===', function (){
+          var matcher = new footest.keywords.be();
+          matcher.notMatch('a', 'b');
+
+          expect(function (){
+            matcher.notMatch(null, null);
+          }).to(throwError, /AssertionError: null !== null/);
+        });
+      });
+
+      describe('.match', function (){
+        it('does a strict equal', function (){
+          var matcher = new footest.keywords.be();
+          matcher.match('a', 'a');
+
+          expect(function (){
+            matcher.match(null, undefined);
+          }).to(throwError, /AssertionError:  === null/);
+        });
+      });
+    });
+
+
+    describe('.beNull', function (){
+      describe('.match', function (){
+        it('asserts actual strictly equals null', function (){
+          var matcher = new footest.keywords.beNull();
+          matcher.match(null);
+
+          expect(function (){
+            matcher.match(undefined);
+          }).to(throwError, /AssertionError: null ===/);
+        });
+      });
+
+      describe('.notMatch', function (){
+        it('asserts actual does NOT strictly equal null', function (){
+          var matcher = new footest.keywords.beNull();
+          matcher.notMatch(undefined);
+
+          expect(function (){
+            matcher.notMatch(null);
+          }).to(throwError, /AssertionError: null !== null/);
+        });
+      });
+    });
+
+    describe('.beUndefined', function (){
+      describe('.match', function (){
+        it('asserts actual strictly equals undefined', function (){
+          var matcher = new footest.keywords.beUndefined();
+          matcher.match(undefined);
+
+          expect(function (){
+            matcher.match(null);
+          }).to(throwError, /AssertionError:  === null/);
+        });
+      });
+
+      describe('.notMatch', function (){
+        it('asserts actual does NOT strictly equal null', function (){
+          var matcher = new footest.keywords.beUndefined();
+          matcher.notMatch(null);
+
+          expect(function (){
+            matcher.notMatch(undefined);
+          }).to(throwError, /AssertionError:  !== /);
+        });
+      });
+    });
+
     describe('.beGt', function (){
       describe('.match', function (){
         it('asserts actual is greater than expected', function (){
@@ -157,30 +230,6 @@ foounit.add(function (kw){ with(kw){
           expect(function (){
             matcher.match([1,2,3], 4);
           }).to(throwError, /4 is not included in \[1,2,3\]/);
-        });
-      });
-    });
-
-    describe('.be', function (){
-      describe('.notMatch', function (){
-        it('does NOT ===', function (){
-          var matcher = new footest.keywords.be();
-          matcher.notMatch('a', 'b');
-
-          expect(function (){
-            matcher.notMatch(null, null);
-          }).to(throwError, /AssertionError: null !== null/);
-        });
-      });
-
-      describe('.match', function (){
-        it('does a strict equal', function (){
-          var matcher = new footest.keywords.be();
-          matcher.match('a', 'a');
-
-          expect(function (){
-            matcher.match(null, undefined);
-          }).to(throwError, /AssertionError:  === null/);
         });
       });
     });

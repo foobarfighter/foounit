@@ -33,28 +33,28 @@ foounit.addKeyword('be', function (){
 });
 
 /**
- * Asserts that actual has an element that === expected
+ * Asserts that actual === null
  */
-foounit.addKeyword('include', function (){
-  this.find = function (actual, expected){
-    var found = false;
-    for (var i = 0; i < actual.length; ++i){
-      if (actual[i] === expected){
-        found = true;
-        break;
-      }
-    }
-    return found;
+foounit.addKeyword('beNull', function (){
+  this.match = function (actual){
+    assert.strictEqual(actual, null);
   }
 
   this.notMatch = function (actual, expected){
-    if (!this.find(actual, expected)){ return; }
-    assert.fail(actual, expected, null, 'is included in');
+    assert.notStrictEqual(actual, null);
+  }
+});
+
+/**
+ * Asserts that actual === undefined
+ */
+foounit.addKeyword('beUndefined', function (){
+  this.match = function (actual){
+    assert.strictEqual(actual, undefined);
   }
 
-  this.match = function (actual, expected){
-    if (this.find(actual, expected)){ return; }
-    assert.fail(actual, expected, null, 'is not included in');
+  this.notMatch = function (actual, expected){
+    assert.notStrictEqual(actual, undefined);
   }
 });
 
@@ -128,5 +128,31 @@ foounit.addKeyword('equal', function (){
 
   this.notMatch = function (actual, expected){
     assert.notDeepEqual(actual, expected);
+  }
+});
+
+/**
+ * Asserts that actual has an element that === expected
+ */
+foounit.addKeyword('include', function (){
+  this.find = function (actual, expected){
+    var found = false;
+    for (var i = 0; i < actual.length; ++i){
+      if (actual[i] === expected){
+        found = true;
+        break;
+      }
+    }
+    return found;
+  }
+
+  this.notMatch = function (actual, expected){
+    if (!this.find(actual, expected)){ return; }
+    assert.fail(actual, expected, null, 'is included in');
+  }
+
+  this.match = function (actual, expected){
+    if (this.find(actual, expected)){ return; }
+    assert.fail(actual, expected, null, 'is not included in');
   }
 });
