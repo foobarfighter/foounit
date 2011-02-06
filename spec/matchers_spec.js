@@ -54,7 +54,7 @@ foounit.add(function (kw){ with(kw){
     describe('.beGt', function (){
       describe('.match', function (){
         it('asserts expected is greater than actual', function (){
-          var matcher = new foounit.keywords.beGt();
+          var matcher = new footest.keywords.beGt();
           expect(function (){ matcher.match(4, 3); }).toNot(throwError);
           expect(function (){ matcher.match(4, 4); }).to(throwError, /Expected 4 to be greater than 4/);
           expect(function (){ matcher.match(4, 5); }).to(throwError, /Expected 4 to be greater than 5/);
@@ -62,7 +62,7 @@ foounit.add(function (kw){ with(kw){
       });
       describe('.notMatch', function (){
         it('asserts expected is NOT greater than actual', function (){
-          var matcher = new foounit.keywords.beGt();
+          var matcher = new footest.keywords.beGt();
           expect(function (){ matcher.notMatch(3, 4); }).toNot(throwError);
           expect(function (){ matcher.notMatch(4, 4); }).toNot(throwError);
           expect(function (){ matcher.notMatch(5, 4); }).to(throwError, /Expected 5 to not be greater than 4/);
@@ -71,11 +71,22 @@ foounit.add(function (kw){ with(kw){
     });
 
     describe('.beLt', function (){
-      describe('.notMatch', function (){
-        xit('asserts that expected is NOT less than actual');
-      });
       describe('.match', function (){
-        xit('asserts expected is less than actual');
+        it('asserts actual is less than expected', function (){
+          var matcher = new footest.keywords.beLt();
+          expect(function (){ matcher.match(3, 4); }).toNot(throwError);
+          expect(function (){ matcher.match(4, 4); }).to(throwError, /Expected 4 to be less than 4/);
+          expect(function (){ matcher.match(5, 4); }).to(throwError, /Expected 5 to be less than 4/);
+        });
+      });
+
+      describe('.notMatch', function (){
+        it('asserts that expected is NOT less than actual', function (){
+          var matcher = new footest.keywords.beLt();
+          expect(function (){ matcher.notMatch(5, 4); }).toNot(throwError);
+          expect(function (){ matcher.notMatch(4, 4); }).toNot(throwError);
+          expect(function (){ matcher.notMatch(3, 4); }).to(throwError, /Expected 3 to not be less than 4/);
+        });
       });
     });
 
@@ -115,7 +126,7 @@ foounit.add(function (kw){ with(kw){
         });
       });
       describe('.match', function (){
-        it('asserts that actual is === false', function (){
+        it('asserts that actual === false', function (){
           var matcher = new footest.keywords.beFalse();
           matcher.match(false);
 

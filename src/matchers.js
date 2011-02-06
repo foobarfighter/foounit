@@ -33,8 +33,7 @@ foounit.addKeyword('be', function (){
 });
 
 /**
- * Assert that a number (or object) is greater
- * than another number (or object).
+ * Assert that actual is greater than expected
  */
 foounit.addKeyword('beGt', function (){
   this.format = function (actual, expected, not){
@@ -49,6 +48,27 @@ foounit.addKeyword('beGt', function (){
 
   this.notMatch = function (actual, expected){
     if (actual > expected){
+      assert.fail(actual, expected, this.format(actual, expected, true), '<=', this.notMatch);
+    }
+  }
+});
+
+/**
+ * Assert that actual is less than expected
+ */
+foounit.addKeyword('beLt', function (){
+  this.format = function (actual, expected, not){
+    var notStr = not ? ' not' : '';
+    return 'Expected ' + actual + ' to' + notStr  +  ' be less than ' + expected;
+  }
+
+  this.match = function (actual, expected){
+    if (actual < expected){ return; }
+    assert.fail(actual, expected, this.format(actual, expected), '<', this.match);
+  }
+
+  this.notMatch = function (actual, expected){
+    if (actual < expected){
       assert.fail(actual, expected, this.format(actual, expected, true), '<=', this.notMatch);
     }
   }
