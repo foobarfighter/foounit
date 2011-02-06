@@ -120,64 +120,81 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
     return foounit.getBuildContext().isFailure();
   }
 
+
   /**
-   * Executes an array of tests
+   * Report the results of a single example.  This is called
+   * after an example has finished running and before the next
+   * example begins.
    */
-  foounit.execute = function (runners){
-    var pending = [];
+  foounit.reportExample = function (example){
+    var sys = require('sys');
+    if (example.isFailure()){
+      console.log('test failed: ' + example.getException().stack);
+    } else if (example.isSuccess()){
+      sys.print('.');
+    } else if (example.isPending()){
+      sys.print('P');
+    }
+  }
 
-    //, passCount, failCount, pendingCount;
-
-    //queue.onTaskComplete = function (example){
-    //  if (example.isSuccess()){
-    //    ++passCount;
-    //  } else if (example.isFailure()){
-    //    ++failCount;
-    //  } else if (example.isPending()){
-    //    ++pendingCount;
-    //  }
-
-    //  foounit.reportExample(example);
-    //};
-
-    //queue.onComplete = function (example){
-    //  foounit.report({
-    //    passCount:    passCount
-    //  , failCount:    failCount
-    //  , pendingCount: pendingCount
-    //  });
-    //};
-    
-
-
-    console.log('');
-    for (var i = 0, ii = runners.length; i < ii; ++i){
-      var runner = runners[i];
-      runner.run();
-      // TODO: Implement report
-      var sys = require('sys');
-      if (runner.isFailure()){
-        foounit.getBuildContext().setFailure(true);
-        console.log('test failed: ' + runner.getException().stack);
-      } else if (runner.isSuccess()){
-        sys.print('.');
-      } else if (runner.isPending()){
-        sys.print('P');
-        pending.push(runner.getDescription());
+  /**
+   * Report the results of the entire test suite.
+   */
+  foounit.report = function (info){
+    if (info.pending.length){
+      var pending = info.pending;
+      console.log("\n");
+      for (var i = 0, ii = pending.length; i < ii; ++i){
+        console.log('PENDING: ' + pending[i]);
       }
     }
 
-    console.log("\n");
-    for (var i = 0, ii = pending.length; i < ii; ++i){
-      console.log('PENDING: ' + pending[i]);
-    }
-
-    console.log('');
-    if (foounit.isFailure()){
+    if (info.failCount){
       console.log('!!FAIL');
     } else {
       console.log('All tests passed.');
     }
+  }
+
+  /**
+   * Executes an array of tests
+   */
+  foounit.execute = function (examples){
+    var pending = []
+      , passCount = 0, failCount = 0, pendingCount = 0
+      , queue = new foounit.WorkQueue(examples);
+
+    queue.onTaskComplete = function (example){
+      try {
+        if (example.isSuccess()){
+          ++passCount;
+        } else if (example.isFailure()){
+          ++failCount;
+        } else if (example.isPending()){
+          pending.push(example.getDescription());
+          ++pendingCount;
+        }
+
+        foounit.reportExample(example);
+      } catch (e) {
+        console.log('Error in onTaskComplete: ', e);
+      }
+    };
+
+    queue.onComplete = function (queue){
+      try {
+        foounit.report({
+          passCount:  passCount
+        , failCount:  failCount
+        , totalCount: queue.size
+        , pending:    pending
+        });
+      } catch (e){
+        console.log('Error in onComplete: ', e);
+      }
+    };
+
+    queue.run();
   }
 
   /**

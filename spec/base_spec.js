@@ -6,7 +6,7 @@ var footest = foounit.require(':src/foo-unit');
 foounit.add(function (kw){ with(kw){
   describe('foounit.base', function (){
     describe('.bind', function (){
-      it('returns a function that is bound to a scope', function (){
+      xit('returns a function that is bound to a scope', function (){
         var scope = { foo: 'bar' };
         var actualScope, args;
 
@@ -89,6 +89,11 @@ foounit.add(function (kw){ with(kw){
         expect(examples[3].getAfters()[1])   .to(be, after3);
 
         footest.setBuildContext(bc);
+      });
+    });
+
+    describe('.execute', function (){
+      xit('executes the specs in the queue', function (){
       });
     });
 

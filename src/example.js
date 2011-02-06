@@ -57,11 +57,20 @@ foounit.mixin(foounit.Example.prototype, {
     return this._test;
   }
 
+  , onComplete: function (example){}
+
   , run: function (runContext){
-    if (this.isPending()){ return; }
+    if (this.isPending()){
+      this.onComplete(this);
+      return;
+    }
 
     runContext = runContext || {};
 
+    // TODO:
+    // Each example should run "blocks"
+    // and those blocks should execute in
+    // in a try..catch
     try {
       this._runBefores(runContext);
       this._test.apply(runContext, []);
@@ -71,6 +80,7 @@ foounit.mixin(foounit.Example.prototype, {
       this._status = this.FAILURE;
     } finally {
        this._runAfters();
+       this.onComplete(this);
     }
   }
 
