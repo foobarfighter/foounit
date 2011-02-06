@@ -6,13 +6,13 @@ if (foounit.hostenv.type == 'node'){
  * Asserts that a function throws an error
  */
 foounit.addKeyword('throwError', function (){
-  this.match = function (expected, actual){
+  this.match = function (actual, expected){
     // actual == block
     // expected == error
     assert.throws(actual, expected);
   }
 
-  this.notMatch = function (expected, actual){
+  this.notMatch = function (actual, expected){
     // actual == block
     // expected == error
     assert.doesNotThrow(actual, expected);
@@ -23,7 +23,7 @@ foounit.addKeyword('throwError', function (){
  * Asserts type and object
  */
 foounit.addKeyword('be', function (){
-  this.match = function (expected, actual){
+  this.match = function (actual, expected){
     assert.strictEqual(actual, expected);
   }
 });
@@ -40,7 +40,7 @@ foounit.addKeyword('beGt', function (){
 
   this.match = function (actual, expected){
     if (actual > expected){ return; }
-    assert.fail(actual, expected, this.format(actual, expected), "beGt", this.match);
+    assert.fail(actual, expected, this.format(actual, expected), 'beGt', this.match);
   }
 
   this.notMatch = function (actual, expected){
@@ -55,12 +55,12 @@ foounit.addKeyword('beGt', function (){
  */
 foounit.addKeyword('beTrue', function (){
   // expected is unused
-  this.notMatch = function (expected, actual){
+  this.notMatch = function (actual){
     assert.notStrictEqual(actual, true);
   }
 
   // expected is unused
-  this.match = function (expected, actual){
+  this.match = function (actual){
     assert.strictEqual(actual, true);
   }
 });
@@ -69,7 +69,7 @@ foounit.addKeyword('beTrue', function (){
  * Asserts deep equality
  */
 foounit.addKeyword('equal', function (){
-  this.match = function (expected, actual){
+  this.match = function (actual, expected){
     assert.deepEqual(actual, expected);
   }
 });

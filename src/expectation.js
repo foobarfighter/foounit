@@ -6,11 +6,11 @@ foounit.Expectation = function (actual){
 foounit.mixin(foounit.Expectation.prototype, {
   to: function (matcherClass, expected){
     var matcher = new matcherClass();
-    matcher.match(expected, this._actual);
+    matcher.match(this._actual, expected);
   }
 
   , toNot: function (matcherClass, expected){
     var matcher = new matcherClass();
-    matcher.notMatch(expected, this._actual);
+    matcher.notMatch(this._actual, expected);
   }
 });

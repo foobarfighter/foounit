@@ -13,15 +13,15 @@ foounit.add(function (kw){ with(kw){
             , throwError = new footest.keywords.throwError();
 
           // Should pass because the block throws
-          throwError.match('expected error', function (){
+          throwError.match(function (){
             thrown = true;
             throw new Error('expected error');
-          });
+          }, 'expected error');
           expect(thrown).to(beTrue);
 
           // Should throw an expected error
           try {
-            throwError.match('should fail match', function (){});
+            throwError.match(function (){}, 'should fail match');
             throw new Error('unexpected');
           } catch (e){
             expect(e.toString()).to(be, 'AssertionError:   "Missing expected exception. should fail match"');
@@ -29,7 +29,7 @@ foounit.add(function (kw){ with(kw){
 
           // Should throw any error
           try {
-            throwError.match(null, function (){});
+            throwError.match(function (){}, null);
             throw new Error('unexpected');
           } catch (e){
             expect(e.toString()).to(be, 'AssertionError:   "Missing expected exception.."');
@@ -40,12 +40,12 @@ foounit.add(function (kw){ with(kw){
       describe('.notMatch', function (){
         it('asserts that an error is NOT thrown', function (){
           var matcher = new foounit.keywords.throwError();
-          matcher.notMatch(null, function (){});
+          matcher.notMatch(function (){}, null);
 
           expect(function (){
-            matcher.notMatch('foo', function (){
+            matcher.notMatch(function (){
               throw new Error('foo');
-            });
+            }, 'foo');
           }).to(throwError, /foo/);
         });
       });
@@ -82,20 +82,23 @@ foounit.add(function (kw){ with(kw){
     describe('.beTrue', function (){
       describe('.notMatch', function (){
         it('asserts that actual is !== true', function (){
+          var matcher = new footest.keywords.beTrue();
+          matcher.notMatch(false);
+
           expect(function (){
-            expect(true).toNot(beTrue);
-          }).to(throwError, 'sdfasfdsfsdfa');
+            matcher.notMatch(true);
+          }).to(throwError, /AssertionError: true !== true/);
         });
       });
 
       describe('.match', function (){
         it('asserts that actual is === true', function (){
           var matcher = new footest.keywords.beTrue();
-          matcher.match(true, true);
+          matcher.match(true);
 
           expect(function (){
-            matcher.match('unused', false);
-          }).to(throwError);
+            matcher.match(false);
+          }).to(throwError, /AssertionError: true === false/);
         });
       });
     });
@@ -128,10 +131,9 @@ foounit.add(function (kw){ with(kw){
           var matcher = new footest.keywords.be();
           matcher.match('a', 'a');
 
-          var thrown;
-          try { matcher.match(undefined, null); }
-          catch(e) { thrown = e; }
-          if (!thrown){throw new Error('expected error to be thrown');}
+          expect(function (){
+            matcher.match(null, undefined);
+          }).to(throwError, /AssertionError:  === null/);
         });
       });
     });
@@ -147,10 +149,9 @@ foounit.add(function (kw){ with(kw){
             , matcher = new footest.keywords.equal();
           matcher.match(value, value.concat());
 
-          var thrown;
-          try { matcher.match(value, value.concat([1])); }
-          catch(e) { thrown = e; }
-          if (!thrown){throw new Error('expected error to be thrown');}
+          expect(function (){
+            matcher.match(value.concat([1]), value);
+          }).to(throwError, /AssertionError:.*deepEqual.*/);
         });
       });
     });
