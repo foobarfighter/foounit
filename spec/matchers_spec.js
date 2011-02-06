@@ -139,10 +139,25 @@ foounit.add(function (kw){ with(kw){
 
     describe('.include', function (){
       describe('.notMatch', function (){
-        xit('asserts that the actual array does NOT have an element === to expected');
+        it('asserts that actual does NOT have an element that is strictly equal to expected', function (){
+          var matcher = new footest.keywords.include();
+          matcher.notMatch([1,2,3], 4);
+
+          expect(function (){
+            matcher.notMatch([1,2,3], 2);
+          }).to(throwError, /2 is included in \[1,2,3\]/);
+        });
       });
+
       describe('.match', function (){
-        xit('asserts that the actual array has an element === to expected');
+        it('asserts that actual has an element that is strictly equal to expected', function (){
+          var matcher = new footest.keywords.include();
+          matcher.match([1,2,3], 2);
+
+          expect(function (){
+            matcher.match([1,2,3], 4);
+          }).to(throwError, /4 is not included in \[1,2,3\]/);
+        });
       });
     });
 

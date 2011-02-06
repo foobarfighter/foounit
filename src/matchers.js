@@ -33,6 +33,32 @@ foounit.addKeyword('be', function (){
 });
 
 /**
+ * Asserts that actual has an element that === expected
+ */
+foounit.addKeyword('include', function (){
+  this.find = function (actual, expected){
+    var found = false;
+    for (var i = 0; i < actual.length; ++i){
+      if (actual[i] === expected){
+        found = true;
+        break;
+      }
+    }
+    return found;
+  }
+
+  this.notMatch = function (actual, expected){
+    if (!this.find(actual, expected)){ return; }
+    assert.fail(actual, expected, null, 'is included in');
+  }
+
+  this.match = function (actual, expected){
+    if (this.find(actual, expected)){ return; }
+    assert.fail(actual, expected, null, 'is not included in');
+  }
+});
+
+/**
  * Assert that actual is greater than expected
  */
 foounit.addKeyword('beGt', function (){
@@ -43,12 +69,12 @@ foounit.addKeyword('beGt', function (){
 
   this.match = function (actual, expected){
     if (actual > expected){ return; }
-    assert.fail(actual, expected, this.format(actual, expected), '>', this.match);
+    assert.fail(actual, expected, this.format(actual, expected), '>');
   }
 
   this.notMatch = function (actual, expected){
     if (actual > expected){
-      assert.fail(actual, expected, this.format(actual, expected, true), '<=', this.notMatch);
+      assert.fail(actual, expected, this.format(actual, expected, true), '<=');
     }
   }
 });
@@ -64,12 +90,12 @@ foounit.addKeyword('beLt', function (){
 
   this.match = function (actual, expected){
     if (actual < expected){ return; }
-    assert.fail(actual, expected, this.format(actual, expected), '<', this.match);
+    assert.fail(actual, expected, this.format(actual, expected), '<');
   }
 
   this.notMatch = function (actual, expected){
     if (actual < expected){
-      assert.fail(actual, expected, this.format(actual, expected, true), '<=', this.notMatch);
+      assert.fail(actual, expected, this.format(actual, expected, true), '<=');
     }
   }
 });
