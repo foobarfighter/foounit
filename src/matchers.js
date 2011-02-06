@@ -29,6 +29,28 @@ foounit.addKeyword('be', function (){
 });
 
 /**
+ * Assert that a number (or object) is greater
+ * than another number (or object).
+ */
+foounit.addKeyword('beGt', function (){
+  this.format = function (actual, expected, not){
+    var notStr = not ? ' not' : '';
+    return 'Expected ' + actual + ' to' + notStr  +  ' be greater than ' + expected;
+  }
+
+  this.match = function (actual, expected){
+    if (actual > expected){ return; }
+    assert.fail(actual, expected, this.format(actual, expected), "beGt", this.match);
+  }
+
+  this.notMatch = function (actual, expected){
+    if (actual > expected){
+      assert.fail(actual, expected, this.format(actual, expected, true), 'notBeGt', this.notMatch);
+    }
+  }
+});
+
+/**
  * Asserts === on true
  */
 foounit.addKeyword('beTrue', function (){
