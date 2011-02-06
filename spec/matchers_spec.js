@@ -147,7 +147,15 @@ foounit.add(function (kw){ with(kw){
 
     describe('equal', function (){
       describe('.notMatch', function (){
-        xit('does NOT deep equal');
+        it('does NOT deep equal', function (){
+          var value = [1, { foo: 'bar' }, 3]
+            , matcher = new footest.keywords.equal();
+          
+          matcher.notMatch(value.concat([1]), value);
+          expect(function (){
+            matcher.notMatch(value, value);
+          }).to(throwError, /AssertionError:.*notDeepEqual.*/);
+        });
       });
 
       describe('.match', function (){

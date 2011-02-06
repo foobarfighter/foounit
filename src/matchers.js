@@ -76,4 +76,8 @@ foounit.addKeyword('equal', function (){
   this.match = function (actual, expected){
     assert.deepEqual(actual, expected);
   }
+
+  this.notMatch = function (actual, expected){
+    assert.notDeepEqual(actual, expected);
+  }
 });
