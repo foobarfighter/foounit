@@ -1,7 +1,0 @@
-#!/bin/bash
-
-NODE_BIN="node"
-FOOUNIT_HOME=`dirname $0`/..
-FOOUNIT_BIN="$FOOUNIT_HOME/bin/foounit.js"
-
-$NODE_BIN $FOOUNIT_BIN $@
