@@ -1,0 +1,46 @@
+foounit.WorkQueue = function (tasks){
+  this._tasks = tasks || [];
+}
+
+foounit.mixin(foounit.WorkQueue.prototype, {
+  run: function (){
+    this._runNext();
+  }
+
+  , enqueue: function (task){
+    this._tasks.push(task);
+  }
+
+  , dequeue: function (){
+    return this._tasks.shift();
+  }
+
+  , size: function (){
+    return this._tasks.length;
+  }
+
+  , runTask: function (task){
+    task.onComplete = foounit.bind(this, this._onTaskComplete);
+    task.run();
+  }
+
+  // Replace function to receive event
+  , onTaskComplete: function (task){}
+
+  // Replace function to receive event
+  , onComplete: function (queue){}
+
+  , _onTaskComplete: function (task){
+    this.onTaskComplete(task);
+    this._runNext();
+  }
+
+  , _runNext: function (){
+    var task = this.dequeue();
+    if (task){
+      this.runTask(task);
+    } else {
+      this.onComplete(this);
+    }
+  }
+});

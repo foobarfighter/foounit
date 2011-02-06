@@ -1,6 +1,7 @@
 {
   "foo-unit.js": [
     "src/base.js"
+    , "src/work_queue.js"
     , "src/example.js"
     , "src/example_group.js"
     , "src/expectation.js"

@@ -43,6 +43,15 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
     return target;
   };
 
+  /**
+   * Returns a function bound to a scope
+   */
+  foounit.bind = function (scope, func){
+    return function (){
+      return func.apply(scope, arguments);
+    }
+  }
+
 
   /**
    * Function used while building up the tests
@@ -116,6 +125,30 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
    */
   foounit.execute = function (runners){
     var pending = [];
+
+    //, passCount, failCount, pendingCount;
+
+    //queue.onTaskComplete = function (example){
+    //  if (example.isSuccess()){
+    //    ++passCount;
+    //  } else if (example.isFailure()){
+    //    ++failCount;
+    //  } else if (example.isPending()){
+    //    ++pendingCount;
+    //  }
+
+    //  foounit.reportExample(example);
+    //};
+
+    //queue.onComplete = function (example){
+    //  foounit.report({
+    //    passCount:    passCount
+    //  , failCount:    failCount
+    //  , pendingCount: pendingCount
+    //  });
+    //};
+    
+
 
     console.log('');
     for (var i = 0, ii = runners.length; i < ii; ++i){

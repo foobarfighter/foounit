@@ -5,6 +5,24 @@ var footest = foounit.require(':src/foo-unit');
 
 foounit.add(function (kw){ with(kw){
   describe('foounit.base', function (){
+    describe('.bind', function (){
+      it('returns a function that is bound to a scope', function (){
+        var scope = { foo: 'bar' };
+        var actualScope, args;
+
+        var func = footest.bind(scope, function (){
+          args = arguments;
+          actualScope = this;
+          return 123;
+        });
+
+        var ret = func(1,2,3);
+        expect(actualScope).to(be, scope);
+        expect(args).to(equal, [1, 2, 3]);
+        expect(ret).to(be, 123);
+      });
+    });
+
     describe('.build', function (){
       it('builds an array of all tests to be run', function (){
         var bc = footest.getBuildContext();
