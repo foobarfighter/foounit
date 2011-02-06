@@ -122,17 +122,19 @@ foounit.addKeyword('beFalse', function (){
  * Asserts deep equality
  */
 foounit.addKeyword('equal', function (){
+  var pSlice = Array.prototype.slice;
+
   var isArguments = function (value){
     return !!value.callee;
   }
 
   var exec = function (actual, expected, not){
     if (isArguments(actual)){
-      actual = Array.prototype.slice.call(actual);
+      actual = pSlice.call(actual);
     }
 
     if (isArguments(expected)){
-      expected = Array.prototype.slice.call(expected);
+      expected = pSlice.call(expected);
     }
 
     var deepEqualFunc = not ? 'notDeepEqual' : 'deepEqual';
