@@ -62,20 +62,14 @@ foounit.addKeyword('include', function (){
  * Assert that actual is greater than expected
  */
 foounit.addKeyword('beGt', function (){
-  this.format = function (actual, expected, not){
-    var notStr = not ? ' not' : '';
-    return 'Expected ' + actual + ' to' + notStr  +  ' be greater than ' + expected;
-  }
-
   this.match = function (actual, expected){
     if (actual > expected){ return; }
-    assert.fail(actual, expected, this.format(actual, expected), '>');
+    assert.fail(actual, expected, null, '>');
   }
 
   this.notMatch = function (actual, expected){
-    if (actual > expected){
-      assert.fail(actual, expected, this.format(actual, expected, true), '<=');
-    }
+    if (actual <= expected){ return; }
+    assert.fail(actual, expected, null, '<=');
   }
 });
 
@@ -83,20 +77,14 @@ foounit.addKeyword('beGt', function (){
  * Assert that actual is less than expected
  */
 foounit.addKeyword('beLt', function (){
-  this.format = function (actual, expected, not){
-    var notStr = not ? ' not' : '';
-    return 'Expected ' + actual + ' to' + notStr  +  ' be less than ' + expected;
-  }
-
   this.match = function (actual, expected){
     if (actual < expected){ return; }
-    assert.fail(actual, expected, this.format(actual, expected), '<');
+    assert.fail(actual, expected, null, '<');
   }
 
   this.notMatch = function (actual, expected){
-    if (actual < expected){
-      assert.fail(actual, expected, this.format(actual, expected, true), '<=');
-    }
+    if (actual >= expected){ return };
+    assert.fail(actual, expected, null, '>=');
   }
 });
 
