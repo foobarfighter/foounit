@@ -61,3 +61,17 @@ foounit.addKeyword('expect', function (actual){
   return new foounit.Expectation(actual);
 });
 
+/**
+ * Creates a PollingExpectation and adds it
+ * to the the currently executing example
+ */
+foounit.addKeyword('waitFor', function (func){
+  //var example = foounit.getBuildContext().getCurrentExample()
+  //  , expectation = foounit.PollingExpectation(actual);
+
+  //example.addAsyncExpectation(expectation);
+  //return expectation;
+
+  return new foounit.PollingExpectation(func);
+});
+

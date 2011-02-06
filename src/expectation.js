@@ -1,4 +1,3 @@
-
 foounit.Expectation = function (actual){
   this._actual = actual;
 }

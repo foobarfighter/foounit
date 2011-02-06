@@ -99,5 +99,34 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
+    // TODO: refactor test setBuildContext usage
+    describe('.waitFor', function (){
+      var bc;
+
+      before(function (){
+        // TODO: Provide ability to swap out runner
+        footest.setBuildContext(new footest.BuildContext());
+      });
+
+      after(function (){
+        footest.setBuildContext(bc);
+      });
+
+      it('creates a foounit.PollingExpectation', function (){
+        var expectation;
+
+        foounit.add(function (kw){ with (kw){
+          it('test', function (){
+            expectation = waitFor(function (){});
+          });
+        }});
+        foounit.execute(foounit.build());
+        expect(expectation.constructor).to(be, footest.PollingExpectation);
+      });
+
+      xit('adds the expectation to the current example', function (){
+      });
+    });
+
   });
 }});
