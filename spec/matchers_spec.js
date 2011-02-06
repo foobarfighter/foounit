@@ -7,10 +7,6 @@ foounit.add(function (kw){ with(kw){
   describe('foounit.matchers', function (){
 
     describe('.throwError', function (){
-      describe('.notMatch', function (){
-        xit('asserts that an error is NOT thrown');
-      });
-
       describe('.match', function (){
         it('asserts that an error is thrown', function (){
           var thrown = false
@@ -38,6 +34,19 @@ foounit.add(function (kw){ with(kw){
           } catch (e){
             expect(e.toString()).to(be, 'AssertionError:   "Missing expected exception.."');
           }
+        });
+      });
+
+      describe('.notMatch', function (){
+        it('asserts that an error is NOT thrown', function (){
+          var matcher = new foounit.keywords.throwError();
+          matcher.notMatch(null, function (){});
+
+          expect(function (){
+            matcher.notMatch('foo', function (){
+              throw new Error('foo');
+            });
+          }).to(throwError, /foo/);
         });
       });
     });

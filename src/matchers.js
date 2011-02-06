@@ -9,12 +9,13 @@ foounit.addKeyword('throwError', function (){
   this.match = function (expected, actual){
     // actual == block
     // expected == error
-
-    // FIXME: Node's assert.throws has a bug in which the expected
-    //        error is not checked against the error message if
-    //        the expected error is a string
-    //        This looks like it may be fixed in master 2/3/2011
     assert.throws(actual, expected);
+  }
+
+  this.notMatch = function (expected, actual){
+    // actual == block
+    // expected == error
+    assert.doesNotThrow(actual, expected);
   }
 });
 
