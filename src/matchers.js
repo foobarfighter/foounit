@@ -55,7 +55,7 @@ foounit.addKeyword('beGt', function (){
 });
 
 /**
- * Asserts === on true
+ * Asserts true === actual
  */
 foounit.addKeyword('beTrue', function (){
   // expected is unused
@@ -66,6 +66,21 @@ foounit.addKeyword('beTrue', function (){
   // expected is unused
   this.match = function (actual){
     assert.strictEqual(actual, true);
+  }
+});
+
+/**
+ * Asserts true === actual
+ */
+foounit.addKeyword('beFalse', function (){
+  // expected is unused
+  this.notMatch = function (actual){
+    assert.notStrictEqual(actual, false);
+  }
+
+  // expected is unused
+  this.match = function (actual){
+    assert.strictEqual(actual, false);
   }
 });
 

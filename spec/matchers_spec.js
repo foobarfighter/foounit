@@ -105,10 +105,24 @@ foounit.add(function (kw){ with(kw){
 
     describe('.beFalse', function (){
       describe('.notMatch', function (){
-        xit('asserts that actual is !== false');
+        it('asserts that actual is !== false', function (){
+          var matcher = new footest.keywords.beFalse();
+          matcher.notMatch(true);
+
+          expect(function (){
+            matcher.notMatch(false);
+          }).to(throwError, /AssertionError: false !== false/);
+        });
       });
       describe('.match', function (){
-        xit('asserts that actual is === false');
+        it('asserts that actual is === false', function (){
+          var matcher = new footest.keywords.beFalse();
+          matcher.match(false);
+
+          expect(function (){
+            matcher.match(true);
+          }).to(throwError, /AssertionError: false === true/);
+        });
       });
     });
 
