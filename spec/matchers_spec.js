@@ -123,7 +123,14 @@ foounit.add(function (kw){ with(kw){
 
     describe('.be', function (){
       describe('.notMatch', function (){
-        xit('does NOT ===');
+        it('does NOT ===', function (){
+          var matcher = new footest.keywords.be();
+          matcher.notMatch('a', 'b');
+
+          expect(function (){
+            matcher.notMatch(null, null);
+          }).to(throwError, /AssertionError: null !== null/);
+        });
       });
 
       describe('.match', function (){

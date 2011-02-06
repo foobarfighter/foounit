@@ -26,6 +26,10 @@ foounit.addKeyword('be', function (){
   this.match = function (actual, expected){
     assert.strictEqual(actual, expected);
   }
+
+  this.notMatch = function (actual, expected){
+    assert.notStrictEqual(actual, expected);
+  }
 });
 
 /**
@@ -40,12 +44,12 @@ foounit.addKeyword('beGt', function (){
 
   this.match = function (actual, expected){
     if (actual > expected){ return; }
-    assert.fail(actual, expected, this.format(actual, expected), 'beGt', this.match);
+    assert.fail(actual, expected, this.format(actual, expected), '>', this.match);
   }
 
   this.notMatch = function (actual, expected){
     if (actual > expected){
-      assert.fail(actual, expected, this.format(actual, expected, true), 'notBeGt', this.notMatch);
+      assert.fail(actual, expected, this.format(actual, expected, true), '<=', this.notMatch);
     }
   }
 });
