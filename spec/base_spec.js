@@ -6,7 +6,7 @@ var footest = foounit.require(':src/foo-unit');
 foounit.add(function (kw){ with(kw){
   describe('foounit.base', function (){
     describe('.bind', function (){
-      xit('returns a function that is bound to a scope', function (){
+      it('returns a function that is bound to a scope', function (){
         var scope = { foo: 'bar' };
         var actualScope, args;
 

@@ -122,12 +122,29 @@ foounit.addKeyword('beFalse', function (){
  * Asserts deep equality
  */
 foounit.addKeyword('equal', function (){
+  var isArguments = function (value){
+    return !!value.callee;
+  }
+
+  var exec = function (actual, expected, not){
+    if (isArguments(actual)){
+      actual = Array.prototype.slice.call(actual);
+    }
+
+    if (isArguments(expected)){
+      expected = Array.prototype.slice.call(expected);
+    }
+
+    var deepEqualFunc = not ? 'notDeepEqual' : 'deepEqual';
+    assert[deepEqualFunc](expected, actual);
+  }
+
   this.match = function (actual, expected){
-    assert.deepEqual(actual, expected);
+    exec(actual, expected, false);
   }
 
   this.notMatch = function (actual, expected){
-    assert.notDeepEqual(actual, expected);
+    exec(actual, expected, true);
   }
 });
 

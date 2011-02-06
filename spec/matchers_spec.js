@@ -235,6 +235,24 @@ foounit.add(function (kw){ with(kw){
     });
 
     describe('equal', function (){
+      var matcher;
+
+      before(function (){
+        matcher = new footest.keywords.equal();
+      });
+
+      describe('when actual or expected are arguments', function (){
+        it('converts them to arrays for comparison', function (){
+          expect(function (){
+            var func = function (){
+              expect(arguments).to(equal, [1,2,3]);
+              expect([1,2,3]).to(equal, arguments);
+            }
+            func(1,2,3);
+          }).toNot(throwError);
+        });
+      });
+
       describe('.notMatch', function (){
         it('does NOT deep equal', function (){
           var value = [1, { foo: 'bar' }, 3]
