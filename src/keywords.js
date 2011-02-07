@@ -72,6 +72,6 @@ foounit.addKeyword('waitFor', function (func){
   //example.addAsyncExpectation(expectation);
   //return expectation;
 
-  return new foounit.PollingExpectation(func);
+  return new foounit.PollingExpectation(func, foounit.settings.waitForTimeout);
 });
 

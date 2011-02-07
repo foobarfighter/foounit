@@ -59,13 +59,13 @@ foounit.mixin(foounit.Example.prototype, {
 
   , onComplete: function (example){}
 
-  , run: function (runContext){
+  , run: function (){
     if (this.isPending()){
       this.onComplete(this);
       return;
     }
 
-    runContext = runContext || {};
+    var runContext = {};
 
     // TODO:
     // Each example should run "blocks"

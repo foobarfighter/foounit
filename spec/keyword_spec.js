@@ -101,30 +101,41 @@ foounit.add(function (kw){ with(kw){
 
     // TODO: refactor test setBuildContext usage
     describe('.waitFor', function (){
-      var bc;
+      var bc, expectation;
 
       before(function (){
         // TODO: Provide ability to swap out runner
         footest.setBuildContext(new footest.BuildContext());
+        createTest();
       });
 
       after(function (){
         footest.setBuildContext(bc);
       });
 
-      it('creates a foounit.PollingExpectation', function (){
-        var expectation;
-
+      function createTest(){
         foounit.add(function (kw){ with (kw){
           it('test', function (){
             expectation = waitFor(function (){});
           });
         }});
+      }
+
+      it('creates a foounit.PollingExpectation', function (){
         foounit.execute(foounit.build());
         expect(expectation.constructor).to(be, footest.PollingExpectation);
+        expect(expectation.getTimeout()).to(be, footest.settings.waitForTimeout);
       });
 
       xit('adds the expectation to the current example', function (){
+        foounit.execute(foounit.build());
+
+        var root = foounit.getBuildContext();
+        var block = root.getCurrentExample().getCurrentBlock();
+
+        expect(block).toNot(beUndefined);
+        expect(block.isAsync()).to(beTrue);
+        expect(block.isRunning()).to(beTrue);
       });
     });
 

@@ -44,6 +44,17 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
   };
 
   /**
+   * Default settings
+   */
+  foounit.defaults = {
+    waitForTimeout: 5000
+  };
+
+  // TODO: Make settings configurable
+  foounit.settings = {};
+  foounit.mixin(foounit.settings, foounit.defaults);
+
+  /**
    * Returns a function bound to a scope
    */
   foounit.bind = function (scope, func){
@@ -51,7 +62,6 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
       return func.apply(scope, arguments);
     }
   }
-
 
   /**
    * Function used while building up the tests
