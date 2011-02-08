@@ -124,14 +124,6 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
   }
 
   /**
-   * Returns true if the test suite has failed
-   */
-  foounit.isFailure = function (){
-    return foounit.getBuildContext().isFailure();
-  }
-
-
-  /**
    * Report the results of a single example.  This is called
    * after an example has finished running and before the next
    * example begins.
@@ -160,10 +152,11 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
     }
 
     if (info.failCount){
-      console.log('!!FAIL');
+      console.log("\n" + info.failCount + ' tests FAILED!!!!!!!!!!!!');
     } else {
-      console.log('All tests passed.');
+      console.log("\nAll tests passed.");
     }
+    console.log(info.totalCount + ' total.');
   }
 
   /**
@@ -196,7 +189,7 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
         foounit.report({
           passCount:  passCount
         , failCount:  failCount
-        , totalCount: queue.size
+        , totalCount: passCount + failCount + pending.length
         , pending:    pending
         });
       } catch (e){

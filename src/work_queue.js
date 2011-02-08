@@ -1,5 +1,5 @@
 foounit.WorkQueue = function (tasks){
-  this._tasks = tasks || [];
+  this._tasks = tasks ? tasks.concat() : [];
 }
 
 foounit.mixin(foounit.WorkQueue.prototype, {
@@ -22,6 +22,10 @@ foounit.mixin(foounit.WorkQueue.prototype, {
   , runTask: function (task){
     task.onComplete = foounit.bind(this, this._onTaskComplete);
     task.run();
+  }
+
+  , stop: function (){
+    this._tasks = [];
   }
 
   // Replace function to receive event

@@ -13,14 +13,15 @@ var testExample = function (){
   var example, context;
 
   example = new footest.Example('description', function (){}); 
-  example.run(context);
+  example.run();
   assertEqual(true, example.isSuccess());
   assertEqual(false, example.isFailure());
 
-  example = new footest.Example(function (){
+  example = new footest.Example('description', function (){
     throwExpected();
   });
-  example.run(context);
+  example.run();
+
   assertEqual(false, example.isSuccess());
   assertEqual(true, example.isFailure());
   assertEqual(true, example.getException().message.length > 0);
@@ -104,19 +105,6 @@ var testFoounitExecute = function (){
   assertEqual(true,  root.getExamples()[0].isFailure());
 }
 
-var testFoounitIsFailure = function (){
-  assertEqual(false, foounit.isFailure());
-
-  foounit.add(function (kw){ with (kw){
-    it('fails', function (){
-      throwExpected();
-    });
-  }});
-  foounit.execute(foounit.build());
-
-  assertEqual(true, foounit.isFailure());
-}
-
 
 /************** /Bootstrap tests **************/
 
@@ -175,9 +163,8 @@ try {
   runTest(testExample);
   runTest(testExampleGroup);
   runTest(testFoounitAdd);
-  //runTest(testFoounitBuild);
+  runTest(testFoounitBuild);
   //runTest(testFoounitExecute);
-  //runTest(testFoounitIsFailure);
   report("\nBootstrap tests PASSED");
 } catch (e){
   after();

@@ -17,6 +17,83 @@ foounit.mixin(foounit.Example.prototype, {
   , FAILURE:  2
   , PENDING:  3
 
+  , onComplete: function (example){}
+
+  , run: function (){
+    if (this.isPending()){
+      this.onComplete(this);
+      return;
+    }
+
+    var self = this;
+
+    function addBefores(queue, befores){
+      for (var i = 0; i < befores.length; ++i){
+        queue.enqueue(self._createBlock(queue, befores[i]));
+      }
+    }
+
+    function addAfters(queue, afters){
+      for (var i = afters.length - 1; i >= 0; --i){
+        queue.enqueue(self._createBlock(queue, afters[i]));
+      }
+    }
+
+    var queue = new foounit.WorkQueue();
+    addBefores(queue, this._befores);
+    queue.enqueue(this._createBlock(queue, this._test));
+    addAfters(queue, this._afters);
+
+    queue.onComplete = function (){
+      self._status = self.SUCCESS;
+      self.onComplete(self);
+    }
+    queue.run();
+
+
+    //var onTestComplete = function (testSuccess){
+    //  afters.reverse();
+    //  self._runFuncs(afters, true, function (afterSuccess){
+    //  });
+    //}
+   
+    //var runAfters = function (){
+    //  afters.reverse();
+    //  self._runFuncs(afters, true, );
+    //}
+
+    //var funcs = this._befores.concat([this._test]);
+    //this._runFuncs(this._befores, false, onTestComplete);
+  }
+
+  //, _runFuncs: function (funcs, continueOnFailure, callback){
+  //  var queue = new foounit.WorkQueue();
+  // 
+  //  var blocks = []; 
+  //  for (var i = 0; i < funcs.length; ++i){
+  //    blocks.push(this._createBlock(queue, func));
+  //  }
+  //}
+
+  , _createBlock: function (queue, func){
+    var self = this, block;
+
+    var fail = function (e){
+      self._status = self.FAILURE;
+      self._exception = e;
+      //queue.stop();
+      self.onComplete(self);
+    }
+
+    var complete = function (block, context){
+      // TODO: was anything added to run context?
+      //       if so it could be async blocks
+      block.onComplete(block);
+    }
+
+    return new foounit.Block(func, fail, complete);
+  }
+
   , isSuccess: function (){
     return this._status === this.SUCCESS;
   }
@@ -55,46 +132,5 @@ foounit.mixin(foounit.Example.prototype, {
 
   , getTest: function (){
     return this._test;
-  }
-
-  , onComplete: function (example){}
-
-  , run: function (){
-    if (this.isPending()){
-      this.onComplete(this);
-      return;
-    }
-
-    var runContext = {};
-
-    // TODO:
-    // Each example should run "blocks"
-    // and those blocks should execute in
-    // in a try..catch
-    try {
-      this._runBefores(runContext);
-      this._test.apply(runContext, []);
-      this._status = this.SUCCESS;
-    } catch (e){
-      this._exception = e;
-      this._status = this.FAILURE;
-    } finally {
-       this._runAfters();
-       this.onComplete(this);
-    }
-  }
-
-  , _runBefores: function (runContext){
-    var befores = this._befores;
-    for (var i = 0; i < befores.length; ++i){
-      befores[i].apply(runContext, []);;
-    }
-  }
-
-  , _runAfters: function (runContext){
-    var afters = this._afters;
-    for (var i = afters.length - 1; i >= 0; --i){
-      afters[i].apply(runContext, []);;
-    }
   }
 });

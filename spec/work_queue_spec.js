@@ -14,7 +14,7 @@ foounit.add(function (kw){ with(kw){
   }
 
   before(function (){
-    TestTask = function (){ };
+    TestTask = function (){ this.complete = false; };
     foounit.mixin(TestTask.prototype, {
       onComplete: function(){}
       , run: function (){}
@@ -106,8 +106,8 @@ foounit.add(function (kw){ with(kw){
       });
 
       it('runs the next task', function (){
-        expect(task1.complete).to(beUndefined);
-        expect(task2.complete).to(beUndefined);
+        expect(task1.complete).to(beFalse);
+        expect(task2.complete).to(beFalse);
         queue.runTask(task1);
         expect(task1.complete).to(beTrue);
         expect(task2.complete).to(beTrue);
@@ -125,4 +125,26 @@ foounit.add(function (kw){ with(kw){
       });
     });
   });
+
+  describe('.stop', function (){
+    it('stops running the queue', function (){
+      useRunnableTestTask();
+
+      var tasks = [new TestTask(), new TestTask(), new TestTask(), new TestTask()]
+        , queue = new footest.WorkQueue(tasks)
+        , count = 0;
+
+      queue.onTaskComplete = function (task){
+        if (count == 1){ queue.stop(); }
+        count++;
+      }
+      queue.run();
+
+      expect(tasks[0].complete).to(beTrue);
+      expect(tasks[1].complete).to(beTrue);
+      expect(tasks[2].complete).to(beFalse);
+      expect(tasks[3].complete).to(beFalse);
+    });
+  });
+
 }});
