@@ -62,20 +62,45 @@ foounit.add(function (kw){ with(kw){
     });
 
     describe('when the example fails in a before block', function (){
-      var example;
+      var example, _log;
+
+      function log(msg){
+        _log.push(msg);
+      }
 
       before(function (){
-        example = new foounit.Example('test', function (){});
+        _log = [];
+        example = new foounit.Example('example', function (){
+          log('example');
+        });
       });
 
       it('is a failure', function (){
-        example.setBefores([function (){ throw new Error('expected'); }]);
+        example.setBefores([function (){ log('before1'); throw new Error('expected'); }]);
         example.run();
         expect(example.isFailure()).to(beTrue);
+        expect(_log).to(equal, ['before1']);
       });
 
-      xit('runs the afters created at the same level as all of the before blocks', function (){
-        example.setBefores();
+      it('runs the afters created at the same level as all of the before blocks', function (){
+        example.setBefores([
+          function (){ log('before1'); }
+          , null,
+          , function (){ log('before3'); throw new Error('expected') }
+          , function (){ log('before4'); }
+        ]);
+
+        example.setAfters([
+          function (){ log('after1'); }
+          , function (){ log('after2'); }
+          , function (){ log('after3'); }
+          , function (){ log('after4'); }
+        ]);
+
+        example.run();
+        expect(_log).to(equal, [
+          'before1', 'before3', 'after3', 'after2', 'after1'
+        ]);
       });
 
       xit('executes the onComplete function', function (){
@@ -209,14 +234,8 @@ foounit.add(function (kw){ with(kw){
               throw new Error('expected');
             }]);
 
-            var thrown;
-            try {
-              example.run();
-              throw new Error('unexpected');
-            } catch (e){
-              thrown = e;
-            }
-            expect(thrown.message).to(be, 'expected');
+            example.run();
+            expect(example.getException().message).to(be, 'expected');
           });
         });
       });
