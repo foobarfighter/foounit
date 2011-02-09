@@ -19,93 +19,79 @@ foounit.mixin(foounit.Example.prototype, {
 
   , onComplete: function (example){}
 
+  // Key events in the run lifecycle
+  , onBeforesComplete: function (failedAt){}
+  , onTestComplete: function (){}
+  , onAftersComplete: function (){}
+
   , run: function (){
     if (this.isPending()){
       this.onComplete(this);
       return;
     }
-    
     this._status = this.SUCCESS;
-    
-    this._runBefores({
-      success: foounit.bind(this, this._runTest)
-    , failure: foounit.bind(this, this._runAfters)
+
+
+    var self = this;
+
+    this.onBeforesComplete = function (failedAt){
+      if (self.isFailure()){
+        self._runAfters(failedAt);
+      } else {
+        self._runTest();
+      }
+    };
+
+    this.onTestComplete = function (){
+      self._runAfters();
+    };
+
+    this.onAftersComplete = foounit.bind(this, function (){
+      self.onComplete(self);
     });
+
+    this._runBefores();
+  }
+
+  , _runBefores: function (){
+    var self = this
+      , befores = this._befores;
+
+    var onFail = function (e, queue, block, iter){
+      self._status = self.FAILURE;
+      self._exception = e;
+      queue.stop();
+      self.onBeforesComplete(iter);
+    };
+
+    var onComplete = function (){
+      self.onBeforesComplete();
+    }
+
+    this._runFuncs(befores, onFail, onComplete);
   }
 
   , _runAfters: function (fromIndex){
     var self = this
-      , afters = this._afters
-      , queue = new foounit.WorkQueue();
+      , afters = this._afters;
 
     fromIndex = fromIndex || afters.length;
     afters.reverse();
     afters = afters.slice(afters.length - fromIndex);
 
-    for (var i = 0; i < afters.length; ++i){
-      var func = afters[i], block;
+    var onFail = function (e, queue, block, iter){
+      if (self._status !== self.FAILURE){
+        self._status = self.FAILURE;
+        self._exception = e;
+      }
+      block.onComplete(block);
+    };
 
-      if (!func){ continue; }
+    var onComplete = foounit.bind(this, this.onAftersComplete);
 
-      // This function is the key difference between this
-      // and _runBefores
-      var fail = (function (level){
-        return function (e){
-          if (self._status !== self.FAILURE){
-            self._status = self.FAILURE;
-            self._exception = e;
-          }
-          block.onComplete(block);
-        }
-      })(i);
-
-      var complete = function (block, context){
-        // TODO: was anything added to run context?
-        //       if so it could be async blocks
-        block.onComplete(block);
-      };
-
-      block = new foounit.Block(func, fail, complete);
-      queue.enqueue(block);
-    }
-
-    queue.onComplete = function (queue){
-      self.onComplete(self);
-    }
-    queue.run();
+    this._runFuncs(afters, onFail, onComplete);
   }
 
-  , _runBefores: function (options){
-    var self = this
-      , befores = this._befores
-      , queue = new foounit.WorkQueue();
-
-    for (var i = 0; i < befores.length; ++i){
-      var func = befores[i], block;
-      if (!func){ continue; }
-
-      var fail = (function (level){
-        return function (e){
-          self._status = self.FAILURE;
-          self._exception = e;
-          queue.stop();
-          options.failure(level);
-        }
-      })(i);
-
-      var complete = function (block, context){
-        // TODO: was anything added to run context?
-        //       if so it could be async blocks
-        block.onComplete(block);
-      };
-
-      block = new foounit.Block(func, fail, complete);
-      queue.enqueue(block);
-    }
-
-    queue.onComplete = options.success;
-    queue.run();
-  }
 
   , _runTest: function (){
     var self = this;
@@ -113,14 +99,44 @@ foounit.mixin(foounit.Example.prototype, {
     var fail = function (e){
       self._status = self.FAILURE;
       self._exception = e;
-      self._runAfters();
+      self.onTestComplete();
     };
 
     var complete = function (){
-      self._runAfters();
+      self.onTestComplete();
     };
 
     new foounit.Block(this._test, fail, complete).run();
+  }
+
+  , _runFuncs: function (funcs, onFailCallback, onCompleteCallback){
+    var queue = new foounit.WorkQueue();
+
+    for (var i = 0; i < funcs.length; ++i){
+      var func = funcs[i], block;
+
+      if (!func){ continue; }
+
+      var fail = (function (iter){
+        return function (e) {
+          onFailCallback(e, queue, block, iter);
+        }
+      })(i);
+
+      var complete = function (block, context){
+        // TODO: was anything added to run context?
+        //       if so it could be async blocks
+        block.onComplete(block);
+      };
+
+      block = new foounit.Block(func, fail, complete);
+      queue.enqueue(block);
+    }
+
+    queue.onComplete = foounit.bind(this, function (queue){
+      onCompleteCallback(this);
+    });
+    queue.run();
   }
 
 
