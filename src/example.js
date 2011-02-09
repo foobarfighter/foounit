@@ -29,12 +29,14 @@ foounit.mixin(foounit.Example.prototype, {
 
     function addBefores(queue, befores){
       for (var i = 0; i < befores.length; ++i){
+        if (!befores[i]){ continue; }
         queue.enqueue(self._createBlock(queue, befores[i]));
       }
     }
 
     function addAfters(queue, afters){
       for (var i = afters.length - 1; i >= 0; --i){
+        if (!afters[i]){ continue; }
         queue.enqueue(self._createBlock(queue, afters[i]));
       }
     }
@@ -81,7 +83,7 @@ foounit.mixin(foounit.Example.prototype, {
     var fail = function (e){
       self._status = self.FAILURE;
       self._exception = e;
-      //queue.stop();
+      queue.stop();
       self.onComplete(self);
     }
 

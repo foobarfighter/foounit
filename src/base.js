@@ -101,11 +101,8 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
     }
 
     var recurseGroup = function (group){
-      var hasBefore = !!group.getBefore()
-        , hasAfter  = !!group.getAfter();
-
-      if (hasBefore){ befores.push(group.getBefore()); }
-      if (hasAfter) { afters.push(group.getAfter()); }
+      befores.push(group.getBefore());
+      afters.push(group.getAfter());
 
       addExamples(group);
 
@@ -113,8 +110,9 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
       for (var i = 0, ii = groups.length; i < ii; ++i){
         recurseGroup(groups[i]);
       }
-      if (hasBefore){ befores.pop(); }
-      if (hasAfter) { afters.pop(); }
+
+      befores.pop();
+      afters.pop();
     }
 
     var runners = [];
@@ -156,7 +154,12 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
     } else {
       console.log("\nAll tests passed.");
     }
-    console.log(info.totalCount + ' total.');
+
+    var endMessage = info.totalCount + ' total.';
+    if (info.pending.length){
+      endMessage += '  ' + info.pending.length + ' pending.';
+    }
+    console.log(endMessage);
   }
 
   /**
@@ -164,7 +167,7 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
    */
   foounit.execute = function (examples){
     var pending = []
-      , passCount = 0, failCount = 0, pendingCount = 0
+      , passCount = 0, failCount = 0 
       , queue = new foounit.WorkQueue(examples);
 
     queue.onTaskComplete = function (example){
@@ -175,7 +178,6 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
           ++failCount;
         } else if (example.isPending()){
           pending.push(example.getDescription());
-          ++pendingCount;
         }
 
         foounit.reportExample(example);

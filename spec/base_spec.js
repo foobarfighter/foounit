@@ -28,13 +28,12 @@ foounit.add(function (kw){ with(kw){
         var bc = footest.getBuildContext();
         footest.setBuildContext(new footest.BuildContext());
 
-        var log = []
-          , before0 = function (){ var x = 'before0'; }
-          , before1 = function (){ var x = 'before1'; }
+        var before0 = function (){ var x = 'before0'; }
+          , before1 = undefined
           , before2 = function (){ var x = 'before2'; }
           , before3 = function (){ var x = 'before3'; }
           , after0 = function (){ var y = 'after0'; }
-          , after1 = function (){ var y = 'after1'; }
+          , after1 = undefined
           , after2 = function (){ var y = 'after2'; }
           , after3 = function (){ var y = 'after3'; }
           , test0 = function (){ var z = 'test0'; }
@@ -47,8 +46,9 @@ foounit.add(function (kw){ with(kw){
           after(after0);
           it('test0', test0);
           describe('group1', function (){
-            before(before1);
-            after(after1);
+            //before1 intentionally omitted
+            //after1  intentionally omitted
+
             it('test1', test1);
             describe('group2', function (){
               before(before2);
@@ -69,17 +69,17 @@ foounit.add(function (kw){ with(kw){
         expect(examples[0].getAfters()[0])   .to(be, after0);
 
         expect(examples[1].getBefores()[0])  .to(be, before0);
-        expect(examples[1].getBefores()[1])  .to(be, before1);
+        expect(examples[1].getBefores()[1])  .to(beNull);
         expect(examples[1].getTest())        .to(be, test1);
         expect(examples[1].getAfters()[0])   .to(be, after0);
-        expect(examples[1].getAfters()[1])   .to(be, after1);
+        expect(examples[1].getAfters()[1])   .to(beNull);
 
         expect(examples[2].getBefores()[0])  .to(be, before0);
-        expect(examples[2].getBefores()[1])  .to(be, before1);
+        expect(examples[2].getBefores()[1])  .to(beNull);
         expect(examples[2].getBefores()[2])  .to(be, before2);
         expect(examples[2].getTest())        .to(be, test2);
         expect(examples[2].getAfters()[0])   .to(be, after0);
-        expect(examples[2].getAfters()[1])   .to(be, after1);
+        expect(examples[2].getAfters()[1])   .to(beNull);
         expect(examples[2].getAfters()[2])   .to(be, after2);
 
         expect(examples[3].getBefores()[0])  .to(be, before0);

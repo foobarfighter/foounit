@@ -39,6 +39,71 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
+    describe('when the example is successful', function (){
+      var example;
+
+      before(function (){
+        example = new foounit.Example('test', function (){});
+      });
+
+      it('is successful', function (){
+        example.run();
+        expect(example.isSuccess()).to(beTrue);
+      });
+
+      it('executes the onComplete function', function (){
+        var actual;
+        example.onComplete = function (example){
+          actual = example;
+        };
+        example.run();
+        expect(actual).to(be, example);
+      });
+    });
+
+    describe('when the example fails in a before block', function (){
+      var example;
+
+      before(function (){
+        example = new foounit.Example('test', function (){});
+      });
+
+      it('is a failure', function (){
+        example.setBefores([function (){ throw new Error('expected'); }]);
+        example.run();
+        expect(example.isFailure()).to(beTrue);
+      });
+
+      xit('runs the afters created at the same level as all of the before blocks', function (){
+        example.setBefores();
+      });
+
+      xit('executes the onComplete function', function (){
+      });
+    });
+
+    describe('when the example fails in an after', function (){
+      xit('is a failure', function (){
+      });
+
+      xit('runs the remaining afters', function (){
+      });
+
+      xit('executes the onComplete function', function (){
+      });
+    });
+
+    describe('when the examples test fails', function (){
+      xit('is a failure', function (){
+      });
+
+      xit('runs all afters', function (){
+      });
+
+      xit('executes the onComplete function', function (){
+      });
+    });
+
     describe('when the test is NOT pending', function (){
       describe('.run', function (){
         it('runs all befores, tests, afters and the onComplete function in order', function (){
