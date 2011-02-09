@@ -227,6 +227,8 @@ foounit.add(function (kw){ with(kw){
         });
 
         // FIXME: This means that you can't put an assertion in the after. ERRAAAAAAAR
+        //        Update... this isn't entirely fixed yet, but after will handle expeptions
+        //        now
         describe('when the after throws', function (){
           it('throws', function (){
             var example = new footest.Example('test', function (){});
