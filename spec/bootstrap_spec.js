@@ -23,8 +23,8 @@ var testExample = function (){
   example.run();
 
   assertEqual(false, example.isSuccess());
-  //assertEqual(true, example.isFailure());
-  //assertEqual(true, example.getException().message.length > 0);
+  assertEqual(true, example.isFailure());
+  assertEqual(true, example.getException().message.length > 0);
 }
 
 var testExampleGroup = function (){
