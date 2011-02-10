@@ -20,6 +20,7 @@ foounit.mixin(foounit.WorkQueue.prototype, {
   }
 
   , runTask: function (task){
+    if (global.debugNow) debugger;
     task.onComplete = foounit.bind(this, this._onTaskComplete);
     task.run();
   }

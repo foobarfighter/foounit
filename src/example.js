@@ -80,6 +80,7 @@ foounit.mixin(foounit.Example.prototype, {
     afters = afters.slice(afters.length - fromIndex);
 
     var onFail = function (e, queue, block, iter){
+      if (global.debugNow){ debugger; }
       if (self._status !== self.FAILURE){
         self._status = self.FAILURE;
         self._exception = e;
@@ -87,7 +88,9 @@ foounit.mixin(foounit.Example.prototype, {
       block.onComplete(block);
     };
 
-    var onComplete = foounit.bind(this, this.onAftersComplete);
+    var onComplete = function (){
+      self.onAftersComplete();
+    }//foounit.bind(this, this.onAftersComplete);
 
     this._runFuncs(afters, onFail, onComplete);
   }
@@ -109,6 +112,7 @@ foounit.mixin(foounit.Example.prototype, {
     new foounit.Block(this._test, fail, complete).run();
   }
 
+  // FIXME: This shit is just fucking weird
   , _runFuncs: function (funcs, onFailCallback, onCompleteCallback){
     var queue = new foounit.WorkQueue();
 
@@ -118,7 +122,7 @@ foounit.mixin(foounit.Example.prototype, {
       if (!func){ continue; }
 
       var fail = (function (iter){
-        return function (e) {
+        return function (e, block) {
           onFailCallback(e, queue, block, iter);
         }
       })(i);

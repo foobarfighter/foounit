@@ -15,7 +15,7 @@ foounit.mixin(foounit.Block.prototype, {
       this._func.apply(runContext, []);
       this._completeCallback(this, runContext);
     } catch (e){
-      this._failCallback(e);
+      this._failCallback(e, this);
     }
   }
 });
