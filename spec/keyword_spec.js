@@ -121,7 +121,7 @@ foounit.add(function (kw){ with(kw){
         }});
       }
 
-      it('creates a foounit.PollingExpectation', function (){
+      xit('creates a foounit.PollingExpectation', function (){
         foounit.execute(foounit.build());
         expect(expectation.constructor).to(be, footest.PollingExpectation);
         expect(expectation.getTimeout()).to(be, footest.settings.waitForTimeout);

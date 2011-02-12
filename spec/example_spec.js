@@ -312,4 +312,15 @@ foounit.add(function (kw){ with(kw){
     }); // when the test is NOT pending
 
   });
+
+  describe('.addToQueue', function (){
+    it('adds a block to the current BlockQueue', function (){
+      var example = new footest.Example('example', function (){
+        example.addToQueue(new footest.Block(function (){
+        }));
+
+      });
+    });
+  });
+
 }});

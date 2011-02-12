@@ -66,12 +66,10 @@ foounit.addKeyword('expect', function (actual){
  * to the the currently executing example
  */
 foounit.addKeyword('waitFor', function (func){
-  //var example = foounit.getBuildContext().getCurrentExample()
-  //  , expectation = foounit.PollingExpectation(actual);
+  var example = foounit.getBuildContext().getCurrentExample()
+    , waitForBlock = new foounit.PollingExpectation(func, foounit.settings.waitForTimout);
 
-  //example.addAsyncExpectation(expectation);
-  //return expectation;
-
-  return new foounit.PollingExpectation(func, foounit.settings.waitForTimeout);
+  //example.addToQueue(waitForBlock);
+  return waitForBlock;
 });
 

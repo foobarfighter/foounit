@@ -11,6 +11,10 @@ foounit.mixin(foounit.WorkQueue.prototype, {
     this._tasks.push(task);
   }
 
+  , enqueueAll: function (tasks){
+    this._tasks = this._tasks.concat(tasks);
+  }
+
   , dequeue: function (){
     return this._tasks.shift();
   }
@@ -21,6 +25,7 @@ foounit.mixin(foounit.WorkQueue.prototype, {
 
   , runTask: function (task){
     task.onComplete = foounit.bind(this, this._onTaskComplete);
+    task.onFailure = foounit.bind(this, this.onTaskFailure);
     task.run();
   }
 
@@ -30,6 +35,9 @@ foounit.mixin(foounit.WorkQueue.prototype, {
 
   // Replace function to receive event
   , onTaskComplete: function (task){}
+
+  // Replace function to receive event
+  , onTaskFailure: function (task){}
 
   // Replace function to receive event
   , onComplete: function (queue){}

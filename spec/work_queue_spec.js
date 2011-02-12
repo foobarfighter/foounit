@@ -4,20 +4,25 @@ if (typeof global !== 'undefined'){
 var footest = foounit.require(':src/foo-unit');
 
 foounit.add(function (kw){ with(kw){
-  var TestTask, queue;
-
-  function useRunnableTestTask(){
-    TestTask.prototype.run = function (){
-      this.complete = true;
-      this.onComplete(this);
-    };
-  }
+  var CompleteTask, FailureTask, queue;
 
   before(function (){
-    TestTask = function (){ this.complete = false; };
-    foounit.mixin(TestTask.prototype, {
+    CompleteTask = function (){ this.complete = false; };
+    foounit.mixin(CompleteTask.prototype, {
       onComplete: function(){}
-      , run: function (){}
+      , run: function (){
+        this.complete = true;
+        this.onComplete(this);
+      }
+    });
+
+    FailureTask = function (){ this.failure = false; }
+    foounit.mixin(FailureTask.prototype, {
+      onComplete: function(){}
+      , run: function (){
+        this.failure = true;
+        this.onFailure(this);
+      }
     });
 
     queue = new footest.WorkQueue();
@@ -26,14 +31,26 @@ foounit.add(function (kw){ with(kw){
   describe('.enqueue', function (){
     it('adds a task to the queue', function (){
       expect(queue.size()).to(be, 0);
-      queue.enqueue(new TestTask());
+      queue.enqueue(new CompleteTask());
       expect(queue.size()).to(be, 1);
+    });
+  });
+
+  describe('.enqueueAll', function (){
+    it('adds an array of tasks', function (){
+      expect(queue.size()).to(be, 0);
+      queue.enqueueAll([
+        new CompleteTask()
+      , new CompleteTask()
+      , new CompleteTask()
+      ]);
+      expect(queue.size()).to(be, 3);
     });
   });
 
   describe('.run', function (){
     before(function (){
-      queue.enqueue(new TestTask());
+      queue.enqueue(new CompleteTask());
       expect(queue.size()).to(be, 1);
     });
 
@@ -48,8 +65,6 @@ foounit.add(function (kw){ with(kw){
       var tasks, completedQueue;
 
       before(function (){
-        useRunnableTestTask();
-
         tasks = [];
         queue.onTaskComplete = function (task){ tasks.push(task); }
         queue.onComplete = function (queue){ completedQueue = queue; }
@@ -57,8 +72,8 @@ foounit.add(function (kw){ with(kw){
 
       it('calls onComplete', function (){
         expect(queue.size()).to(be, 1);
-        queue.enqueue(new TestTask());
-        queue.enqueue(new TestTask());
+        queue.enqueue(new CompleteTask());
+        queue.enqueue(new CompleteTask());
         queue.run();
 
         expect(tasks.length).to(be, 3);
@@ -69,8 +84,8 @@ foounit.add(function (kw){ with(kw){
 
   describe('.dequeue', function (){
     it('removes an item from the front of the queue', function (){
-      var task1 = new TestTask()
-        , task2 = new TestTask();
+      var task1 = new CompleteTask()
+        , task2 = new CompleteTask();
 
       queue.enqueue(task1);
       queue.enqueue(task2);
@@ -87,7 +102,7 @@ foounit.add(function (kw){ with(kw){
     var called;
 
     it('runs a task', function (){
-      var task = new TestTask();
+      var task = new CompleteTask();
       task.run = function (){ called = true; }
       queue.runTask(task);
       expect(called).to(beTrue);
@@ -97,10 +112,8 @@ foounit.add(function (kw){ with(kw){
       var task1, task2;
 
       before(function (){
-        useRunnableTestTask();
-
-        task1 = new TestTask();
-        task2 = new TestTask();
+        task1 = new CompleteTask();
+        task2 = new CompleteTask();
         queue.enqueue(task1);
         queue.enqueue(task2);
       });
@@ -124,13 +137,29 @@ foounit.add(function (kw){ with(kw){
         expect(tasks[1]).to(be, task2);
       });
     });
+
+    describe('when the task has failed', function (){
+      it('calls the onTaskFailure function', function (){
+        var called = false
+          , task = new FailureTask()
+          , queue = new footest.WorkQueue();
+
+        queue.onTaskFailure = function (){
+          called = true;
+        };
+
+        queue.enqueue(task);
+        queue.run();
+
+        expect(task.failure).to(beTrue);
+        expect(called).to(beTrue);
+      });
+    });
   });
 
   describe('.stop', function (){
     it('stops running the queue', function (){
-      useRunnableTestTask();
-
-      var tasks = [new TestTask(), new TestTask(), new TestTask(), new TestTask()]
+      var tasks = [new CompleteTask(), new CompleteTask(), new CompleteTask(), new CompleteTask()]
         , queue = new footest.WorkQueue(tasks)
         , count = 0;
 

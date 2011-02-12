@@ -20,7 +20,8 @@ foounit.mixin(foounit.Example.prototype, {
   , onComplete: function (example){}
 
   // Key events in the run lifecycle
-  , onBeforesComplete: function (failedAt){}
+  , onBeforesComplete: function (){}
+  , onBeforesFailure: function (failedAt){}
   , onTestComplete: function (){}
   , onAftersComplete: function (){}
 
@@ -35,11 +36,11 @@ foounit.mixin(foounit.Example.prototype, {
     var self = this;
 
     this.onBeforesComplete = function (failedAt){
-      if (self.isFailure()){
-        self._runAfters(failedAt);
-      } else {
-        self._runTest();
-      }
+      self._runTest();
+    };
+
+    this.onBeforesFailure = function (failedAt){
+      this._runAfters(failedAt);
     };
 
     this.onTestComplete = function (){
@@ -53,22 +54,42 @@ foounit.mixin(foounit.Example.prototype, {
     this._runBefores();
   }
 
+  , addToQueue: function (block){
+    this._queue.enqueue(block);
+  }
+
+  , _enqueueBlocks: function (funcs){
+    for (var i = 0; i < funcs.length; ++i){
+      var func = funcs[i] || function (){};
+      var block = new foounit.Block(func)
+      this._queue.enqueue(block);
+    }
+  }
+
   , _runBefores: function (){
     var self = this
-      , befores = this._befores;
+      , index = 0;
 
-    var onFail = function (e, queue, block, iter){
-      self._status = self.FAILURE;
-      self._exception = e;
-      queue.stop();
-      self.onBeforesComplete(iter);
+    this._queue = new foounit.WorkQueue();
+
+    this._queue.onComplete = function (){
+      self.onBeforesComplete();
     };
 
-    var onComplete = function (){
-      self.onBeforesComplete();
+    // This index stuff is a little janky
+    this._queue.onTaskComplete = function (blockQueue){
+      ++index;
     }
 
-    this._runFuncs(befores, onFail, onComplete);
+    this._queue.onTaskFailure = function (blockQueue){
+      self._status = self.FAILURE;
+      self._exception = blockQueue.getException();
+      self._queue.stop();
+      self.onBeforesFailure(index);
+    };
+
+    this._enqueueBlocks(this._befores);
+    this._queue.run();
   }
 
   , _runAfters: function (fromIndex){
@@ -79,37 +100,40 @@ foounit.mixin(foounit.Example.prototype, {
     afters.reverse();
     afters = afters.slice(afters.length - fromIndex);
 
-    var onFail = function (e, queue, block, iter){
-      if (global.debugNow){ debugger; }
-      if (self._status !== self.FAILURE){
-        self._status = self.FAILURE;
-        self._exception = e;
-      }
-      block.onComplete(block);
+    this._queue = new foounit.WorkQueue();
+
+    this._queue.onComplete = function (){
+      self.onAftersComplete();
     };
 
-    var onComplete = function (){
-      self.onAftersComplete();
-    }//foounit.bind(this, this.onAftersComplete);
+    this._queue.onTaskFailure = function (task){
+      if (self._status !== self.FAILURE){
+        self._status = self.FAILURE;
+        self._exception = task.getException();
+      }
+      task.onComplete(task);
+    }
 
-    this._runFuncs(afters, onFail, onComplete);
+    this._enqueueBlocks(afters);
+    this._queue.run();
   }
 
 
   , _runTest: function (){
-    var self = this;
+    var self = this
+      , block = new foounit.Block(this._test);
 
-    var fail = function (e){
+    block.onFailure = function (block){
       self._status = self.FAILURE;
-      self._exception = e;
+      self._exception = block.getException();
       self.onTestComplete();
     };
 
-    var complete = function (){
+    block.onComplete = function (){
       self.onTestComplete();
     };
 
-    new foounit.Block(this._test, fail, complete).run();
+    block.run();
   }
 
   // FIXME: This shit is just fucking weird
