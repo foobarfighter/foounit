@@ -16,7 +16,7 @@ foounit.add(function (kw){ with(kw){
 
       it('calls onFailure and it has an exception', function (){
         var actual;
-        block.onFailure = function (block){ actual = block; }
+        block.onFailure = function (b){ actual = b; }
         block.run();
 
         expect(actual).to(be, block);
@@ -33,10 +33,7 @@ foounit.add(function (kw){ with(kw){
 
       it('calls onComplete and it does NOT have an exception', function (){
         var actual;
-
-        block.onComplete = function (){
-          actual = block;
-        };
+        block.onComplete = function (b){ actual = b; };
         block.run();
 
         expect(actual).to(be, block);
