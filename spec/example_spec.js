@@ -373,7 +373,7 @@ foounit.add(function (kw){ with(kw){
           blockQueue = ex.getCurrentBlockQueue();
 
           initialSize = blockQueue.size();
-          ex.addToQueue(block);
+          ex.enqueue(block);
           afterAddSize = blockQueue.size();
         });
 

@@ -23,6 +23,10 @@ foounit.mixin(foounit.WorkQueue.prototype, {
     return this._tasks.length;
   }
 
+  , peekNext: function (){
+    return this._tasks[0];
+  }
+
   , runTask: function (task){
     task.onComplete = foounit.bind(this, this._onTaskComplete);
     task.onFailure = foounit.bind(this, this._onTaskFailure);

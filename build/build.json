@@ -7,7 +7,7 @@
     , "src/example.js"
     , "src/example_group.js"
     , "src/expectation.js"
-    , "src/polling_expectation.js"
+    , "src/polling_block.js"
     , "src/keywords.js"
     , "src/matchers.js"
     , "src/build_context.js"

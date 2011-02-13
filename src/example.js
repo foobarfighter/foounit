@@ -66,7 +66,7 @@ foounit.mixin(foounit.Example.prototype, {
     this._runBefores();
   }
 
-  , addToQueue: function (block){
+  , enqueue: function (block){
     this._currentBlockQueue.enqueue(block);
   }
 

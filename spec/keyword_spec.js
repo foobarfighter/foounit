@@ -99,43 +99,35 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
-    // TODO: refactor test setBuildContext usage
     describe('.waitFor', function (){
       var bc, expectation;
 
       before(function (){
-        // TODO: Provide ability to swap out runner
         footest.setBuildContext(new footest.BuildContext());
-        createTest();
       });
 
       after(function (){
         footest.setBuildContext(bc);
       });
 
-      function createTest(){
-        foounit.add(function (kw){ with (kw){
-          it('test', function (){
-            expectation = waitFor(function (){});
+      it('adds a PollingBlock to the current block queue', function (){
+        var waitForBlock;
+
+        var example = new footest.Example('example', function (){
+          footest.keywords.waitFor(function (){
+            expect(foo).to(equal, 'quux');
           });
-        }});
-      }
 
-      xit('creates a foounit.PollingExpectation', function (){
-        foounit.execute(foounit.build());
-        expect(expectation.constructor).to(be, footest.PollingExpectation);
-        expect(expectation.getTimeout()).to(be, footest.settings.waitForTimeout);
-      });
+          waitForBlock = footest.getBuildContext()
+            .getCurrentExample()
+            .getCurrentBlockQueue()
+            .peekNext();
+        });
 
-      xit('adds the expectation to the current example', function (){
-        foounit.execute(foounit.build());
+        example.run();
 
-        var root = foounit.getBuildContext();
-        var block = root.getCurrentExample().getCurrentBlock();
-
-        expect(block).toNot(beUndefined);
-        expect(block.isAsync()).to(beTrue);
-        expect(block.isRunning()).to(beTrue);
+        expect(example.getException()).to(beUndefined);
+        expect(waitForBlock.constructor).to(be, footest.PollingBlock);
       });
     });
 

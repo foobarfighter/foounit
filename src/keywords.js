@@ -62,14 +62,13 @@ foounit.addKeyword('expect', function (actual){
 });
 
 /**
- * Creates a PollingExpectation and adds it
- * to the the currently executing example
+ * Adds a polling block to the current block queue
  */
 foounit.addKeyword('waitFor', function (func){
   var example = foounit.getBuildContext().getCurrentExample()
-    , waitForBlock = new foounit.PollingExpectation(func, foounit.settings.waitForTimout);
-
-  //example.addToQueue(waitForBlock);
-  return waitForBlock;
+    , block = new foounit.PollingBlock(func);
+  
+  example.enqueue(block);
+  return block;
 });
 

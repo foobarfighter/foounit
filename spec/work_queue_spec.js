@@ -48,6 +48,16 @@ foounit.add(function (kw){ with(kw){
     });
   });
 
+  describe('.peekNext', function (){
+    it('returns the next task to be executed', function (){
+      expect(queue.peekNext()).to(beUndefined);
+      var task = new CompleteTask();
+      queue.enqueue(task);
+      queue.enqueue(new CompleteTask());
+      expect(queue.peekNext()).to(be, task);
+    });
+  });
+
   describe('.run', function (){
     before(function (){
       queue.enqueue(new CompleteTask());
