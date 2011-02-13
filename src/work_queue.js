@@ -25,7 +25,7 @@ foounit.mixin(foounit.WorkQueue.prototype, {
 
   , runTask: function (task){
     task.onComplete = foounit.bind(this, this._onTaskComplete);
-    task.onFailure = foounit.bind(this, this.onTaskFailure);
+    task.onFailure = foounit.bind(this, this._onTaskFailure);
     task.run();
   }
 
@@ -41,6 +41,10 @@ foounit.mixin(foounit.WorkQueue.prototype, {
 
   // Replace function to receive event
   , onComplete: function (queue){}
+
+  , _onTaskFailure: function (task){
+    this.onTaskFailure(task);
+  }
 
   , _onTaskComplete: function (task){
     this.onTaskComplete(task);

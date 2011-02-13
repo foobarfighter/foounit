@@ -3,9 +3,10 @@ foounit.Example = function (description, test, pending){
   this._test = test;
   this._afters  = [];
   this._description = description;
+  this._currentBlockQueue = undefined;
 
   this._status = 0;
-  this._exception = null;
+  this._exception = undefined;
 
   if (pending === true) {
     this._status = this.PENDING;
@@ -25,7 +26,17 @@ foounit.mixin(foounit.Example.prototype, {
   , onTestComplete: function (){}
   , onAftersComplete: function (){}
 
+  , setCurrentBlockQueue: function (blockQueue){
+    this._currentBlockQueue = blockQueue;
+  }
+
+  , getCurrentBlockQueue: function (){
+    return this._currentBlockQueue;
+  }
+
   , run: function (){
+    foounit.getBuildContext().setCurrentExample(this);
+
     if (this.isPending()){
       this.onComplete(this);
       return;
@@ -48,6 +59,7 @@ foounit.mixin(foounit.Example.prototype, {
     };
 
     this.onAftersComplete = foounit.bind(this, function (){
+      foounit.getBuildContext().setCurrentExample(undefined);
       self.onComplete(self);
     });
 
@@ -55,14 +67,18 @@ foounit.mixin(foounit.Example.prototype, {
   }
 
   , addToQueue: function (block){
-    this._queue.enqueue(block);
+    this._currentBlockQueue.enqueue(block);
   }
 
+  // TODO: Refactor, before, after and it should all return BlockQueues
   , _enqueueBlocks: function (funcs){
     for (var i = 0; i < funcs.length; ++i){
-      var func = funcs[i] || function (){};
-      var block = new foounit.Block(func)
-      this._queue.enqueue(block);
+      var func = funcs[i] || function (){}
+        , blockQueue = new foounit.BlockQueue(this)
+        , block = new foounit.Block(func);
+
+      blockQueue.enqueue(block);
+      this._queue.enqueue(blockQueue);
     }
   }
 
@@ -118,55 +134,24 @@ foounit.mixin(foounit.Example.prototype, {
     this._queue.run();
   }
 
-
   , _runTest: function (){
-    var self = this
-      , block = new foounit.Block(this._test);
+    var self = this;
 
-    block.onFailure = function (block){
+    this._queue = new foounit.WorkQueue();
+
+    this._queue.onTaskFailure = function (blockQueue){
       self._status = self.FAILURE;
-      self._exception = block.getException();
+      self._exception = blockQueue.getException();
       self.onTestComplete();
     };
 
-    block.onComplete = function (){
+    this._queue.onComplete = function (){
       self.onTestComplete();
     };
 
-    block.run();
+    this._enqueueBlocks([this._test]);
+    this._queue.run();
   }
-
-  // FIXME: This shit is just fucking weird
-  , _runFuncs: function (funcs, onFailCallback, onCompleteCallback){
-    var queue = new foounit.WorkQueue();
-
-    for (var i = 0; i < funcs.length; ++i){
-      var func = funcs[i], block;
-
-      if (!func){ continue; }
-
-      var fail = (function (iter){
-        return function (e, block) {
-          onFailCallback(e, queue, block, iter);
-        }
-      })(i);
-
-      var complete = function (block, context){
-        // TODO: was anything added to run context?
-        //       if so it could be async blocks
-        block.onComplete(block);
-      };
-
-      block = new foounit.Block(func, fail, complete);
-      queue.enqueue(block);
-    }
-
-    queue.onComplete = foounit.bind(this, function (queue){
-      onCompleteCallback(this);
-    });
-    queue.run();
-  }
-
 
   , isSuccess: function (){
     return this._status === this.SUCCESS;

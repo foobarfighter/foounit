@@ -1,6 +1,7 @@
 foounit.BuildContext = function (){
-  this,_currentGroup = null;
-  this._root = null;
+  this,_currentGroup = undefined;
+  this._currentExample = undefined;
+  this._root = undefined;
 };
 
 foounit.mixin(foounit.BuildContext.prototype, {
@@ -15,5 +16,13 @@ foounit.mixin(foounit.BuildContext.prototype, {
 
   , getCurrentGroup: function (){
     return this._currentGroup;
+  }
+
+  , setCurrentExample: function (example){
+    this._currentExample = example;
+  }
+
+  , getCurrentExample: function (){
+    return this._currentExample;
   }
 });

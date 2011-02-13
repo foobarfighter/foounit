@@ -2,6 +2,7 @@
   "foo-unit.js": [
     "src/base.js"
     , "src/work_queue.js"
+    , "src/block_queue.js"
     , "src/block.js"
     , "src/example.js"
     , "src/example_group.js"

@@ -294,9 +294,6 @@ foounit.add(function (kw){ with(kw){
           });
         });
 
-        // FIXME: This means that you can't put an assertion in the after. ERRAAAAAAAR
-        //        Update... this isn't entirely fixed yet, but after will handle expeptions
-        //        now
         describe('when the after throws', function (){
           it('throws', function (){
             var example = new footest.Example('test', function (){});
@@ -313,12 +310,80 @@ foounit.add(function (kw){ with(kw){
 
   });
 
-  describe('.addToQueue', function (){
-    it('adds a block to the current BlockQueue', function (){
-      var example = new footest.Example('example', function (){
-        example.addToQueue(new footest.Block(function (){
-        }));
+  describe('when an example is running', function (){
+    var bc;
 
+    before(function (){
+      bc = footest.getBuildContext();
+      footest.setBuildContext(new footest.BuildContext());
+    });
+
+    after(function (){
+      footest.setBuildContext(bc);
+    });
+
+    it('sets the current example', function (){
+      var example = new footest.Example('example', function (){
+        currentExample = footest.getBuildContext().getCurrentExample();
+      });
+      example.run();
+
+      expect(footest.getBuildContext().getCurrentExample()).to(beUndefined);
+      expect(currentExample).to(be, example);
+    });
+
+    it('sets the current block queue for each currently executing block', function (){
+      var beforeQueue1, beforeQueue2, testQueue, afterQueue;
+      
+      var example = new footest.Example('example', function (){
+        testQueue = footest.getBuildContext().getCurrentExample().getCurrentBlockQueue();
+      });
+
+      // Assert that each before block has it's own BlockQueue
+      example.setBefores([
+        function (){ beforeQueue1 = footest.getBuildContext().getCurrentExample().getCurrentBlockQueue(); }
+      , function (){ beforeQueue2 = footest.getBuildContext().getCurrentExample().getCurrentBlockQueue(); }
+      ]);
+
+      example.setAfters([function (){
+        afterQueue = footest.getBuildContext().getCurrentExample().getCurrentBlockQueue(); 
+      }]);
+
+      example.run();
+
+      expect(testQueue.constructor).to(be, footest.BlockQueue);
+      expect(beforeQueue1.constructor).to(be, footest.BlockQueue);
+      expect(beforeQueue2.constructor).to(be, footest.BlockQueue);
+      expect(afterQueue.constructor).to(be, footest.BlockQueue);
+
+      expect(testQueue).toNot(be, beforeQueue1);
+      expect(testQueue).toNot(be, afterQueue);
+      expect(beforeQueue1).toNot(be, afterQueue);
+      expect(beforeQueue1).toNot(be, beforeQueue2);
+    });
+
+    describe('when a block is added to the current block queue', function (){
+      it('adds a block to the current BlockQueue', function (){
+        var blockQueue
+          , initialSize, afterAddSize
+          , block = new footest.Block(function (){});
+
+        var example = new footest.Example('example', function (){
+          var ex = footest.getBuildContext().getCurrentExample();
+          blockQueue = ex.getCurrentBlockQueue();
+
+          initialSize = blockQueue.size();
+          ex.addToQueue(block);
+          afterAddSize = blockQueue.size();
+        });
+
+        example.run();
+
+        expect(blockQueue).toNot(beUndefined);
+
+        expect(example.isSuccess()).to(beTrue);
+        expect(initialSize).to(be, 0);
+        expect(afterAddSize).to(be, 1);
       });
     });
   });
