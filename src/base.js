@@ -138,39 +138,14 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
    * example begins.
    */
   foounit.reportExample = function (example){
-    var sys = require('sys');
-    if (example.isFailure()){
-      console.log('test failed: ' + example.getException().stack);
-    } else if (example.isSuccess()){
-      sys.print('.');
-    } else if (example.isPending()){
-      sys.print('P');
-    }
+    throw new Error('foounit.reportExample is abstract');
   }
 
   /**
    * Report the results of the entire test suite.
    */
   foounit.report = function (info){
-    if (info.pending.length){
-      var pending = info.pending;
-      console.log("\n");
-      for (var i = 0, ii = pending.length; i < ii; ++i){
-        console.log('PENDING: ' + pending[i]);
-      }
-    }
-
-    if (info.failCount){
-      console.log("\n" + info.failCount + ' tests FAILED!!!!!!!!!!!!');
-    } else {
-      console.log("\nAll tests passed.");
-    }
-
-    var endMessage = info.totalCount + ' total.';
-    if (info.pending.length){
-      endMessage += '  ' + info.pending.length + ' pending.';
-    }
-    console.log(endMessage);
+    throw new Error('foounit.report is abstract');
   }
 
   /**

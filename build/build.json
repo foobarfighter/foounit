@@ -16,6 +16,7 @@
   , "foo-unit-node.js": [
     { "file": "build/fsh.js", "scope": "function", "variable": "fsh" }
     , { "file": "src/adapters/node_assert_patch.js", "scope": "function", "variable": "assertPatch" }
+    , "src/adapters/node_colors.js"
     , "src/adapters/node.js"
   ]
 }

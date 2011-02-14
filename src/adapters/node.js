@@ -9,7 +9,11 @@ if (typeof fsh === 'undefined'){
     'fsh should have been baked in.');
 }
 
+
+
 var adapter = (function (){
+  var sys = require('sys');
+
   // Private variables
   var self = {},  _specdir, _codedir;
 
@@ -42,6 +46,44 @@ var adapter = (function (){
       var spec = require(specFile);
     }
     foounit.execute(foounit.build());
+  }
+
+  /*
+   * Reporting
+   */
+  self.reportExample = function (example){
+    if (example.isFailure()){
+      colors.putsRed('F');
+      colors.putsRed(example.getDescription());
+      sys.puts(new Array(example.getDescription().length+1).join('='));
+      highlightSpecs(example.getException().stack);
+    } else if (example.isSuccess()){
+      colors.printGreen('.');
+    } else if (example.isPending()){
+      colors.printYellow('P');
+    }
+  }
+
+  self.report = function (info){
+    if (info.pending.length){
+      var pending = info.pending;
+      console.log("\n");
+      for (var i = 0, ii = pending.length; i < ii; ++i){
+        colors.putsYellow('PENDING: ' + pending[i]);
+      }
+    }
+
+    if (info.failCount){
+      colors.putsRed("\n" + info.failCount + ' test(s) FAILED!!!!!!!!!!!!');
+    } else {
+      console.log("\nAll tests passed.");
+    }
+
+    var endMessage = info.totalCount + ' total.';
+    if (info.pending.length){
+      endMessage += '  ' + info.pending.length + ' pending.';
+    }
+    console.log(endMessage);
   }
 
   return self;
