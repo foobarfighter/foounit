@@ -123,10 +123,10 @@ foounit.mixin(foounit.Example.prototype, {
     };
 
     this._queue.onTaskFailure = function (task){
-      if (self._status !== self.FAILURE){
+      //if (self._status !== self.FAILURE){
         self._status = self.FAILURE;
         self._exception = task.getException();
-      }
+      //}
       task.onComplete(task);
     }
 

@@ -8,7 +8,9 @@ foounit.PollingBlock = function (func, timeout){
 
 foounit.mixin(foounit.PollingBlock.prototype, foounit.BlockQueue.prototype);
 foounit.mixin(foounit.PollingBlock.prototype, {
-  run: function (){
+  getTimeout: function (){ return this._timeout; }
+
+  , run: function (){
     var self = this
       , start = foounit.getTime()
       , interval;

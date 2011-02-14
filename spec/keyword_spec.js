@@ -111,30 +111,31 @@ foounit.add(function (kw){ with(kw){
       });
 
       it('adds a PollingBlock to the current block queue', function (){
-        var waitForBlock;
+        var waitForBlock1, waitForBlock2;
 
         var example = new footest.Example('example', function (){
+          var blockQueue = footest.getBuildContext()
+            .getCurrentExample()
+            .getCurrentBlockQueue();
+
           footest.keywords.waitFor(function (){
             expect(foo).to(equal, 'quux');
           });
+          waitForBlock1 = blockQueue.dequeue();
 
-          waitForBlock = footest.getBuildContext()
-            .getCurrentExample()
-            .getCurrentBlockQueue()
-            .peekNext();
-
-          // We need to dequeue this task for the foounit suite
-          // *hand wave* ... you never saw this.
-          footest.getBuildContext()
-            .getCurrentExample()
-            .getCurrentBlockQueue()
-            .dequeue();
+          footest.keywords.waitFor(function (){}, 123);
+          waitForBlock2 = blockQueue.dequeue();
         });
 
         example.run();
 
         expect(example.getException()).to(beUndefined);
-        expect(waitForBlock.constructor).to(be, footest.PollingBlock);
+        expect(waitForBlock1.constructor).to(be, footest.PollingBlock);
+        expect(waitForBlock1.getTimeout()).to(equal, footest.settings.waitForTimeout);
+
+        expect(waitForBlock2).toNot(be, waitForBlock1);
+        expect(waitForBlock2.constructor).to(be, footest.PollingBlock);
+        expect(waitForBlock2.getTimeout()).to(equal, 123);
       });
     });
 
