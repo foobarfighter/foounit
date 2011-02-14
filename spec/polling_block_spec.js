@@ -65,8 +65,9 @@ foounit.add(function (kw){ with(kw){
         });
 
         it('calls onFailure', function (){
-          var actual;
+          var actual, called = 0;
           var block = new footest.PollingBlock(function (){
+            called++
             throw new Error('errar');
           }, 5000);
 
@@ -74,6 +75,7 @@ foounit.add(function (kw){ with(kw){
           block.run();
 
           expect(cleared).to(beTrue);
+          expect(called).to(beGt, 1);
           expect(actual).to(be, block);
           expect(actual.getException().message).to(equal, 'waitFor timeout: errar');
         });
