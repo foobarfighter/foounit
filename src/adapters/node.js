@@ -74,9 +74,9 @@ var adapter = (function (){
     }
 
     if (info.failCount){
-      colors.putsRed("\n" + info.failCount + ' test(s) FAILED!!!!!!!!!!!!');
+      colors.putsRed("\n" + info.failCount + ' test(s) FAILED');
     } else {
-      console.log("\nAll tests passed.");
+      colors.putsGreen("\nAll tests passed.");
     }
 
     var endMessage = info.totalCount + ' total.';
