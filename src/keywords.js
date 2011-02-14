@@ -66,7 +66,7 @@ foounit.addKeyword('expect', function (actual){
  */
 foounit.addKeyword('waitFor', function (func){
   var example = foounit.getBuildContext().getCurrentExample()
-    , block = new foounit.PollingBlock(func);
+    , block = new foounit.PollingBlock(func, foounit.settings.waitForTimeout);
   
   example.enqueue(block);
   return block;

@@ -22,13 +22,15 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
     // Host environment is browser-like
     if (typeof window !== 'undefined'){
       _type = 'browser';
+      _global = window;
     } else if (typeof global !== 'undefined'){
       _type = 'node';
+      _global = global;
     } else {
       _throwError('Unrecognized environment');
     }
 
-    return { type: _type };
+    return { type: _type, global: _global };
   })();
 
   /**
@@ -53,6 +55,15 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
   // TODO: Make settings configurable
   foounit.settings = {};
   foounit.mixin(foounit.settings, foounit.defaults);
+
+  /**
+   * Ressettable wrappers for your pleasure
+   */
+  foounit.setInterval   = foounit.hostenv.global.setInterval;
+  foounit.clearInterval = foounit.hostenv.global.clearInterval;
+  foounit.setTimeout    = foounit.hostenv.global.setTimeout;
+  foounit.clearTimeout  = foounit.hostenv.global.clearTimeout;
+  foounit.getTime       = function (){ return new Date().getTime(); };
 
   /**
    * Returns a function bound to a scope

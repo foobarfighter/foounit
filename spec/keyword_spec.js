@@ -122,6 +122,13 @@ foounit.add(function (kw){ with(kw){
             .getCurrentExample()
             .getCurrentBlockQueue()
             .peekNext();
+
+          // We need to dequeue this task for the foounit suite
+          // *hand wave* ... you never saw this.
+          footest.getBuildContext()
+            .getCurrentExample()
+            .getCurrentBlockQueue()
+            .dequeue();
         });
 
         example.run();
