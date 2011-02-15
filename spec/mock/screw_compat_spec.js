@@ -56,5 +56,43 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
+    describe('haveBeenCalled', function (){
+      var obj;
+
+      before(function (){
+        obj = {};
+        obj.foo = function (){};
+      });
+
+      describe('.match', function (){
+
+        describe('when the function is mocked', function (){
+          describe('when haveBeenCalled has no params', function (){
+            it('asserts that the mocked function was called once', function (){
+              mock(obj, 'foo');
+
+              var matcher = new foounit.keywords.haveBeenCalled();
+
+              var expectedMessage = /mock was called 0 times, but was expected 1 times/;
+              expect(function (){ matcher.match(obj.foo); }).to(throwError, expectedMessage);
+              obj.foo();
+              matcher.match(obj.foo);
+            });
+          });
+
+          describe('when haveBeenCalled has a number as a param', function (){
+            xit('asserts the mocked function was called N times', function (){
+            });
+          });
+
+        });
+
+        describe('when the function has not been mocked', function (){
+          xit('throws an error that the function is not mocked', function (){
+          });
+        });
+      });
+    });
+
   });
 }});

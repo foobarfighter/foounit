@@ -40,18 +40,32 @@
   });
 
   foounit.addKeyword('haveBeenCalled', function (){
+    function format(actualCount, expectedCount){
+      actualCount = actualCount || 0;
+      return 'mock was called ' + actualCount +
+        ' times, but was expected ' + expectedCount + ' times';
+    };
+
+    this.match = function (mockedFunc, countOrArgs){
+      countOrArgs = countOrArgs || 1;
+      assert.strictEqual(mockedFunc.totalCalls, countOrArgs, format(mockedFunc.totalCalls, countOrArgs)
+      );
+    }
   });
 
   foounit.addKeyword('withArgs', function (){
   });
 
   foounit.addKeyword('once', function (){
+    return 1;
   });
 
   foounit.addKeyword('twice', function (){
+    return 2;
   });
 
   foounit.addKeyword('thrice', function (){
+    return 3;
   });
 
   foounit.assertMock = function (){
