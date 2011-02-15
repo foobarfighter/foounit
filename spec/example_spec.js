@@ -59,6 +59,41 @@ foounit.add(function (kw){ with(kw){
         example.run();
         expect(actual).to(be, example);
       });
+
+      it('resets mocks', function (){
+        var obj = {};
+        obj.foo = function (){ return 123; };
+        obj.bar = function (){ return 456; };
+        obj.baz = function (){ return 789; };
+
+        var mockFooRet, mockBarRet, mockBazRet;
+
+        var example = new foounit.Example('test', function (){
+          mock(obj, 'foo', function (){ return 'abc'; });
+          mockFooRet = obj.foo();
+        });
+
+        example.setBefores([function (){
+          mock(obj, 'bar', function (){ return 'def'; });
+          mockBarRet = obj.bar();
+        }]);
+
+        example.setAfters([function (){
+          mock(obj, 'baz', function (){ return 'xyz'; });
+          mockBazRet = obj.baz();
+        }]);
+
+        example.run();
+
+        expect(mockFooRet).to(equal, 'abc');
+        expect(obj.foo()).to(equal, 123);
+
+        expect(mockBarRet).to(equal, 'def');
+        expect(obj.bar()).to(equal, 456);
+
+        expect(mockBazRet).to(equal, 'xyz');
+        expect(obj.baz()).to(equal, 789);
+      });
     });
 
     describe('when the example fails in a before block', function (){
@@ -113,6 +148,8 @@ foounit.add(function (kw){ with(kw){
         example.run();
         expect(actual).to(be, example);
       });
+
+      xit('resets mocks', function (){});
     });
 
     describe('when the example fails in an after', function (){
@@ -149,6 +186,8 @@ foounit.add(function (kw){ with(kw){
         example.run();
         expect(actual).to(be, example);
       });
+
+      xit('resets mocks', function (){});
 
       describe('when there has already been a failure', function (){
         xit('reports the first exception', function (){
@@ -194,6 +233,8 @@ foounit.add(function (kw){ with(kw){
         example.run();
         expect(actual).to(be, example);
       });
+
+      xit('resets mocks', function (){});
     });
 
 

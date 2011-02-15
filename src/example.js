@@ -60,6 +60,7 @@ foounit.mixin(foounit.Example.prototype, {
 
     this.onAftersComplete = foounit.bind(this, function (){
       foounit.getBuildContext().setCurrentExample(undefined);
+      foounit.resetMocks();
       self.onComplete(self);
     });
 
