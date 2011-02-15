@@ -125,7 +125,7 @@ foounit.addKeyword('equal', function (){
   var pSlice = Array.prototype.slice;
 
   var isArguments = function (value){
-    return !!value.callee;
+    return value && !!value.callee;
   }
 
   var exec = function (actual, expected, not){

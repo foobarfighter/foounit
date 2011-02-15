@@ -11,6 +11,7 @@
     , "src/keywords.js"
     , "src/matchers.js"
     , "src/build_context.js"
+    , "src/mock/screw_compat.js"
   ]
 
   , "foo-unit-node.js": [
