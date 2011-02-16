@@ -44,19 +44,17 @@
   foounit.addKeyword('haveBeenCalled', function (){
     var equalMatcher = new foounit.keywords.equal();
 
-    function format(actualCount, expectedCount){
+    function format(actualCount, expectedCount, not){
+      var notStr = not ? ' not' : '';
       actualCount = actualCount || 0;
       return 'mock was called ' + actualCount +
-        ' times, but was expected ' + expectedCount + ' times';
+        ' times, but was' + notStr + ' expected ' + expectedCount + ' times';
     };
 
-    function assertCallCount(actualCallCount, expectedCallCount){
-      assert.strictEqual(
-        actualCallCount
-        , expectedCallCount
-        , format(actualCallCount, expectedCallCount)
-      );
-    };
+    function assertMocked(func){
+      if (func.isMocked){ return; }
+      throw new Error('Function has not been mocked');
+    }
 
     function wasCalledWithArgs(callArgs, expectedArgs){
       if (!callArgs){ return; }
@@ -71,7 +69,7 @@
     };
 
     this.match = function (mockedFunc, countOrArgs){
-      if (!mockedFunc.isMocked){ throw new Error('Function has not been mocked'); }
+      assertMocked(mockedFunc);
 
       countOrArgs = countOrArgs || 1;
 
@@ -79,7 +77,28 @@
         if (wasCalledWithArgs(mockedFunc.callArgs, countOrArgs)){ return; }
         throw new Error('Function was not called with arguments: ' + countOrArgs);
       } else {
-        assertCallCount(mockedFunc.totalCalls, countOrArgs);
+        assert.strictEqual(
+         mockedFunc.totalCalls 
+          , countOrArgs
+          , format(mockedFunc.totalCalls, countOrArgs)
+        );
+      }
+    }
+
+    this.notMatch = function (mockedFunc, countOrArgs){
+      assertMocked(mockedFunc);
+
+      countOrArgs = countOrArgs || 1;
+
+      if (countOrArgs.length !== undefined){
+        if (!wasCalledWithArgs(mockedFunc.callArgs, countOrArgs)){ return; }
+        throw new Error('Function was called with arguments: ' + countOrArgs);
+      } else {
+        assert.notStrictEqual(
+         mockedFunc.totalCalls 
+          , countOrArgs
+          , format(mockedFunc.totalCalls, countOrArgs, true)
+        );
       }
     }
   });

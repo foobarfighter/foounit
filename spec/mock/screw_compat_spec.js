@@ -128,7 +128,68 @@ foounit.add(function (kw){ with(kw){
           });
         });
       });
-    });
+
+
+      describe('notMatch', function (){
+        var matcher;
+
+        before(function (){
+          matcher = new foounit.keywords.haveBeenCalled();
+        });
+
+        describe('when the function has not been mocked', function (){
+          it('fails', function (){
+            obj.foo();
+
+            expect(function (){
+              matcher.notMatch(obj.foo);
+            }).to(throwError, /Function has not been mocked/);
+          });
+        });
+
+        describe('when haveBeenCalled does not have a param', function (){
+          it('fails when the function has been called', function (){
+            mock(obj, 'foo');
+
+            matcher.notMatch(obj.foo);
+
+            obj.foo();
+            expect(function (){
+              matcher.notMatch(obj.foo);
+            }).to(throwError, /mock was called 1 times, but was not expected 1 times/);
+          });
+        });
+
+        describe('when haveBeenCalled has a number as a param', function (){
+          xit('fails when the function has been called the expected amount of times', function (){
+            mock(obj, 'foo');
+            obj.foo();
+
+            matcher.notMatch(obj.foo, twice);
+
+            obj.foo();
+            expect(function (){
+              matcher.notMatch(obj.foo, twice);
+            }).to(throwError, /mock was called 2 times, but was not expected 2 times/);
+          });
+        });
+
+        describe('when haveBeenCalled has an array as a param', function (){
+          it('fails when the function has been called at least once with the expected params', function (){
+            mock(obj, 'foo');
+
+            obj.foo(1,2);
+            matcher.notMatch(obj.foo, [1,2,3]);
+
+            obj.foo(1,2,3);
+            expect(function (){
+              matcher.notMatch(obj.foo, [1,2,3]);
+            }).to(throwError, /Function was called with arguments: 1,2,3/);
+          });
+        });
+      });  // notMatch
+
+    });  // haveNotBeenCalled
 
   });
 }});
