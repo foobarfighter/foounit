@@ -64,11 +64,12 @@ foounit.add(function (kw){ with(kw){
     });
 
     describe('haveBeenCalled', function (){
-      var obj;
+      var obj, matcher;
 
       before(function (){
         obj = {};
         obj.foo = function (){};
+        matcher = new foounit.keywords.haveBeenCalled();
       });
 
       describe('.match', function (){
@@ -77,8 +78,6 @@ foounit.add(function (kw){ with(kw){
           describe('when haveBeenCalled has no params', function (){
             it('asserts that the mocked function was called once', function (){
               mock(obj, 'foo');
-
-              var matcher = new foounit.keywords.haveBeenCalled();
 
               var expectedMessage = /mock was called 0 times, but was expected 1 times/;
               expect(function (){ matcher.match(obj.foo); }).to(throwError, expectedMessage);
@@ -92,7 +91,6 @@ foounit.add(function (kw){ with(kw){
               mock(obj, 'foo');
               obj.foo();
 
-              var matcher = new foounit.keywords.haveBeenCalled();
               var expectedMessage = /mock was called 1 times, but was expected 2 times/;
               expect(function (){ matcher.match(obj.foo, twice); }).to(throwError, expectedMessage);
 
@@ -107,7 +105,6 @@ foounit.add(function (kw){ with(kw){
             it('asserts that the mocked function has been called once with the args', function (){
               mock(obj, 'foo');
 
-              var matcher = new foounit.keywords.haveBeenCalled();
               expect(function (){
                 matcher.match(obj.foo, [1,2,3]);
               }).to(throwError, /Function was not called with arguments: 1,2,3/);
@@ -120,8 +117,6 @@ foounit.add(function (kw){ with(kw){
 
         describe('when the function has not been mocked', function (){
           it('throws an error that the function is not mocked', function (){
-            var matcher = new foounit.keywords.haveBeenCalled();
-
             expect(function (){
               matcher.match(obj.foo);
             }).to(throwError, /Function has not been mocked/);
@@ -131,12 +126,6 @@ foounit.add(function (kw){ with(kw){
 
 
       describe('notMatch', function (){
-        var matcher;
-
-        before(function (){
-          matcher = new foounit.keywords.haveBeenCalled();
-        });
-
         describe('when the function has not been mocked', function (){
           it('fails', function (){
             obj.foo();
@@ -150,7 +139,6 @@ foounit.add(function (kw){ with(kw){
         describe('when haveBeenCalled does not have a param', function (){
           it('fails when the function has been called', function (){
             mock(obj, 'foo');
-
             matcher.notMatch(obj.foo);
 
             obj.foo();
