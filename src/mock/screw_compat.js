@@ -37,39 +37,60 @@
         return stubFunc.apply(obj, arguments);
       }
     }
+
+    obj[funcStr].isMocked = true;
   });
 
   foounit.addKeyword('haveBeenCalled', function (){
+    var equalMatcher = new foounit.keywords.equal();
+
     function format(actualCount, expectedCount){
       actualCount = actualCount || 0;
       return 'mock was called ' + actualCount +
         ' times, but was expected ' + expectedCount + ' times';
     };
 
-    this.match = function (mockedFunc, countOrArgs){
-      countOrArgs = countOrArgs || 1;
-      assert.strictEqual(mockedFunc.totalCalls, countOrArgs, format(mockedFunc.totalCalls, countOrArgs)
+    function assertCallCount(actualCallCount, expectedCallCount){
+      assert.strictEqual(
+        actualCallCount
+        , expectedCallCount
+        , format(actualCallCount, expectedCallCount)
       );
+    };
+
+    function wasCalledWithArgs(callArgs, expectedArgs){
+      if (!callArgs){ return; }
+
+      for (var i = 0; i < callArgs.length; ++i){
+        try {
+          equalMatcher.match(callArgs[i], expectedArgs);
+          return true;
+        } catch (e){}
+      }
+      return false;
+    };
+
+    this.match = function (mockedFunc, countOrArgs){
+      if (!mockedFunc.isMocked){ throw new Error('Function has not been mocked'); }
+
+      countOrArgs = countOrArgs || 1;
+
+      if (countOrArgs.length !== undefined){
+        if (wasCalledWithArgs(mockedFunc.callArgs, countOrArgs)){ return; }
+        throw new Error('Function was not called with arguments: ' + countOrArgs);
+      } else {
+        assertCallCount(mockedFunc.totalCalls, countOrArgs);
+      }
     }
   });
 
   foounit.addKeyword('withArgs', function (){
+    return Array.prototype.slice.call(arguments, 0);
   });
 
-  foounit.addKeyword('once', function (){
-    return 1;
-  });
-
-  foounit.addKeyword('twice', function (){
-    return 2;
-  });
-
-  foounit.addKeyword('thrice', function (){
-    return 3;
-  });
-
-  foounit.assertMock = function (){
-  };
+  foounit.addKeyword('once',   1);
+  foounit.addKeyword('twice',  2); 
+  foounit.addKeyword('thrice', 3);
 
   foounit.resetMocks = function (){
     repo.reset();

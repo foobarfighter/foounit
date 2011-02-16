@@ -56,6 +56,13 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
+    describe('withArgs', function (){
+      it('converts an argument list into an array', function (){
+        var arr = foounit.keywords.withArgs(1, 2, 3);
+        expect(arr).to(equal, [1,2,3]);
+      });
+    });
+
     describe('haveBeenCalled', function (){
       var obj;
 
@@ -81,14 +88,43 @@ foounit.add(function (kw){ with(kw){
           });
 
           describe('when haveBeenCalled has a number as a param', function (){
-            xit('asserts the mocked function was called N times', function (){
+            it('asserts the mocked function was called N times', function (){
+              mock(obj, 'foo');
+              obj.foo();
+
+              var matcher = new foounit.keywords.haveBeenCalled();
+              var expectedMessage = /mock was called 1 times, but was expected 2 times/;
+              expect(function (){ matcher.match(obj.foo, twice); }).to(throwError, expectedMessage);
+
+              obj.foo();
+              matcher.match(obj.foo, twice);
+              obj.foo();
+              matcher.match(obj.foo, thrice);
             });
           });
 
+          describe('when haveBeenCalled has an array as a param', function (){
+            it('asserts that the mocked function has been called once with the args', function (){
+              mock(obj, 'foo');
+
+              var matcher = new foounit.keywords.haveBeenCalled();
+              expect(function (){
+                matcher.match(obj.foo, [1,2,3]);
+              }).to(throwError, /Function was not called with arguments: 1,2,3/);
+
+              obj.foo(1,2,3);
+              matcher.match(obj.foo, [1,2,3]);
+            });
+          });
         });
 
         describe('when the function has not been mocked', function (){
-          xit('throws an error that the function is not mocked', function (){
+          it('throws an error that the function is not mocked', function (){
+            var matcher = new foounit.keywords.haveBeenCalled();
+
+            expect(function (){
+              matcher.match(obj.foo);
+            }).to(throwError, /Function has not been mocked/);
           });
         });
       });
