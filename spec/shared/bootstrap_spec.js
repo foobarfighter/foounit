@@ -1,4 +1,4 @@
-var foounit = require(__dirname + '/../dist/foo-unit');
+var foounit = require(__dirname + '/../../dist/foo-unit');
 
 var footest = foounit.require(':src/foo-unit');
 

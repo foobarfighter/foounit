@@ -1,5 +1,5 @@
 if (typeof global !== 'undefined'){
-  var foounit = require('../../dist/foo-unit-node');
+  var foounit = require('../../../dist/foo-unit-node');
 }
 var footest = foounit.require(':src/foo-unit');
 
