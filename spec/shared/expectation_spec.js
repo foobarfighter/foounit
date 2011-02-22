@@ -1,6 +1,3 @@
-if (typeof global !== 'undefined'){
-  var foounit = require('../../dist/foo-unit-node');
-}
 var footest = foounit.require(':src/foo-unit');
 
 foounit.add(function(kw) { with(kw){

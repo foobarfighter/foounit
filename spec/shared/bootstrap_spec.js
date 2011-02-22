@@ -1,5 +1,3 @@
-var foounit = require(__dirname + '/../../dist/foo-unit');
-
 var footest = foounit.require(':src/foo-unit');
 
 // Note: These tests are a little bit weird because
