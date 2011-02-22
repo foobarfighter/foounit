@@ -1,4 +1,4 @@
-var footest = foounit.require(':src/foo-unit');
+var footest = foounit.require(':src/foounit');
 
 // Note: These tests are a little bit weird because
 // they are testing some of the building blocks of foounit.

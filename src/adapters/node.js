@@ -1,11 +1,11 @@
-var foounit = require('./foo-unit');
+var foounit = require('./foounit');
 
 // This is a little weird, but fsh will get baked into
-// the foo-unit-node build.
+// the foounit-node build.
 //, fsh = require('../build/fsh');
 if (typeof fsh === 'undefined'){
   throw new Error('Looks like there was a problem ' +
-    'building foo-unit-node. ' +
+    'building foounit-node. ' +
     'fsh should have been baked in.');
 }
 

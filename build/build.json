@@ -1,5 +1,5 @@
 {
-  "foo-unit.js": [
+  "foounit.js": [
     "src/base.js"
     , "src/suite.js"
     , "src/build_context.js"
@@ -15,7 +15,7 @@
     , "src/mock/screw_compat.js"
   ]
 
-  , "foo-unit-node.js": [
+  , "foounit-node.js": [
     { "file": "build/fsh.js", "scope": "function", "variable": "fsh" }
     , { "file": "src/adapters/node_assert_patch.js", "scope": "function", "variable": "assertPatch" }
     , "src/adapters/node_colors.js"

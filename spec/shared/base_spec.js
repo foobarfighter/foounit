@@ -1,4 +1,4 @@
-var footest = foounit.require(':src/foo-unit');
+var footest = foounit.require(':src/foounit');
 
 foounit.add(function (kw){ with(kw){
   describe('foounit.base', function (){

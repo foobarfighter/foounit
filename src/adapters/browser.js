@@ -8,7 +8,7 @@
 
   var _loadCode = function (path, type){
     // FIXME: Kinda hacky
-    if (path.match(/foo-unit$/) || path.match(/foounit-browser$/)){
+    if (path.match(/foounit$/) || path.match(/foounit-browser$/)){
       return foounit;
     }
 
