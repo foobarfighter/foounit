@@ -11,7 +11,9 @@ var generateBrowserSuite = function (){
 
   var content = '';
   for (var i = 0; i < files.length; ++i){
-    content += "foounit.getSuite().addFile('" + files[i] + "');\n";
+    var file = files[i];
+    file = ':test' + file.substr((__dirname + '/spec').length);
+    content += "foounit.getSuite().addFile('" + file + "');\n";
   }
 
   fs.writeFileSync(__dirname + '/spec/browser/autogen_suite.js', content);
@@ -24,12 +26,12 @@ var restartLoaderService = function (){
 
 desc('Run foounit node specs');
 namespace('spec', function (){
-  task('node', ['build:node'], function (){
+  task('node', ['build:all'], function (){
     var foounit = require('./dist/foounit-node');
     foounit.run(__dirname + '/spec', __dirname + '/dist', /.*_spec.js$/);
   });
 
-  task('browser', ['build:browser'], function (){
+  task('browser', ['build:all'], function (){
     generateBrowserSuite();
     restartLoaderService();
   });
@@ -81,6 +83,11 @@ namespace('build', function (params) {
 
     var concated = pacman.concat('foounit-browser.js');
     fs.writeFileSync('dist/foounit-browser.js', concated);
+  });
+
+  desc('Builds all adapter environments');
+  task('all', ['build:core', 'build:node', 'build:browser'], function (){
+    console.log('--> Built all adapters');
   });
 
 });

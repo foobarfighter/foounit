@@ -122,11 +122,7 @@ var assertEqual = function (expected, actual, message){
 }
 
 var report = function (message){
-  if (foounit.hostenv.type == 'node'){
-    console.log(message);
-  } else {
-    document.body.innerHTML = message;
-  }
+  console.log(message);
 }
 
 var throwExpected = function (){

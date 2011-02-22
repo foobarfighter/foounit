@@ -73,7 +73,7 @@
    * Report a single example
    */
   foounit.reportExample = function (example){
-    console.log('report example: ', example);
+    console.log('report example: ', example.getException().message);
   };
 
 })(foounit);
