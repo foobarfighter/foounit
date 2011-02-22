@@ -17,13 +17,13 @@
 
   , "foounit-node.js": [
     { "file": "build/fsh.js", "scope": "function", "variable": "fsh" }
-    , { "file": "src/adapters/node_assert_patch.js", "scope": "function", "variable": "assertPatch" }
-    , "src/adapters/node_colors.js"
+    , { "file": "src/adapters/node/assert_patch.js", "scope": "function", "variable": "assertPatch" }
+    , "src/adapters/node/colors.js"
     , "src/adapters/node.js"
   ]
 
   , "foounit-browser.js": [
-    "src/adapters/xhr_loader_strategy.js"
+    "src/adapters/browser/xhr_loader_strategy.js"
     , "src/adapters/browser.js"
   ]
 }
