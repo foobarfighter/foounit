@@ -1,6 +1,8 @@
 {
   "foo-unit.js": [
     "src/base.js"
+    , "src/suite.js"
+    , "src/build_context.js"
     , "src/work_queue.js"
     , "src/block_queue.js"
     , "src/block.js"
@@ -10,7 +12,6 @@
     , "src/polling_block.js"
     , "src/keywords.js"
     , "src/matchers.js"
-    , "src/build_context.js"
     , "src/mock/screw_compat.js"
   ]
 
@@ -19,5 +20,10 @@
     , { "file": "src/adapters/node_assert_patch.js", "scope": "function", "variable": "assertPatch" }
     , "src/adapters/node_colors.js"
     , "src/adapters/node.js"
+  ]
+
+  , "foounit-browser.js": [
+    "src/adapters/xhr_loader_strategy.js"
+    , "src/adapters/browser.js"
   ]
 }
