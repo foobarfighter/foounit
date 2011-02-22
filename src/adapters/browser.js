@@ -64,6 +64,9 @@
     console.dir(info);
   };
 
+  /**
+   * Report a single example
+   */
   foounit.reportExample = function (example){
     console.log('report example: ', example);
   };

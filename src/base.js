@@ -252,5 +252,6 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
 // the node adapter immediately.
 if (foounit.hostenv.type == 'node'){
   module.exports = foounit;
+  global.foounit = foounit;
 }
 

@@ -12,20 +12,12 @@ foounit.mixin(foounit.Suite.prototype, {
   , run: function (){
     var self = this;
 
-    //setTimeout(function (){
-      var files = self._files;
-
-      console.log('running files: ', files);
-
-      for (var i = 0; i < files.length; ++i){
-        var file = files[i].replace(/\.js$/, '');
-        console.log('about to foounit.require: ', file);
-        foounit.require(file);
-      }
-
-      console.log('executing tests: ', files.length);
-      foounit.execute(foounit.build());
-    //}, 1000);
+    var files = self._files;
+    for (var i = 0; i < files.length; ++i){
+      var file = files[i].replace(/\.js$/, '');
+      foounit.require(file);
+    }
+    foounit.execute(foounit.build());
   }
 
   , getFiles: function (){

@@ -17,7 +17,6 @@ foounit.browser.XhrLoaderStrategy = function (){
   };
 
   var get = function (uri){
-    console.log('get uri: ', uri);
     var request = xhr();
     request.open('GET', uri, false);
     request.send(null);
