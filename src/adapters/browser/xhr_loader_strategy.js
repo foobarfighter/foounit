@@ -50,7 +50,7 @@ foounit.browser.XhrLoaderStrategy = function (){
       , funcString = '(function (foounit, module, __dirname, __filename){' + code + '});';
 
     try {
-      var func = eval(funcString);
+      eval('var func = ' + funcString);
       func.call({}, foounit, module, dirname(path), basename(path));
     } catch (e){
       console.error('Failed to load path: ' + path + ': ' + e.message, e);

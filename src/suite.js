@@ -17,6 +17,7 @@ foounit.mixin(foounit.Suite.prototype, {
       var file = files[i].replace(/\.js$/, '');
       foounit.require(file);
     }
+    console.log('>> foounit building...');
     foounit.execute(foounit.build());
   }
 

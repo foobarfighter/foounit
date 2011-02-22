@@ -65,15 +65,20 @@
    * Reports the final results of the suite
    */
   foounit.report = function (info){
-    console.log('--------> report: ');
-    console.dir(info);
+    console.log('>> foounit summary: '   +
+      info.failCount      + ' failed, '  +
+      info.passCount      + ' passed, '  +
+      info.pending.length + ' pending, ' +
+      info.totalCount     + ' total');
   };
 
   /**
    * Report a single example
    */
   foounit.reportExample = function (example){
-    console.log('report example: ', example.getException().message);
+    if (example.isFailure()){
+      console.log('example failed: ', example.getException().message);
+    }
   };
 
 })(foounit);

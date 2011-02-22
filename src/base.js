@@ -172,7 +172,10 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
     }
 
     var runners = [];
+
+    var tic = new Date().getTime();
     recurseGroup(foounit.getBuildContext().getRoot());
+    console.log('>> foounit build time: ', new Date().getTime() - tic);
 
     return runners;
   }
@@ -201,6 +204,8 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
       , passCount = 0, failCount = 0 
       , queue = new foounit.WorkQueue(examples);
 
+    var tic = new Date().getTime();
+
     queue.onTaskComplete = function (example){
       try {
         if (example.isSuccess()){
@@ -213,7 +218,7 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
 
         foounit.reportExample(example);
       } catch (e) {
-        console.log('Error in onTaskComplete: ', e);
+        console.log('Error in onTaskComplete: ', e.message);
       }
     };
 
@@ -224,6 +229,7 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
         , failCount:  failCount
         , totalCount: passCount + failCount + pending.length
         , pending:    pending
+        , runMillis:  new Date().getTime() - tic
         });
       } catch (e){
         console.log('Error in onComplete: ', e);
