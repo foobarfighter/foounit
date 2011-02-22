@@ -7,7 +7,6 @@
   foounit.mount('src',  __dirname + '/../dist');
   foounit.mount('test', __dirname);
 
-
   if (foounit.hostenv.type == 'node'){
     foounit.getSuite().addPattern(__dirname + '/shared/**/**');
     foounit.getSuite().addPattern(__dirname + '/node/**/**');

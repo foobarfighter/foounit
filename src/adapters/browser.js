@@ -7,10 +7,15 @@
     , _loaderStrategy;
 
   var _loadCode = function (path, type){
+    // FIXME: Kinda hacky
+    if (path.match(/foo-unit$/) || path.match(/foounit-browser$/)){
+      return foounit;
+    }
+
     path = foounit.translatePath(path);
     if (!_loaded[path]){
       _loaded[path] = true;
-      _loaderStrategy[type](path + '.js');
+      return _loaderStrategy[type](path + '.js');
     }
   };
 
@@ -25,14 +30,14 @@
    * Load a javascript file in a functional scope
    */
   foounit.require = function (path){
-    _loadCode(path, 'require');
+    return _loadCode(path, 'require');
   };
 
   /**
    * Load a javascript file in the global scope
    */
   foounit.load = function (path){
-    _loadCode(path, 'load');
+    return _loadCode(path, 'load');
   };
 
   /**
