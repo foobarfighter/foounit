@@ -99,5 +99,26 @@ foounit.add(function (kw){ with(kw){
 
     //describe('.getFullDescription'
 
+    describe('.translatePath', function (){
+      it('translates mounted paths', function (){
+        var testPath = ':baz/bing/:bar/bang', actual;
+
+        actual = footest.translatePath(testPath);
+        expect(testPath).to(equal, actual);
+
+        footest.mount('baz', 'quux');
+        footest.mount('bar', 'boom');
+
+        actual = footest.translatePath(testPath);
+        expect(actual).to(equal, 'quux/bing/boom/bang');
+
+        footest.unmount('baz');
+        footest.unmount('bar');
+
+        actual = footest.translatePath(testPath);
+        expect(testPath).to(equal, actual);
+      });
+    });
+
   });
 }});

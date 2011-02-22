@@ -75,6 +75,16 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
   }
 
   /**
+   * Gets the test foounit.Suite object.  If the suite has
+   * not been set then it creates a new test suite
+   */
+  var _suite;
+  foounit.getSuite = function (){
+    _suite = _suite || new foounit.Suite();
+    return _suite;
+  }
+
+  /**
    * Function used while building up the tests
    */
   var _buildContext;
@@ -86,6 +96,41 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
     _buildContext = _buildContext || new foounit.BuildContext();
     return _buildContext;
   }
+
+  /**
+   * Set the loader strategy
+   */
+  foounit.setLoaderStrategy = function (strategy){
+  }
+
+  /**
+   * Mounts a special path for use in foounit.require and foounit.load
+   */
+  var _mounts = {};
+  foounit.mount = function (key, path){
+    _mounts[key] = path;
+  }
+
+  /**
+   * Unmounts a special path to be used by foounit.require and foounit.load
+   */
+  foounit.unmount = function (key, path){
+    delete _mounts[key];
+  }
+
+  /**
+   * Translates mounted paths into a physical path
+   */
+  foounit.translatePath = (function (){
+    var regex = /:(\w+)/g;
+
+    return function (path){
+      var file = path.replace(regex, function (match, mount){
+        return _mounts[mount] ? _mounts[mount] : match;
+      });
+      return file;
+    }
+  })();
 
   /**
    * Adds groups / tests to the root level ExampleGroup
@@ -199,6 +244,7 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
   foounit.addKeyword = function (keyword, definition){
     foounit.keywords[keyword] = definition;
   }
+
 
 })(foounit);
 
