@@ -81,8 +81,9 @@ var adapter = (function (){
 
     var endMessage = info.totalCount + ' total.';
     if (info.pending.length){
-      endMessage += '  ' + info.pending.length + ' pending.';
+      endMessage += ' ' + info.pending.length + ' pending.';
     }
+    endMessage += ' runtime ' + info.runMillis + 'ms';
     console.log(endMessage);
   }
 

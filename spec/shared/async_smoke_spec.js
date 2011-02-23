@@ -23,7 +23,7 @@ foounit.add(function (kw){ with(kw){
 
         setTimeout(function (){
           beforeCondition = true;
-        }, 1000);
+        }, 100);
 
         waitFor(function (){
           expect(beforeCondition).to(beTrue);
