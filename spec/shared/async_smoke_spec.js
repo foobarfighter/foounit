@@ -62,7 +62,7 @@ foounit.add(function (kw){ with(kw){
 
       it('never gets called because the before should fail', function (){
         // This should pass because we should never get here
-        expect(true).to(beFalse);
+        throw new Error('We should never execute this test!!!!!');
       });
     });
 

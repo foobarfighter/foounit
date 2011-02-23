@@ -49,8 +49,14 @@ foounit.browser.XhrLoaderStrategy = function (){
       , module = { exports: {} }
       , funcString = '(function (foounit, module, __dirname, __filename){' + code + '});';
 
+    var func;
     try {
-      eval('var func = ' + funcString);
+      // IE sucks shit.
+      if (document.all){
+        eval('func = ' + funcString);
+      } else {
+        func = eval(funcString);
+      }
       func.call({}, foounit, module, dirname(path), basename(path));
     } catch (e){
       console.error('Failed to load path: ' + path + ': ' + e.message, e);

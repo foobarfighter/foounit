@@ -101,6 +101,7 @@ foounit.add(function (kw){ with(kw){
 
       before(function (){
         footest.setBuildContext(new footest.BuildContext());
+        mock(foounit, 'setTimeout', function (func){ func(); });
       });
 
       after(function (){

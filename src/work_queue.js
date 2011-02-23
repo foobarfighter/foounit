@@ -30,7 +30,9 @@ foounit.mixin(foounit.WorkQueue.prototype, {
   , runTask: function (task){
     task.onComplete = foounit.bind(this, this._onTaskComplete);
     task.onFailure = foounit.bind(this, this._onTaskFailure);
-    task.run();
+    foounit.setTimeout(function (){
+      task.run();
+    }, 0);
   }
 
   , stop: function (){

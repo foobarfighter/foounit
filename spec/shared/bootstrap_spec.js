@@ -21,8 +21,8 @@ var testExample = function (){
   example.run();
 
   assertEqual(false, example.isSuccess());
-  //assertEqual(true, example.isFailure());
-  //assertEqual(true, example.getException().message.length > 0);
+  assertEqual(true, example.isFailure());
+  assertEqual(true, example.getException().message.length > 0);
 }
 
 var testExampleGroup = function (){
@@ -129,13 +129,17 @@ var throwExpected = function (){
   throw new Error('!!expected failure');
 }
 
-var bc = null;
+var bc, origSetTimeout;
 var before = function (){
   bc = footest.getBuildContext();
   footest.setBuildContext(new footest.BuildContext());
+
+  origSetTimeout = foounit.setTimeout;
+  foounit.setTimeout = function (func, timeout){ func(); };
 }
 var after = function (){
   footest.setBuildContext(bc);
+  foounit.setTimeout = origSetTimeout;
 }
 
 var runTest = function (func){
