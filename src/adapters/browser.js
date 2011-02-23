@@ -70,6 +70,7 @@
       info.passCount      + ' passed, '  +
       info.pending.length + ' pending, ' +
       info.totalCount     + ' total');
+    console.log('>> foounit runtime: ', info.runMillis + 'ms');
   };
 
   /**
@@ -77,7 +78,7 @@
    */
   foounit.reportExample = function (example){
     if (example.isFailure()){
-      console.log('example failed: ', example.getException().message);
+      //console.log('example failed: ', example.getException().message);
     }
   };
 
