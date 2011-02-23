@@ -59,10 +59,18 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
   /**
    * Ressettable wrappers for your pleasure
    */
-  foounit.setInterval   = foounit.hostenv.global.setInterval;
-  foounit.clearInterval = foounit.hostenv.global.clearInterval;
-  foounit.setTimeout    = foounit.hostenv.global.setTimeout;
-  foounit.clearTimeout  = foounit.hostenv.global.clearTimeout;
+  foounit.setInterval   = function (func, interval) {
+    return foounit.hostenv.global.setInterval(func, interval);
+  };
+  foounit.clearInterval = function (handle) {
+    return foounit.hostenv.global.clearInterval(handle);
+  };
+  foounit.setTimeout    = function (func, timeout) {
+    return foounit.hostenv.global.setTimeout(func, timeout)
+  };
+  foounit.clearTimeout  = function (handle) {
+    return foounit.hostenv.global.clearTimeout(handle);
+  };
   foounit.getTime       = function (){ return new Date().getTime(); };
 
   /**
