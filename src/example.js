@@ -154,6 +154,11 @@ foounit.mixin(foounit.Example.prototype, {
     this._queue.run();
   }
 
+  , getStack: function (){
+    var e = this.getException();
+    return e.stack || e.stackTrace;
+  }
+
   , isSuccess: function (){
     return this._status === this.SUCCESS;
   }

@@ -64,14 +64,33 @@
   /**
    * Reports the final results of the suite
    */
-  foounit.report = function (info){
-    console.log('>> foounit summary: '   +
-      info.failCount      + ' failed, '  +
-      info.passCount      + ' passed, '  +
-      info.pending.length + ' pending, ' +
-      info.totalCount     + ' total');
-    console.log('>> foounit runtime: ', info.runMillis + 'ms');
-  };
+  foounit.report = (function (){
+    var createPendingNode = function (description){
+      var titleDiv = document.createElement('div');
+      titleDiv.className = 'example pending';
+      titleDiv.innerHTML = '<div class="title">' + description + '</div>';
+      return titleDiv;
+    };
+
+    return function (info){
+      var body = document.getElementsByTagName('body')[0];
+      try {
+        var pending = info.pending;
+        for (var i = 0; i < pending.length; ++i){
+          body.appendChild(createPendingNode(pending[i]));
+        }
+
+        console.log('>> foounit summary: '   +
+          info.failCount      + ' failed, '  +
+          info.passCount      + ' passed, '  +
+          info.pending.length + ' pending, ' +
+          info.totalCount     + ' total');
+        console.log('>> foounit runtime: ', info.runMillis + 'ms');
+      } catch (e){
+        alert('foounit.report: ' + e.message);
+      }
+    };
+  })();
 
   /**
    * Report a single example
@@ -81,11 +100,13 @@
     var createFailureNode = function (example){
       var titleDiv = document.createElement('div');
       titleDiv.className = 'example failure';
-      titleDiv.innerHTML = '<div class="title">' + example.getException() + '</div>';
+      titleDiv.innerHTML = '<div class="title">' + example.getDescription() + '</div>';
+
+      console.debug(example);
 
       var stackDiv = document.createElement('div');
       stackDiv.className = 'stack';
-      stackDiv.innerHTML = '<pre>' + example.getException().stack + '</pre>';
+      stackDiv.innerHTML = '<pre>' + example.getStack() + '</pre>';
       titleDiv.appendChild(stackDiv);
 
       return titleDiv;
@@ -99,7 +120,7 @@
           body.appendChild(failNode);
         }
       } catch (e){
-        alert('foounit UI error: ' + e.message);
+        alert('foounit.reportExample: ' + e.message);
       }
     };
   })();
