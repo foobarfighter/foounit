@@ -76,11 +76,33 @@
   /**
    * Report a single example
    */
-  foounit.reportExample = function (example){
-    if (example.isFailure()){
-      //console.log('example failed: ', example.getException().message);
-    }
-  };
+  foounit.reportExample = (function (){
+
+    var createFailureNode = function (example){
+      var titleDiv = document.createElement('div');
+      titleDiv.className = 'example failure';
+      titleDiv.innerHTML = '<div class="title">' + example.getException() + '</div>';
+
+      var stackDiv = document.createElement('div');
+      stackDiv.className = 'stack';
+      stackDiv.innerHTML = '<pre>' + example.getException().stack + '</pre>';
+      titleDiv.appendChild(stackDiv);
+
+      return titleDiv;
+    };
+
+    return function (example){
+      var body = document.getElementsByTagName('body')[0];
+      try {
+        if (example.isFailure()){
+          var failNode = createFailureNode(example);
+          body.appendChild(failNode);
+        }
+      } catch (e){
+        alert('foounit UI error: ' + e.message);
+      }
+    };
+  })();
 
 })(foounit);
 
