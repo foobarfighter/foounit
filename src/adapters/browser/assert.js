@@ -79,11 +79,16 @@ assert = (function (){
         stackStartFunction: stackStartFunction
       });
     } else {
-      var formatted = ['AssertionError:',
-        JSON.stringify(expected),
-        operator,
-        JSON.stringify(actual)].join(' ');
-      throw new Error(formatted);
+      if (message) {
+        var msg = ['AssertionError:', message].join(' ');
+        throw new Error(msg);
+      } else {
+        var formatted = ['AssertionError:',
+          JSON.stringify(expected),
+          operator,
+          JSON.stringify(actual)].join(' ');
+        throw new Error(formatted);
+      }
     }
   }
 
