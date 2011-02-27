@@ -3,15 +3,21 @@ if (typeof foounit.ui == 'undefined'){
 }
 
 (function (ui){
-  var _body;
+  var _body, _index = 0;
+
+  var _createTitleNode = function (title, index, className){
+    var titleDiv = document.createElement('div');
+    titleDiv.className = 'example ' + className;
+    titleDiv.innerHTML = '<a name="example' + index + '" ' +
+      'class="title">' + title + '</a>';
+    return titleDiv;
+  }
 
   /**
    * Creates a failure node for an example
    */
-  var _createFailureNode = function (example){
-    var titleDiv = document.createElement('div');
-    titleDiv.className = 'example failure';
-    titleDiv.innerHTML = '<div class="title">' + example.getDescription() + '</div>';
+  var _createFailureNode = function (example, index){
+    var titleDiv = _createTitleNode(example.getDescription(), index, 'failure');
 
     var stackDiv = document.createElement('div');
     stackDiv.className = 'stack';
@@ -27,21 +33,15 @@ if (typeof foounit.ui == 'undefined'){
   /**
    * Creates a success node for an example
    */
-  var _createSuccessNode = function (example){
-    var titleDiv = document.createElement('div');
-    titleDiv.className = 'example success';
-    titleDiv.innerHTML = '<div class="title">' + example.getDescription() + '</div>';
-    return titleDiv;
+  var _createSuccessNode = function (example, index){
+    return _createTitleNode(example.getDescription(), index, 'success');
   };
 
   /**
    * Creates a pending node for an example
    */
-  var _createPendingNode = function (description){
-    var titleDiv = document.createElement('div');
-    titleDiv.className = 'example pending';
-    titleDiv.innerHTML = '<div class="title">' + description + '</div>';
-    return titleDiv;
+  var _createPendingNode = function (example, index){
+    return _createTitleNode(example.getDescription(), index, 'pending');
   };
 
   /**
@@ -62,26 +62,24 @@ if (typeof foounit.ui == 'undefined'){
     this._log.className = 'progress-bar-log';
     this._node.appendChild(this._log);
 
-
-    this.fail = function (){
-      var node = document.createElement('span');
-      node.className = 'failure';
-      node.innerHTML = 'F';
+    this._appendStatus = function (className, display, index){
+      var node = document.createElement('a');
+      node.href = '#example' + index;
+      node.className = className;
+      node.innerHTML = display;
       this._progress.appendChild(node);
     }
 
-    this.success = function (){
-      var node = document.createElement('span');
-      node.className = 'success';
-      node.innerHTML = '.';
-      this._progress.appendChild(node);
+    this.fail = function (index){
+      this._appendStatus('failure', 'F', index);
     }
 
-    this.pending = function (){
-      var node = document.createElement('span');
-      node.className = 'pending';
-      node.innerHTML = 'P';
-      this._progress.appendChild(node);
+    this.success = function (index){
+      this._appendStatus('success', '.', index);
+    }
+
+    this.pending = function (index){
+      this._appendStatus('pending', 'P', index);
     }
 
     this.log = function (message){
@@ -106,8 +104,9 @@ if (typeof foounit.ui == 'undefined'){
    */
   ui.onFailure = function (example){
     try {
-      _body.appendChild(_createFailureNode(example));
-      _progressBar.fail();
+      _body.appendChild(_createFailureNode(example, _index));
+      _progressBar.fail(_index);
+      ++_index;
     } catch (e){
       alert('foounit.ui.onFailure: ' + e.message);
     }
@@ -118,8 +117,9 @@ if (typeof foounit.ui == 'undefined'){
    */
   ui.onSuccess = function (example){
     try {
-      _body.appendChild(_createSuccessNode(example));
-      _progressBar.success();
+      _body.appendChild(_createSuccessNode(example, _index));
+      _progressBar.success(_index);
+      ++_index;
     } catch (e){
       alert('foounit.ui.onSuccess: ' + e.message);
     }
@@ -129,7 +129,13 @@ if (typeof foounit.ui == 'undefined'){
    * Called when the runner runs a pending example
    */
   ui.onPending = function (example){
-    _progressBar.pending();
+    try {
+      _body.appendChild(_createPendingNode(example, _index));
+      _progressBar.pending(_index);
+      ++_index;
+    } catch (e){
+      alert('foounit.ui.onPending: ' + e.message);
+    }
   }
 
   /**
@@ -137,11 +143,6 @@ if (typeof foounit.ui == 'undefined'){
    */
   ui.onFinish = function (info){
     try {
-      var pending = info.pending;
-      for (var i = 0; i < pending.length; ++i){
-        _body.appendChild(_createPendingNode(pending[i]));
-      }
-
       _progressBar.log('>> foounit summary: '   +
         info.failCount      + ' failed, '  +
         info.passCount      + ' passed, '  +
