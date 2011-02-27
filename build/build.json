@@ -23,7 +23,8 @@
   ]
 
   , "foounit-browser.js": [
-    "src/adapters/browser/assert.js"
+    "src/adapters/browser/ui.js"
+    , "src/adapters/browser/assert.js"
     , "src/adapters/browser/console.js"
     , "src/adapters/browser/xhr_loader_strategy.js"
     , "src/adapters/browser.js"

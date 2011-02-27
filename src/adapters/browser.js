@@ -59,65 +59,34 @@
         return getDirectoryFromPath(script);
       }
     }
-  }
+  };
 
   /**
    * Reports the final results of the suite
    */
-  foounit.report = (function (){
-    var createPendingNode = function (description){
-      var titleDiv = document.createElement('div');
-      titleDiv.className = 'example pending';
-      titleDiv.innerHTML = '<div class="title">' + description + '</div>';
-      return titleDiv;
-    };
-
-    return function (info){
-      var body = document.getElementsByTagName('body')[0];
-      try {
-        var pending = info.pending;
-        for (var i = 0; i < pending.length; ++i){
-          body.appendChild(createPendingNode(pending[i]));
-        }
-
-        console.log('>> foounit summary: '   +
-          info.failCount      + ' failed, '  +
-          info.passCount      + ' passed, '  +
-          info.pending.length + ' pending, ' +
-          info.totalCount     + ' total');
-        console.log('>> foounit runtime: ', info.runMillis + 'ms');
-      } catch (e){
-        alert('foounit.report: ' + e.message);
-      }
-    };
-  })();
+  foounit.report = function (info){
+    foounit.ui.onFinish(info);
+  };
 
   /**
    * Report a single example
    */
   foounit.reportExample = (function (){
-
-    var createFailureNode = function (example){
-      var titleDiv = document.createElement('div');
-      titleDiv.className = 'example failure';
-      titleDiv.innerHTML = '<div class="title">' + example.getDescription() + '</div>';
-
-      console.debug(example);
-
-      var stackDiv = document.createElement('div');
-      stackDiv.className = 'stack';
-      stackDiv.innerHTML = '<pre>' + example.getStack() + '</pre>';
-      titleDiv.appendChild(stackDiv);
-
-      return titleDiv;
-    };
+    var isUiInit = false; 
 
     return function (example){
-      var body = document.getElementsByTagName('body')[0];
+      if (!isUiInit){
+        foounit.ui.init();
+        isUiInit = true;
+      }
+
       try {
-        if (example.isFailure()){
-          var failNode = createFailureNode(example);
-          body.appendChild(failNode);
+        if (example.isSuccess()){
+          foounit.ui.onSuccess(example);
+        } else if (example.isFailure()){
+          foounit.ui.onFailure(example);
+        } else if (example.isPending()){
+          foounit.ui.onPending(example);
         }
       } catch (e){
         alert('foounit.reportExample: ' + e.message);

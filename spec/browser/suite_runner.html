@@ -6,18 +6,29 @@ body {
   font-size: 10pt;
 }
 
-.example {
-  margin-bottom: 12px;
+.title {
+  padding-bottom: 10px;
 }
 
-.failure {
-  background-color: #E99494;
-  padding: 10px;
+.example {
+  margin-bottom: 12px;
 }
 
 .stack {
   background-color: #FFFFD1;
   padding: 1px;
+}
+
+.failure, .success {
+  padding: 10px;
+}
+
+.failure {
+  background-color: #E99494;
+}
+
+.success {
+  background-color: #339933;
 }
 
 .example.pending {
@@ -26,9 +37,22 @@ body {
   margin: 0;
 }
 
-.title {
-  padding-bottom: 10px;
+.progress-bar {
+  padding: 10px;
+  margin:  10px 0;
+  background-color: #ccc;
 }
+
+.progress-bar .success,
+.progress-bar .failure,
+.progress-bar .pending {
+  background-color: #ccc;
+  padding: 0;
+}
+
+.progress-bar .success { color: #339933; }
+.progress-bar .failure { color: #ff0000; }
+.progress-bar .pending { font-weight: bold; color: #E8E819; ]
 </style>
 
 <script type="text/javascript" src="../../dist/foounit.js"></script>

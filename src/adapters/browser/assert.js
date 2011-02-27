@@ -41,12 +41,11 @@ assert = (function (){
     this.operator = options.operator;
     var stackStartFunction = options.stackStartFunction || fail;
 
-    if (Error.captureStackTrace) {
+    //if (Error.captureStackTrace) {
       Error.captureStackTrace(this, stackStartFunction);
-    }
+    //}
   };
   foounit.mixin(assert.AssertionError.prototype, Error.prototype);
-  //util.inherits(assert.AssertionError, Error);
 
   assert.AssertionError.prototype.toString = function() {
     if (this.message) {
@@ -60,7 +59,6 @@ assert = (function (){
   };
 
   // assert.AssertionError instanceof Error
-
   assert.AssertionError.__proto__ = Error.prototype;
 
   // At present only the three keys mentioned above are used and
