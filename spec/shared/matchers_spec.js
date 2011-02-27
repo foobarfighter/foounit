@@ -21,7 +21,7 @@ foounit.add(function (kw){ with(kw){
             throwError.match(function (){}, 'should fail match');
             throw new Error('unexpected');
           } catch (e){
-            expect(e.toString()).to(be, 'AssertionError:   "Missing expected exception. should fail match"');
+            expect(e.toString().indexOf('AssertionError:   "Missing expected exception. should fail match"')).to(beGt, -1);
           }
 
           // Should throw any error
@@ -29,7 +29,7 @@ foounit.add(function (kw){ with(kw){
             throwError.match(function (){}, null);
             throw new Error('unexpected');
           } catch (e){
-            expect(e.toString()).to(be, 'AssertionError:   "Missing expected exception.."');
+            expect(e.toString().indexOf('AssertionError:   "Missing expected exception.."')).to(beGt, -1);
           }
         });
       });
