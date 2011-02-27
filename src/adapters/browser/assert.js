@@ -28,58 +28,13 @@ assert = (function (){
 
   var pSlice = Array.prototype.slice;
 
-  // 2. The AssertionError is defined in assert.
-  // new assert.AssertionError({ message: message,
-  //                             actual: actual,
-  //                             expected: expected })
-
-  assert.AssertionError = function AssertionError(options) {
-    this.name = 'AssertionError';
-    this.message = options.message;
-    this.actual = options.actual;
-    this.expected = options.expected;
-    this.operator = options.operator;
-    var stackStartFunction = options.stackStartFunction || fail;
-
-    //if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, stackStartFunction);
-    //}
-  };
-  foounit.mixin(assert.AssertionError.prototype, Error.prototype);
-
-  assert.AssertionError.prototype.toString = function() {
-    if (this.message) {
-      return [this.name + ':', this.message].join(' ');
-    } else {
-      return [this.name + ':',
-              JSON.stringify(this.expected),
-              this.operator,
-              JSON.stringify(this.actual)].join(' ');
-    }
-  };
-
-  // assert.AssertionError instanceof Error
-  assert.AssertionError.__proto__ = Error.prototype;
-
-  // At present only the three keys mentioned above are used and
-  // understood by the spec. Implementations or sub modules can pass
-  // other keys to the AssertionError's constructor - they will be
-  // ignored.
-
-  // 3. All of the following functions must throw an AssertionError
-  // when a corresponding condition is not met, with a message that
-  // may be undefined if not provided.  All assertion methods provide
-  // both the actual and expected values to the assertion error for
-  // display purposes.
-
   function fail(actual, expected, message, operator, stackStartFunction) {
-    throw new assert.AssertionError({
-      message: message,
-      actual: actual,
-      expected: expected,
-      operator: operator,
-      stackStartFunction: stackStartFunction
-    });
+    var formatted = ['AssertionError:',
+      JSON.stringify(expected),
+      operator,
+      JSON.stringify(actual)].join(' ');
+
+    throw new Error(formatted);
   }
 
   // EXTENSION! allows for well behaved errors defined elsewhere.

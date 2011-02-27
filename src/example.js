@@ -156,7 +156,7 @@ foounit.mixin(foounit.Example.prototype, {
 
   , getStack: function (){
     var e = this.getException();
-    return e.stack || e.stackTrace;
+    return e.stack || e.stacktrace;
   }
 
   , isSuccess: function (){

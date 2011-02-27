@@ -15,7 +15,10 @@ if (typeof foounit.ui == 'undefined'){
 
     var stackDiv = document.createElement('div');
     stackDiv.className = 'stack';
-    stackDiv.innerHTML = '<pre>' + example.getStack() + '</pre>';
+    stackDiv.innerHTML = '<pre>' +
+      example.getException().message + "\n\n" +
+      example.getStack() +
+      '</pre>';
     titleDiv.appendChild(stackDiv);
 
     return titleDiv;
@@ -51,25 +54,40 @@ if (typeof foounit.ui == 'undefined'){
     this._node.className = 'progress-bar';
     this._body.appendChild(this._node);
 
+    this._progress = document.createElement('div');
+    this._progress.className = 'progress';
+    this._node.appendChild(this._progress);
+
+    this._log = document.createElement('div');
+    this._log.className = 'progress-bar-log';
+    this._node.appendChild(this._log);
+
+
     this.fail = function (){
       var node = document.createElement('span');
       node.className = 'failure';
       node.innerHTML = 'F';
-      this._node.appendChild(node);
+      this._progress.appendChild(node);
     }
 
     this.success = function (){
       var node = document.createElement('span');
       node.className = 'success';
       node.innerHTML = '.';
-      this._node.appendChild(node);
+      this._progress.appendChild(node);
     }
 
     this.pending = function (){
       var node = document.createElement('span');
       node.className = 'pending';
       node.innerHTML = 'P';
-      this._node.appendChild(node);
+      this._progress.appendChild(node);
+    }
+
+    this.log = function (message){
+      var node = document.createElement('div');
+      node.innerHTML = message;
+      this._log.appendChild(node);
     }
   }
 
@@ -123,12 +141,14 @@ if (typeof foounit.ui == 'undefined'){
       for (var i = 0; i < pending.length; ++i){
         _body.appendChild(_createPendingNode(pending[i]));
       }
-      console.log('>> foounit summary: '   +
+
+      _progressBar.log('>> foounit summary: '   +
         info.failCount      + ' failed, '  +
         info.passCount      + ' passed, '  +
         info.pending.length + ' pending, ' +
         info.totalCount     + ' total');
-      console.log('>> foounit runtime: ', info.runMillis + 'ms');
+
+      _progressBar.log('>> foounit runtime: ', info.runMillis + 'ms');
     } catch (e){
       alert('foounit.ui.onFinish: ' + e.message);
     }
