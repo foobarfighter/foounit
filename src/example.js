@@ -3,6 +3,7 @@ foounit.Example = function (description, test, pending){
   this._test = test;
   this._afters  = [];
   this._description = description;
+  this._descriptions = [];
   this._currentBlockQueue = undefined;
 
   this._status = 0;
@@ -183,6 +184,21 @@ foounit.mixin(foounit.Example.prototype, {
 
   , getDescription: function (){
     return this._description;
+  }
+
+  , getFullDescription: function (){
+    var descriptions = this._descriptions.concat();
+    descriptions.shift();
+    descriptions.push(this.getDescription());
+    return descriptions.join(' ');
+  }
+
+  , getDescriptions: function (){
+    return this._descriptions;
+  }
+
+  , setDescriptions: function (descriptions){
+    this._descriptions = descriptions;
   }
 
   , getBefores: function (){

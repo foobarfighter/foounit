@@ -94,7 +94,39 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
-    //describe('.getFullDescription'
+    describe('.getFullDescription', function (){
+      var bc;
+
+      before(function (){
+        bc = footest.getBuildContext();
+        footest.setBuildContext(new footest.BuildContext());
+      });
+
+      after(function (){
+        footest.setBuildContext(bc);
+      });
+
+      it('returns the description including parent descriptions as a string', function (){
+        footest.add(function (){
+          it('test0');
+          describe('group1', function (){
+            it('test1');
+            describe('group2', function (){
+              it('test2');
+            });
+          });
+          describe('group3', function (){
+            it('test3');
+          });
+        });
+
+        var examples = footest.build();
+        expect(examples[0].getFullDescription()).to(equal, 'test0');
+        expect(examples[1].getFullDescription()).to(equal, 'group1 test1');
+        expect(examples[2].getFullDescription()).to(equal, 'group1 group2 test2');
+        expect(examples[3].getFullDescription()).to(equal, 'group3 test3');
+      });
+    });
 
     describe('.translatePath', function (){
       it('translates mounted paths', function (){

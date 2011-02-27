@@ -153,13 +153,14 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
    * Builds an array of tests to be run
    */
   foounit.build = function (){
-    var befores = [], afters = [];
+    var befores = [], afters = [], descriptions = [];
 
     var addExamples = function (group){
       var examples = group.getExamples();
       for (var i = 0, ii = examples.length; i < ii; ++i){
         examples[i].setBefores(befores.concat());
         examples[i].setAfters(afters.concat());
+        examples[i].setDescriptions(descriptions.concat());
         runners.push(examples[i]);
       }
     }
@@ -167,6 +168,7 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
     var recurseGroup = function (group){
       befores.push(group.getBefore());
       afters.push(group.getAfter());
+      descriptions.push(group.getDescription());
 
       addExamples(group);
 
@@ -177,6 +179,7 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
 
       befores.pop();
       afters.pop();
+      descriptions.pop();
     }
 
     var runners = [];
@@ -221,7 +224,7 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
         } else if (example.isFailure()){
           ++failCount;
         } else if (example.isPending()){
-          pending.push(example.getDescription());
+          pending.push(example.getFullDescription());
         }
 
         foounit.reportExample(example);

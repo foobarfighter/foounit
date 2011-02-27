@@ -18,7 +18,7 @@ if (typeof foounit.ui == 'undefined'){
    * Creates a failure node for an example
    */
   var _createFailureNode = function (example, index){
-    var titleDiv = _createTitleNode(example.getDescription(), index, 'failure');
+    var titleDiv = _createTitleNode(example.getFullDescription(), index, 'failure');
 
     var stackDiv = document.createElement('div');
     stackDiv.className = 'stack';
@@ -35,14 +35,14 @@ if (typeof foounit.ui == 'undefined'){
    * Creates a success node for an example
    */
   var _createSuccessNode = function (example, index){
-    return _createTitleNode(example.getDescription(), index, 'success');
+    return _createTitleNode(example.getFullDescription(), index, 'success');
   };
 
   /**
    * Creates a pending node for an example
    */
   var _createPendingNode = function (example, index){
-    return _createTitleNode(example.getDescription(), index, 'pending');
+    return _createTitleNode(example.getFullDescription(), index, 'pending');
   };
 
   /**

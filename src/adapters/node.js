@@ -54,8 +54,8 @@ var adapter = (function (){
   self.reportExample = function (example){
     if (example.isFailure()){
       colors.putsRed('F');
-      colors.putsRed(example.getDescription());
-      sys.puts(new Array(example.getDescription().length+1).join('='));
+      colors.putsRed(example.getFullDescription());
+      sys.puts(new Array(example.getFullDescription().length+1).join('='));
       highlightSpecs(example.getException().stack);
     } else if (example.isSuccess()){
       colors.printGreen('.');
