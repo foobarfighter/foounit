@@ -33,13 +33,58 @@ assert = (function (){
 
   var pSlice = Array.prototype.slice;
 
-  function fail(actual, expected, message, operator, stackStartFunction) {
-    var formatted = ['AssertionError:',
-      JSON.stringify(expected),
-      operator,
-      JSON.stringify(actual)].join(' ');
 
-    throw new Error(formatted);
+  // FIXME: This is super hacky
+  // AssertionError only works in v8
+  if (navigator.userAgent.match(/Chrome/)){
+    assert.AssertionError = function AssertionError(options) {
+      this.name = 'AssertionError';
+      this.message = options.message;
+      this.actual = options.actual;
+      this.expected = options.expected;
+      this.operator = options.operator;
+      var stackStartFunction = options.stackStartFunction || fail;
+
+      //if (Error.captureStackTrace) {
+        Error.captureStackTrace(this, stackStartFunction);
+      //}
+    };
+    foounit.mixin(assert.AssertionError.prototype, Error.prototype);
+
+    assert.AssertionError.prototype.toString = function() {
+      if (this.message) {
+        return [this.name + ':', this.message].join(' ');
+      } else {
+        return [this.name + ':',
+                JSON.stringify(this.expected),
+                this.operator,
+                JSON.stringify(this.actual)].join(' ');
+      }
+    };
+
+    // assert.AssertionError instanceof Error
+    assert.AssertionError.__proto__ = Error.prototype;
+  }
+
+
+  function fail(actual, expected, message, operator, stackStartFunction) {
+    // FIXME: This is super hacky
+    // AssertionError only works in V8
+    if (navigator.userAgent.match(/Chrome/)){
+      throw new assert.AssertionError({
+        message: message,
+        actual: actual,
+        expected: expected,
+        operator: operator,
+        stackStartFunction: stackStartFunction
+      });
+    } else {
+      var formatted = ['AssertionError:',
+        JSON.stringify(expected),
+        operator,
+        JSON.stringify(actual)].join(' ');
+      throw new Error(formatted);
+    }
   }
 
   // EXTENSION! allows for well behaved errors defined elsewhere.
@@ -116,6 +161,18 @@ assert = (function (){
     return Object.prototype.toString.call(object) == '[object Arguments]';
   }
 
+  function getKeys(obj){
+    var keys = [];
+    try {
+      keys = Object.keys(obj);
+    } catch (e){
+      for (var p in obj){
+        keys.push(p);
+      }
+    }
+    return keys;
+  }
+
   function objEquiv(a, b) {
     if (isUndefinedOrNull(a) || isUndefinedOrNull(b))
       return false;
@@ -132,8 +189,8 @@ assert = (function (){
       return _deepEqual(a, b);
     }
     try {
-      var ka = Object.keys(a),
-          kb = Object.keys(b),
+      var ka = getKeys(a),
+          kb = getKeys(b),
           key, i;
     } catch (e) {//happens when one is a string literal and the other isn't
       return false;
