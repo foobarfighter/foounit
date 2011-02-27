@@ -9,7 +9,8 @@ if (typeof foounit.ui == 'undefined'){
     var titleDiv = document.createElement('div');
     titleDiv.className = 'example ' + className;
     titleDiv.innerHTML = '<a name="example' + index + '" ' +
-      'class="title">' + title + '</a>';
+      'class="title">' + title + '</a> ' +
+      '<a href="#top">&raquo; top</a>';
     return titleDiv;
   }
 
@@ -96,6 +97,11 @@ if (typeof foounit.ui == 'undefined'){
    */
   ui.init = function (){
     _body = document.getElementsByTagName('body')[0];
+
+    var topNode = document.createElement('a');
+    topNode.setAttribute('name', 'top');
+    _body.appendChild(topNode);
+
     _progressBar = new _ProgressBar(_body, 'progress');
   };
 
