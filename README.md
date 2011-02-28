@@ -2,7 +2,7 @@
 
 A functionally scoped BDD style test framework that runs everywhere.
 
-Key features include:
+### Key features:
 
 * Asyncronous test running
 * Out of the box support for multiple javascript host environments: node.js, major browsers, Adobe AIR, The Ruby Racer
