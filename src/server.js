@@ -23,6 +23,8 @@ Server.prototype.start = function (){
           return;
         }
       }
+      response.writeHead(404, {});
+      response.end();
       //console.log('>> no service match');
     } catch (e){
       console.log('>> error foounit.Server: ', e);

@@ -33,13 +33,13 @@ foounit.add(function (kw){ with(kw){
     });
 
     describe('.mount', function (){
-      before(function (){
-        server.mount(/^\/echo1/, new EchoService('echo1'));
-        server.mount(/^\/echo1b/, new EchoService('echo1b'));
-        server.start();
-      });
-
       describe('when a pattern is matched', function (){
+        before(function (){
+          server.mount(/^\/echo1/, new EchoService('echo1'));
+          server.mount(/^\/echo1b/, new EchoService('echo1b'));
+          server.start();
+        });
+
         it('calls a service that matches the pattern', function (){
           client.get('http://0.0.0.0:5999/echo1');
           waitFor(function (){
@@ -47,7 +47,7 @@ foounit.add(function (kw){ with(kw){
           });
         });
 
-        it('does not call another service after the first match', function (){
+        xit('does not call another service after the first match', function (){
           client.get('http://0.0.0.0:5999/echo1b');
           waitForTimeout(function (){
             expect(client.inbox.takeNext().body).to(equal, 'echo1b');
@@ -56,7 +56,15 @@ foounit.add(function (kw){ with(kw){
       });
 
       describe('when a pattern is not matched', function (){
-        xit('returns 404', function (){
+        before(function (){
+          server.start();
+        });
+
+        it('returns 404', function (){
+          client.get('http://0.0.0.0:5999/DNE');
+          waitFor(function (){
+            expect(client.inbox.takeNext().statusCode).to(equal, 404);
+          });
         });
       });
     });
