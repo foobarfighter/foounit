@@ -289,8 +289,9 @@ assert = (function (){
       fail('Got unwanted exception' + message);
     }
 
+    var actualMessage = actual && (actual.message || actual.toString());
     if ((shouldThrow && actual && expected &&
-        !expectedException(actual, expected)) || (!shouldThrow && actual)) {
+        !expectedException(actualMessage, expected)) || (!shouldThrow && actual)) {
       throw actual;
     }
   }
