@@ -8,33 +8,37 @@ var Server = function (host, port){
 };
 
 Server.prototype.start = function (){
+  //console.log('>> starting foounit.Server');
   var self = this;
 
   this._server = http.createServer(function (request, response){
-    response.writeHead(200, {'Content-Type: ': 'text/plain' });
-    response.end('echo');
-    //try {
-    //  var mounts = self.mounts;
-    //  for (var i = 0; i < mounts.length; ++i){
-    //    var mount = mounts[i];
-    //    if (request.pathname.match(mount.pattern)){
-    //      mount.service.call(request, response);
-    //      break;
-    //    }
-    //  }
-    //} catch (e){
-    //  console.log('>> Server: error while serving request: ', e);
-    //}
+    //console.log('>> request');
+    try {
+      var mounts = self._mounts;
+      for (var i = 0; i < mounts.length; ++i){
+        var mount = mounts[i];
+        if (request.url.match(mount.pattern)){
+          //console.log('>> match: ', mount.pattern);
+          mount.service.call(request, response);
+          return;
+        }
+      }
+      //console.log('>> no service match');
+    } catch (e){
+      console.log('>> error foounit.Server: ', e);
+    }
   });
 
   this._server.listen(this._port, this._host);
 };
 
 Server.prototype.stop = function (){
+  //console.log('>> stopping foounit.Server');
   this._server.close();
 };
 
-Server.prototype.mount = function (pattern, appService){
+Server.prototype.mount = function (pattern, service){
+  this._mounts.push({ pattern: pattern, service: service });
 };
 
 module.exports.Server = Server;

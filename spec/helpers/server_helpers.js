@@ -1,11 +1,14 @@
 var http = require('http')
   , url = require('url');
 
-var EchoService = function (){
+var EchoService = function (responseText){
+  this._responseText = responseText;
+
   // TODO: This should be jsgi or something
+  var self = this;
   this.call = function (request, response){
     response.writeHead(200, {'Content-Type': 'text/plain' });
-    response.end('echo\n');
+    response.end(self._responseText);
   };
 };
 
@@ -46,6 +49,10 @@ var TestClient = function (){
 
     request.end();
   }
+
+  this.kill = function (){
+    // TODO: If we don't kill the clients then it will hang the test suite
+  };
 };
 
 module.exports.EchoService = EchoService;
