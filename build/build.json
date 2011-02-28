@@ -30,4 +30,8 @@
     , "src/adapters/browser/xhr_loader_strategy.js"
     , "src/adapters/browser.js"
   ]
+
+  , "foounit-server.js": [
+    "src/server.js"
+  ]
 }

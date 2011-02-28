@@ -27,9 +27,9 @@ var adapter = (function (){
   /**
    * Override foounit.require
    */
-  self.require = function (file){
-    file = _translate(file, { 'src': _codedir });
-    return require(file);
+  self.require = function (path){
+    path = foounit.translatePath(path);
+    return require(path);
   }
 
   /**

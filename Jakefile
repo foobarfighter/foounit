@@ -27,8 +27,14 @@ var restartLoaderService = function (){
 desc('Run foounit node specs');
 namespace('spec', function (){
   task('node', ['build:all'], function (){
+    // Load the foounit node plugin
     var foounit = require('./dist/foounit-node');
-    foounit.run(__dirname + '/spec', __dirname + '/dist', /.*_spec.js$/);
+
+    // This runs the suite.
+    global.fsh = fsh;       //FIXME: Hack
+    require('./spec/suite');
+
+    //foounit.run(__dirname + '/spec',   __dirname + '/dist', /.*_spec.js$/);
   });
 
   task('browser', ['build:all'], function (){
@@ -72,7 +78,6 @@ namespace('build', function (params) {
   desc('Builds the core and the node adapter');
   task('node', ['build:core'], function (params){
     console.log('--> Building foounit-node.js');
-
     var concated = pacman.concat('foounit-node.js');
     fs.writeFileSync('dist/foounit-node.js', concated);
   });
@@ -80,13 +85,20 @@ namespace('build', function (params) {
   desc('Builds the browser adapter');
   task('browser', ['build:core'], function (params){
     console.log('--> Building foounit-browser.js');
-
     var concated = pacman.concat('foounit-browser.js');
     fs.writeFileSync('dist/foounit-browser.js', concated);
   });
 
+  desc('Build the server bundle');
+  task('server', ['build:core'], function (param){
+    console.log('--> Building foounit-server.js');
+    var concated = pacman.concat('foounit-server.js');
+    fs.writeFileSync('dist/foounit-server.js', concated);
+    
+  });
+
   desc('Builds all adapter environments');
-  task('all', ['build:core', 'build:node', 'build:browser'], function (){
+  task('all', ['build:core', 'build:node', 'build:browser', 'build:server'], function (){
     console.log('--> Built all adapters');
   });
 

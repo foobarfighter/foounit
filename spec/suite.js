@@ -8,8 +8,18 @@
   foounit.mount('test', __dirname);
 
   if (foounit.hostenv.type == 'node'){
-    foounit.getSuite().addPattern(__dirname + '/shared/**/**');
-    foounit.getSuite().addPattern(__dirname + '/node/**/**');
+    // TODO: This is what I want
+    //foounit.getSuite().addPattern(__dirname + '/shared/**/**');
+    //foounit.getSuite().addPattern(__dirname + '/node/**/**');
+
+    // This is what is easy
+    var files = [];
+    files = files.concat(fsh.findSync(__dirname + '/shared', /.*_spec.js$/));
+    files = files.concat(fsh.findSync(__dirname + '/server', /.*_spec.js$/));
+
+    for (var i = 0; i < files.length; ++i){
+      foounit.getSuite().addFile(files[i]);
+    }
   }
 
   if (foounit.hostenv.type == 'browser'){
