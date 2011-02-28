@@ -69,10 +69,8 @@ A functionally scoped BDD style test framework that runs everywhere.
 * XhrLoadingStrategy is not good enough.  We lose stack trace info in the eval.
 * The UI for browser based running is not where I want it to be yet.
 
-## Greetz
-* mde - for providing good ideas
-* peterbraden - for identifying problems with foounit's first iteration
-* jasmine for beating me to the punch :) and also providing a better API than I originally had
+## About
+TODO
 
 ## Other Alternatives
 
@@ -85,3 +83,10 @@ Some notable alternatives are:
 * shoulda.js (BDD with different syntax)
 * vows       (BDD with different syntax)
 * logan      (Cross environment unit testing)
+
+## Greetz
+* mde - for providing good ideas
+* peterbraden - for identifying problems with foounit's first iteration
+* nathansobo - for rewriting Screw Unit while I was at Grockit which got me this far
+* Alex Russell and James Burke - for being a sounding board for synchronous loader ideas
+* jasmine for beating me to the punch :) and also providing a better API than I originally had
