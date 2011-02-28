@@ -2,6 +2,13 @@
 
 A functionally scoped BDD style test framework that runs everywhere.
 
+Key features include:
+
+* Asyncronous test running
+* Out of the box support for multiple javascript host environments: node.js, major browsers, Adobe AIR, The Ruby Racer
+* BDD style test running
+* A simple API
+
 ### Contrived Example
     var MyLib = foounit.require(':src/my_lib');
 
@@ -50,6 +57,7 @@ A functionally scoped BDD style test framework that runs everywhere.
   * Node 0.2.6 - YES
   * Node 0.4   - NO
 * Rhino - NO
+* spidermonkey - ??
 
 ### Other
 * Adobe AIR - NO
