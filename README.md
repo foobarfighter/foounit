@@ -66,8 +66,10 @@ A functionally scoped BDD style test framework that runs everywhere.
 * peterbraden - for identifying problems with foounit's first iteration
 * jasmine for beating me to the punch :) and also providing a better API than I originally had
 
+## Other Alternatives
+
 ### foounit isn't for you?
-There's a lot of great unit testing frameworks for javascript these days.
+There's a lot of great unit testing frameworks for javascript these days.  It's more important that people are testing their code than it is that people use foounit.
 
 Some notable alternatives are:
 
