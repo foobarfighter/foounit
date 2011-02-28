@@ -44,12 +44,12 @@ A functionally scoped BDD style test framework that runs everywhere.
   * IE7 - ?
   * IE8 - ?
   * IE9 - ?
-* Rhino - NO
 
 ### Comand line
 * Node.js
   * Node 0.2.6 - YES
   * Node 0.4   - NO
+* Rhino - NO
 
 ### Other
 * Adobe AIR - NO
