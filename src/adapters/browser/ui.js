@@ -10,7 +10,7 @@ if (typeof foounit.ui == 'undefined'){
     titleDiv.className = 'example ' + className;
     titleDiv.innerHTML = '<a name="example' + index + '" ' +
       'class="title">' + title + '</a> ' +
-      '<a href="#top">&raquo; top</a>';
+      '&nbsp;<a class="topnav" href="#top">top &raquo;</a>';
     return titleDiv;
   }
 
