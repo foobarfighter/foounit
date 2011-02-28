@@ -21,7 +21,9 @@ foounit.add(function (kw){ with(kw){
             throwError.match(function (){}, 'should fail match');
             throw new Error('unexpected');
           } catch (e){
-            expect(e.toString().indexOf('AssertionError:   "Missing expected exception. should fail match"')).to(beGt, -1);
+            // FIXME: We shouldn't be doing this.  This normalization is to passify IE8.
+            var message = e.message || e.toString();
+            expect(message.indexOf('AssertionError:   "Missing expected exception. should fail match"')).to(beGt, -1);
           }
 
           // Should throw any error
@@ -29,7 +31,9 @@ foounit.add(function (kw){ with(kw){
             throwError.match(function (){}, null);
             throw new Error('unexpected');
           } catch (e){
-            expect(e.toString().indexOf('AssertionError:   "Missing expected exception.."')).to(beGt, -1);
+            // FIXME: We shouldn't be doing this.  This normalization is to passify IE8.
+            var message = e.message || e.toString();
+            expect(message.indexOf('AssertionError:   "Missing expected exception.."')).to(beGt, -1);
           }
         });
       });
