@@ -137,5 +137,45 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
+    describe('.waitForTimeout', function (){
+      var bc;
+      before(function (){
+        footest.setBuildContext(new footest.BuildContext());
+        mock(foounit, 'setTimeout', function (func){ func(); });
+      });
+
+      after(function (){
+        footest.setBuildContext(bc);
+      });
+
+      it('adds a TimeoutBlock to the current block queue', function (){
+        var waitForTimeoutBlock1, waitForTimeoutBlock2;
+
+        var example = new footest.Example('example', function (){
+          var blockQueue = footest.getBuildContext()
+            .getCurrentExample()
+            .getCurrentBlockQueue();
+
+          footest.keywords.waitForTimeout(function (){
+            expect(foo).to(equal, 'quux');
+          });
+          waitForTimeoutBlock1 = blockQueue.dequeue();
+
+          footest.keywords.waitForTimeout(function (){
+            expect(foo).to(equal, 'quux');
+          }, 123);
+          waitForTimeoutBlock2 = blockQueue.dequeue();
+        });
+
+        example.run();
+
+        expect(waitForTimeoutBlock1.constructor).to(be, footest.TimeoutBlock);
+        expect(waitForTimeoutBlock1.getTimeout()).to(equal, footest.settings.waitForTimeout);
+
+        expect(waitForTimeoutBlock2.constructor).to(be, footest.TimeoutBlock);
+        expect(waitForTimeoutBlock2.getTimeout()).to(equal, 123);
+      });
+    });
+
   });
 }});

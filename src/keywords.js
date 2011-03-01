@@ -72,3 +72,14 @@ foounit.addKeyword('waitFor', function (func, timeout){
   return block;
 });
 
+/**
+ * Adds a TimeoutBlock to the current block queue
+ */
+foounit.addKeyword('waitForTimeout', function (func, timeout){
+  var example = foounit.getBuildContext().getCurrentExample()
+    , block = new foounit.TimeoutBlock(func, timeout || foounit.settings.waitForTimeout);
+
+  example.enqueue(block);
+  return block;
+});
+

@@ -47,7 +47,7 @@ foounit.add(function (kw){ with(kw){
           });
         });
 
-        xit('does not call another service after the first match', function (){
+        it('does not call another service after the first match', function (){
           client.get('http://0.0.0.0:5999/echo1b');
           waitForTimeout(function (){
             expect(client.inbox.takeNext().body).to(equal, 'echo1b');
