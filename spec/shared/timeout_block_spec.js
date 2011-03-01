@@ -46,6 +46,7 @@ foounit.add(function (kw){ with(kw){
         waitFor(function (){
           expect(failure).to(beTrue);
           expect(callCount).to(equal, 2);
+          expect(block.getException().message).to(equal, 'timeout was not reached');
         });
       });
     });
