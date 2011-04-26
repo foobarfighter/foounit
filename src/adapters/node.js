@@ -38,7 +38,7 @@ var adapter = (function (){
    * Override foouint.load
    */
   self.load = function (path){
-    path = foounit.translatePath(path);
+    path = foounit.translatePath(path) + '.js';
     var code = fs.readFileSync(path);
     runInThisContext(code, path, true); 
   }

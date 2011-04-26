@@ -10,7 +10,7 @@ foounit.add(function (kw){ with (kw){
     });
 
     it('loads a JS file in the global scope', function (){
-      foounit.load(':test/fixture/noncommonjs_module.js');
+      foounit.load(':test/fixture/noncommonjs_module');
       expect(fixture.test.module).toNot(beUndefined);
     });
   });
