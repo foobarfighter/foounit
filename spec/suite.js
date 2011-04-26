@@ -15,6 +15,7 @@
     // This is what is easy
     var files = [];
     files = files.concat(fsh.findSync(__dirname + '/shared', /.*_spec.js$/));
+    files = files.concat(fsh.findSync(__dirname + '/node',   /.*_spec.js$/));
     files = files.concat(fsh.findSync(__dirname + '/server', /.*_spec.js$/));
 
     for (var i = 0; i < files.length; ++i){

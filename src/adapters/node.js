@@ -12,7 +12,9 @@ if (typeof fsh === 'undefined'){
 
 
 var adapter = (function (){
-  var sys = require('sys');
+  var sys = require('sys')
+    , fs  = require('fs')
+    , runInThisContext = process.binding('evals').Script.runInThisContext;
 
   // Private variables
   var self = {},  _specdir, _codedir;
@@ -30,6 +32,15 @@ var adapter = (function (){
   self.require = function (path){
     path = foounit.translatePath(path);
     return require(path);
+  }
+
+  /**
+   * Override foouint.load
+   */
+  self.load = function (path){
+    path = foounit.translatePath(path);
+    var code = fs.readFileSync(path);
+    runInThisContext(code, path, true); 
   }
 
   /**
