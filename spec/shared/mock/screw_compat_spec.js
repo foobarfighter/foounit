@@ -14,14 +14,18 @@ foounit.add(function (kw){ with(kw){
         mock(obj, 'foo');
         expect(obj.foo.totalCalls).to(beUndefined);
         expect(obj.foo.callArgs).to(beUndefined);
+        expect(obj.foo.mostRecentArgs).to(beUndefined);
 
         obj.foo();
         expect(obj.foo.totalCalls).to(be, 1);
         expect(obj.foo.callArgs[0]).to(equal, []);
+        expect(obj.foo.mostRecentArgs).to(equal, []);
 
         obj.foo(1, 2, 3);
         expect(obj.foo.totalCalls).to(be, 2);
         expect(obj.foo.callArgs[1]).to(equal, [1, 2, 3]);
+        expect(obj.foo.mostRecentArgs).to(equal, [1, 2, 3]);
+
       });
 
       describe('when the target function does not exist', function (){

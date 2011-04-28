@@ -31,7 +31,10 @@
       var f = obj[funcStr];
       f.totalCalls = f.totalCalls !== undefined ? ++f.totalCalls : 1;
       f.callArgs   = f.callArgs || [];
-      f.callArgs.push(pSlice.call(arguments, 0));
+
+      var args = pSlice.call(arguments, 0);
+      f.callArgs.push(args.concat());
+      f.mostRecentArgs = args.concat();
 
       if (stubFunc){
         return stubFunc.apply(obj, arguments);
