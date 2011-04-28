@@ -47,9 +47,9 @@ A functionally scoped BDD style test framework that runs everywhere.
 * Chrome - YES
 * Safari - YES
 * Internet Explorer
-  * IE6 - ?
-  * IE7 - ?
-  * IE8 - ?
+  * IE6 - YES
+  * IE7 - YES
+  * IE8 - YES
   * IE9 - ?
 
 ### Comand line
