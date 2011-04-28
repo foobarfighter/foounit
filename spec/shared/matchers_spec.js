@@ -217,20 +217,33 @@ foounit.add(function (kw){ with(kw){
           var matcher = new footest.keywords.include();
           matcher.notMatch([1,2,3], 4);
 
+          // Is this bad? We didn't find both elements so we pass
+          // Should we assert that all elements are not found?
+          matcher.notMatch([1,2,3], [4,2]);  
+
           expect(function (){
             matcher.notMatch([1,2,3], 2);
           }).to(throwError, /2 is included in \[1,2,3\]/);
+
+          expect(function (){
+            matcher.notMatch([1,2,3], [3,2]);
+          }).to(throwError, /\[3,2\] is included in \[1,2,3\]/);
         });
       });
 
       describe('.match', function (){
-        it('asserts that actual has an element that is strictly equal to expected', function (){
+        it('asserts that actual has elements that are strictly equal to expected', function (){
           var matcher = new footest.keywords.include();
           matcher.match([1,2,3], 2);
+          matcher.match([1,2,3], [3,2]);
 
           expect(function (){
             matcher.match([1,2,3], 4);
           }).to(throwError, /4 is not included in \[1,2,3\]/);
+
+          expect(function (){
+            matcher.match([1,2,3], [4,5]);
+          }).to(throwError, /\[4,5\] is not included in \[1,2,3\]/);
         });
       });
     });

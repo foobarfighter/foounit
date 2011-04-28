@@ -154,24 +154,32 @@ foounit.addKeyword('equal', function (){
  * Asserts that actual has an element that === expected
  */
 foounit.addKeyword('include', function (){
-  this.find = function (actual, expected){
-    var found = false;
-    for (var i = 0; i < actual.length; ++i){
-      if (actual[i] === expected){
-        found = true;
-        break;
-      }
+  var find = function (actual, expected){
+    if (!expected || (expected.constructor != Array && !expected.callee)){
+      expected = [expected];
     }
-    return found;
+
+    for (var i = 0; i < expected.length; ++i){
+      var found = false;
+      for (var j = 0; j < actual.length; ++j){
+        if (expected[i] === actual[j]){
+          found = true;
+          break;
+        }
+      }
+      if (!found){ return false; }
+    }
+
+    return true;
   }
 
   this.notMatch = function (actual, expected){
-    if (!this.find(actual, expected)){ return; }
+    if (!find(actual, expected)){ return; }
     assert.fail(actual, expected, null, 'is included in');
   }
 
   this.match = function (actual, expected){
-    if (this.find(actual, expected)){ return; }
+    if (find(actual, expected)){ return; }
     assert.fail(actual, expected, null, 'is not included in');
   }
 });
