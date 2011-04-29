@@ -14,9 +14,9 @@
 
     path = foounit.translatePath(path);
     if (!_loaded[path]){
-      _loaded[path] = true;
-      return _loaderStrategy[type](path + '.js');
+      _loaded[path] = _loaderStrategy[type](path + '.js');
     }
+    return _loaded[path];
   };
 
   /**

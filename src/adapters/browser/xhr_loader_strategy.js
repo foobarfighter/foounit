@@ -17,6 +17,7 @@ foounit.browser.XhrLoaderStrategy = function (){
   };
 
   var get = function (uri){
+    console.log('get: ' + uri);
     var request = xhr();
     request.open('GET', uri, false);
     request.send(null);
@@ -47,7 +48,7 @@ foounit.browser.XhrLoaderStrategy = function (){
   this.require = function (path){
     var code = get(path)
       , module = { exports: {} }
-      , funcString = '(function (foounit, module, __dirname, __filename){' + code + '});';
+      , funcString = '(function (foounit, module, exports, __dirname, __filename){' + code + '});';
 
     var func;
     try {
@@ -57,7 +58,7 @@ foounit.browser.XhrLoaderStrategy = function (){
       } else {
         func = eval(funcString);
       }
-      func.call({}, foounit, module, dirname(path), basename(path));
+      func.call({}, foounit, module, module.exports, dirname(path), basename(path));
     } catch (e){
       console.error('Failed to load path: ' + path + ': ' + e.message, e);
     }
@@ -71,5 +72,6 @@ foounit.browser.XhrLoaderStrategy = function (){
   this.load = function (path){
     var code = get(path);
     eval(code);
+    return true;
   };
 };
