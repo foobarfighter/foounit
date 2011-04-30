@@ -53,9 +53,7 @@ A functionally scoped BDD style test framework that runs everywhere.
   * IE9 - ?
 
 ### Comand line
-* Node.js
-  * Node 0.2.6 - YES
-  * Node 0.4   - NO
+* Node.js - YES
 * Rhino - NO
 * spidermonkey - ??
 
