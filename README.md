@@ -43,7 +43,8 @@ A functionally scoped BDD style test framework that runs everywhere.
 
 ### Browser
 * Firefox
-  * Firefox 3.6 - YES
+  * Firefox 3.x - YES
+  * Firefox 4.x - YES
 * Chrome - YES
 * Safari - YES
 * Internet Explorer
