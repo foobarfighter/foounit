@@ -183,3 +183,16 @@ foounit.addKeyword('include', function (){
     assert.fail(actual, expected, null, 'is not included in');
   }
 });
+
+foounit.addKeyword('match', function (){
+  this.notMatch = function (actual, expected){
+    if (!expected.exec(actual)){ return; }
+    assert.fail(actual, expected, null, expected + ' matches');
+  }
+
+  this.match = function (actual, expected){
+    if (expected.exec(actual)){ return; }
+    assert.fail(actual, expected, null, expected + ' does not match');
+  }
+});
+

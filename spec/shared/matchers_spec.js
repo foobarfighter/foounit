@@ -292,5 +292,33 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
+    describe('match', function (){
+      var matcher;
+
+      before(function (){
+        matcher = new footest.keywords.match();
+      });
+
+      describe('.match', function (){
+        it('matches actual against a regular expression (expected)', function (){
+          matcher.match('foo123', /^foo/);
+
+          expect(function (){
+            matcher.match('bar123', /foo/);
+          }).to(throwError, /AssertionError:  \/foo\/ does not match "bar123"/);
+        });
+      });
+
+      describe('.notMatch', function (){
+        it('does not match actual against a regular expression (expected)', function (){
+          matcher.notMatch('bar123', /^foo/);
+
+          expect(function (){
+            matcher.notMatch('foo', /foo/);
+          }).to(throwError, /AssertionError:  \/foo\/ matches "foo"/);
+        });
+      });
+    });
+
   });
 }});
