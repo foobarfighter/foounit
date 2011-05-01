@@ -127,6 +127,13 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
   }
 
   /**
+   * Returns the mount structure
+   */
+  foounit.getMounts = function (){
+    return _mounts;
+  }
+
+  /**
    * Translates mounted paths into a physical path
    */
   foounit.translatePath = (function (){
