@@ -1,17 +1,6 @@
 var http = require('http')
   , url = require('url');
 
-var EchoService = function (responseText){
-  this._responseText = responseText;
-
-  // TODO: This should be jsgi or something
-  var self = this;
-  this.serve = function (request, response){
-    response.writeHead(200, {'Content-Type': 'text/plain' });
-    response.end(self._responseText);
-  };
-};
-
 var Inbox = function (){
   var _queue = [];
 
