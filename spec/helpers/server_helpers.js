@@ -6,7 +6,7 @@ var EchoService = function (responseText){
 
   // TODO: This should be jsgi or something
   var self = this;
-  this.call = function (request, response){
+  this.serve = function (request, response){
     response.writeHead(200, {'Content-Type': 'text/plain' });
     response.end(self._responseText);
   };
@@ -24,15 +24,16 @@ var Inbox = function (){
   };
 };
 
-var TestClient = function (){
+var TestClient = function (host, port){
   var self = this;
 
+  this.host = host;
+  this.port = port;
   this.inbox = new Inbox();
 
-  this.get = function (pUrl){
-    var parsed = url.parse(pUrl)
-      , client = http.createClient(parsed.port, parsed.hostname)
-      , request = client.request('GET', parsed.pathname);
+  this.get = function (path){
+    var client = http.createClient(this.port, this.host)
+      , request = client.request('GET', path);
 
     request.on('response', function (response){
       var body = '';

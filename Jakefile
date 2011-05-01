@@ -33,13 +33,19 @@ namespace('spec', function (){
     // This runs the suite.
     global.fsh = fsh;       //FIXME: Hack
     require('./spec/suite');
-
-    //foounit.run(__dirname + '/spec',   __dirname + '/dist', /.*_spec.js$/);
   });
 
   task('browser', ['build:all'], function (){
     generateBrowserSuite();
     restartLoaderService();
+  });
+
+  task('server',  ['build:all'], function (){
+    var foounit = require('./dist/foounit-node');
+    foounit.mount('src',  __dirname + '/dist');
+    foounit.mount('test', __dirname + '/spec');
+    foounit.getSuite().addFile(__dirname + '/spec/server/server_spec.js');
+    foounit.getSuite().run();
   });
 });
 
