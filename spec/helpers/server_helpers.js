@@ -45,5 +45,4 @@ var TestClient = function (host, port){
   };
 };
 
-module.exports.EchoService = EchoService;
 module.exports.TestClient = TestClient;
