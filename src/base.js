@@ -279,3 +279,4 @@ if (foounit.hostenv.type == 'node'){
   global.foounit = foounit;
 }
 
+if (typeof exports !== undefined) exports = foounit;
