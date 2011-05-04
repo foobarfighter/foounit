@@ -1,0 +1,6 @@
+{ "name" : "foounit"
+, "description" : "BDD Test Framework"
+, "author" : "Bob Remeika"
+, "version" : "0.0.1"
+, "main" : "./src/main" 
+}
