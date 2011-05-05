@@ -1,6 +1,9 @@
-{ "name" : "foounit"
+{ "name"        : "foounit"
 , "description" : "BDD Test Framework"
-, "author" : "Bob Remeika"
-, "version" : "0.0.1"
-, "main" : "./src/main" 
+, "tags"        : ["bdd", "unit", "test", "testing", "screw unit", "jasmine"]
+, "repository"  : {"type": "git", "url": "git://github.com/foobarfighter/foounit.git"}
+, "engines"     : ["node"]
+, "author"      : "Bob Remeika"
+, "version"     : "0.0.1"
+, "main"        : "./src/main" 
 }

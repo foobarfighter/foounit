@@ -3,7 +3,7 @@ if (typeof foounit.ui == 'undefined'){
 }
 
 (function (ui){
-  var _body, _index = 0;
+  var _body, _index = 0, _autoScrolling = true;
 
   var _createTitleNode = function (title, index, className){
     var titleDiv = document.createElement('div');
@@ -90,6 +90,27 @@ if (typeof foounit.ui == 'undefined'){
     }
   }
 
+  var _Scroller = function (){
+    var _listen = function (obj, evt){
+    };
+
+    // Runs in the constructor
+    _listen(window, 'scroll');
+    _listen(window, 'click');
+
+    this.cancel = function (){
+    }
+
+    this.bottom = function (){
+      window.scroll(0, 1000000);
+    }
+
+    this.top = function (){
+      window.scroll(0, 0);
+    }
+
+  }
+
   /************ Public functions ***********/
 
   /**
@@ -103,6 +124,7 @@ if (typeof foounit.ui == 'undefined'){
     _body.appendChild(topNode);
 
     _progressBar = new _ProgressBar(_body, 'progress');
+    _scroller    = new _Scroller();
   };
 
   /**
@@ -112,6 +134,7 @@ if (typeof foounit.ui == 'undefined'){
     try {
       _body.appendChild(_createFailureNode(example, _index));
       _progressBar.fail(_index);
+      _scroller.bottom();
       ++_index;
     } catch (e){
       alert('foounit.ui.onFailure: ' + e.message);
@@ -125,6 +148,7 @@ if (typeof foounit.ui == 'undefined'){
     try {
       _body.appendChild(_createSuccessNode(example, _index));
       _progressBar.success(_index);
+      _scroller.bottom();
       ++_index;
     } catch (e){
       alert('foounit.ui.onSuccess: ' + e.message);
@@ -138,6 +162,7 @@ if (typeof foounit.ui == 'undefined'){
     try {
       _body.appendChild(_createPendingNode(example, _index));
       _progressBar.pending(_index);
+      _scroller.bottom();
       ++_index;
     } catch (e){
       alert('foounit.ui.onPending: ' + e.message);
@@ -156,6 +181,7 @@ if (typeof foounit.ui == 'undefined'){
         info.totalCount     + ' total');
 
       _progressBar.log('>> foounit runtime: ', info.runMillis + 'ms');
+      _scroller.top();
     } catch (e){
       alert('foounit.ui.onFinish: ' + e.message);
     }

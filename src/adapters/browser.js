@@ -66,6 +66,10 @@
    */
   foounit.report = function (info){
     foounit.ui.onFinish(info);
+
+    // Used by jellyfish in CI environments
+    window.testResults = info;
+    window.jfComplete  = true;
   };
 
   /**
