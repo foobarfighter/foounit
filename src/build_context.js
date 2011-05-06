@@ -15,6 +15,9 @@ foounit.mixin(foounit.BuildContext.prototype, {
   }
 
   , getCurrentGroup: function (){
+    if (!this._currentGroup){
+      this.setCurrentGroup(this.getRoot());
+    }
     return this._currentGroup;
   }
 

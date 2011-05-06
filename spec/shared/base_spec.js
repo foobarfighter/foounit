@@ -20,6 +20,30 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
+    describe('.addKeyword', function (){
+      var orig;
+
+      before(function (){
+        orig = foounit.settings.kwScope;
+        expect(foounit.keywords.bazBar).to(beUndefined);
+      });
+
+      after(function (){
+        foounit.settings.kwScope = orig;
+      });
+
+      it('adds keywords scoped to the setting in foounit.settings.kwScope', function (){
+        var scope = {};
+        foounit.settings.kwScope = scope;
+        foounit.addKeyword('bazBar', 'poopin');
+        expect(scope.bazBar).to(equal, 'poopin');
+
+        foounit.removeKeyword('bazBar');
+        expect(scope.bazBar).to(beUndefined);
+        expect(foounit.keywords.bazBar).to(beUndefined);
+      });
+    });
+
     describe('.build', function (){
       it('builds an array of all tests to be run', function (){
         var bc = footest.getBuildContext();

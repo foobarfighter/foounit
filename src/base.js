@@ -49,7 +49,13 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
    * Default settings
    */
   foounit.defaults = {
+    // Default timeout setting for waitFor keyword
     waitForTimeout: 5000
+
+    // Default scope to which keywords are applied
+    // If undefined then keywords are not added to
+    // to a scope object
+  , kwScope:        foounit.hostenv.global
   };
 
   // TODO: Make settings configurable
@@ -267,6 +273,20 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
    */
   foounit.addKeyword = function (keyword, definition){
     foounit.keywords[keyword] = definition;
+
+    var kwScope = foounit.settings.kwScope;
+    if (kwScope){ kwScope[keyword] = definition; }
+  }
+
+  /**
+   * Removes a keyword from the foounit.keywords object
+   * and from the kwScope
+   */
+  foounit.removeKeyword = function (keyword){
+    delete foounit.keywords[keyword];
+
+    var kwScope = foounit.settings.kwScope;
+    if (kwScope){ delete kwScope[keyword]; }
   }
 
 
