@@ -75,3 +75,5 @@ assert.throws = function(block, /*optional*/error, /*optional*/message) {
 assert.doesNotThrow = function(block, /*optional*/error, /*optional*/message) {
   _throws.apply(this, [false].concat(pSlice.call(arguments)));
 };
+
+module.exports = assert;

@@ -1,15 +1,22 @@
-var foounit = require('./foounit');
+var foounit = require('../base')
+  , fsh     = require('../../build/fsh')
+  , colors  = require('./node/colors')
+  , assert  = require('./node/assert_patch');
 
-// This is a little weird, but fsh will get baked into
-// the foounit-node build.
-//, fsh = require('../build/fsh');
-if (typeof fsh === 'undefined'){
-  throw new Error('Looks like there was a problem ' +
-    'building foounit-node. ' +
-    'fsh should have been baked in.');
-}
-
-
+// Include all node dependencies... not great, but it's better than doing a build.
+foounit.mixin(foounit, require('../block'));
+foounit.mixin(foounit, require('../work_queue'));
+foounit.mixin(foounit, require('../block_queue'));
+foounit.mixin(foounit, require('../build_context'));
+foounit.mixin(foounit, require('../example'));
+foounit.mixin(foounit, require('../example_group'));
+foounit.mixin(foounit, require('../expectation'));
+foounit.mixin(foounit, require('../keywords'));
+foounit.mixin(foounit, require('../matchers'));
+foounit.mixin(foounit, require('../mock/screw_compat'));
+foounit.mixin(foounit, require('../polling_block'));
+foounit.mixin(foounit, require('../suite'));
+foounit.mixin(foounit, require('../timeout_block'));
 
 var adapter = (function (){
   var sys = require('sys')
@@ -17,7 +24,7 @@ var adapter = (function (){
     , runInThisContext = process.binding('evals').Script.runInThisContext;
 
   // Private variables
-  var self = {},  _specdir, _codedir;
+  var self = {},  _specdir;
 
   // Private functions
   var _translate = function(str, tvars){
@@ -45,17 +52,21 @@ var adapter = (function (){
 
   /**
    * Runs all registered tests. Convenience method for build/execute steps.
+   * Optionally accepts a test directory and a pattern for finding files with tests to run.
    */
-  self.run = function (specdir, codedir, pattern) {
+  self.run = function (specdir, pattern) {
     _specdir = specdir;
-    _codedir = codedir;
 
-    var specs = fsh.findSync(_specdir, pattern);
-    for (var i = 0, ii = specs.length; i < ii; ++i){
-      var specFile = specs[i].replace(/\.js$/, '');
-      console.log('running spec: ', specFile);
-      var spec = require(specFile);
+    if (_specdir){
+      var specs = fsh.findSync(_specdir, pattern);
+
+      for (var i = 0, ii = specs.length; i < ii; ++i){
+        var specFile = specs[i].replace(/\.js$/, '');
+        console.log('running spec: ', specFile);
+        var spec = require(specFile);
+      }
     }
+
     foounit.execute(foounit.build());
   }
 
@@ -67,7 +78,7 @@ var adapter = (function (){
       colors.putsRed('F');
       colors.putsRed(example.getFullDescription());
       sys.puts(new Array(example.getFullDescription().length+1).join('='));
-      highlightSpecs(example.getException().stack);
+      colors.highlightSpecs(example.getException().stack);
     } else if (example.isSuccess()){
       colors.printGreen('.');
     } else if (example.isPending()){
@@ -103,8 +114,3 @@ var adapter = (function (){
 
 foounit.mixin(foounit, adapter);
 module.exports = foounit;
-
-// TODO: Launch if file was not required
-// TODO: Parse params from cmd-line
-//run('../', /_spec\.js$/, '../../dist');
-

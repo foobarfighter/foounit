@@ -26,9 +26,9 @@ var restartLoaderService = function (){
 
 desc('Run foounit node specs');
 namespace('spec', function (){
-  task('node', ['build:all'], function (){
-    // Load the foounit node plugin
-    var foounit = require('./dist/foounit-node');
+  task('node', [], function (){
+    // Load foounit
+    var foounit = require('foounit');
 
     // This runs the suite.
     global.fsh = fsh;       //FIXME: Hack

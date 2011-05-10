@@ -16,10 +16,20 @@
     var files = [];
     files = files.concat(fsh.findSync(__dirname + '/shared', /.*_spec.js$/));
     files = files.concat(fsh.findSync(__dirname + '/node',   /.*_spec.js$/));
-    files = files.concat(fsh.findSync(__dirname + '/server', /.*_spec.js$/));
+
+    // TODO: This should be a separate module
+    //files = files.concat(fsh.findSync(__dirname + '/server', /.*_spec.js$/));
 
     for (var i = 0; i < files.length; ++i){
       foounit.getSuite().addFile(files[i]);
+    }
+
+    // FIXME: Patch requires for foounit under node.  This is only required when testing foounit itself.
+    // TODO:  Require testable units independently.  This is only temporary.
+    var orig = foounit.require;
+    foounit.require = function (path){
+      if (path != ':src/foounit'){ return orig.apply(foounit, arguments); }
+      return require('foounit');
     }
   }
 

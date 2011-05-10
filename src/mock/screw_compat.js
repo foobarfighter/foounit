@@ -1,3 +1,7 @@
+if (foounit.hostenv.type == 'node'){
+  var assert = require('assert');
+}
+
 (function (foounit){
   var pSlice = Array.prototype.slice;
 
