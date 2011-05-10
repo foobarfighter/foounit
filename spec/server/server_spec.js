@@ -34,8 +34,8 @@ foounit.add(function (kw){ with(kw){
       client.kill();
     });
 
-    it('passes', function (){
-      console.log('w00t!');
+    xit('passes', function (){
+      //console.log('w00t!');
     });
   });
 

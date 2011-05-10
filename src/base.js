@@ -51,11 +51,6 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
   foounit.defaults = {
     // Default timeout setting for waitFor keyword
     waitForTimeout: 5000
-
-    // Default scope to which keywords are applied
-    // If undefined then keywords are not added to
-    // to a scope object
-  , kwScope:        foounit.hostenv.global
   };
 
   // TODO: Make settings configurable
@@ -264,6 +259,11 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
   }
 
   /**
+   * Private scope variable for hosting the foounit keywords
+   */
+  var _kwScope;
+
+  /**
    * foounit keyword context
    */
   foounit.keywords = {};
@@ -273,9 +273,7 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
    */
   foounit.addKeyword = function (keyword, definition){
     foounit.keywords[keyword] = definition;
-
-    var kwScope = foounit.settings.kwScope;
-    if (kwScope){ kwScope[keyword] = definition; }
+    if (_kwScope){ _kwScope[keyword] = definition; }
   }
 
   /**
@@ -284,10 +282,30 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
    */
   foounit.removeKeyword = function (keyword){
     delete foounit.keywords[keyword];
-
-    var kwScope = foounit.settings.kwScope;
-    if (kwScope){ delete kwScope[keyword]; }
+    if (_kwScope){ delete _kwScope[keyword]; }
   }
+
+  /**
+   * Puts all of the foounit keywords in the global scope
+   */
+  foounit.globalize = function (){
+    return this.scope(this.hostenv.global);
+  }
+
+  /**
+   * Mixes in all of the foounit keywords into scope object that was passed
+   */
+  foounit.scope = function (obj){
+    _kwScope = obj ? foounit.mixin(obj, foounit.keywords) : obj;
+    return this;
+  }
+
+  /**
+   * Retrieve the object that was set for the keyword scope
+   */
+  foounit.getScope = function (){
+    return _kwScope;
+  };
 
 
 })(foounit);

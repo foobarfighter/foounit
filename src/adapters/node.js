@@ -44,7 +44,7 @@ var adapter = (function (){
   }
 
   /**
-   * Default runner
+   * Runs all registered tests. Convenience method for build/execute steps.
    */
   self.run = function (specdir, codedir, pattern) {
     _specdir = specdir;

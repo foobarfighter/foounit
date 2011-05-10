@@ -32,6 +32,13 @@ namespace('spec', function (){
 
     // This runs the suite.
     global.fsh = fsh;       //FIXME: Hack
+
+    // Poor man's way of just selecting a particular file or files under node to run
+    var files = Array.prototype.slice.call(arguments, 0);
+    for (var i = 0; i < files.length; ++i){
+      foounit.getSuite().addFile(__dirname + '/' + files[i]);
+    }
+
     require('./spec/suite');
   });
 

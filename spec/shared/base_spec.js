@@ -20,27 +20,35 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
-    describe('.addKeyword', function (){
-      var orig;
-
+    describe('.addKeyword/.removeKeyword', function (){
       before(function (){
-        orig = foounit.settings.kwScope;
-        expect(foounit.keywords.bazBar).to(beUndefined);
+        expect(footest.getScope()).to(beUndefined);
       });
 
       after(function (){
-        foounit.settings.kwScope = orig;
+        footest.scope(undefined);
       });
 
       it('adds keywords scoped to the setting in foounit.settings.kwScope', function (){
         var scope = {};
-        foounit.settings.kwScope = scope;
-        foounit.addKeyword('bazBar', 'poopin');
+        footest.scope(scope)
+        footest.addKeyword('bazBar', 'poopin');
         expect(scope.bazBar).to(equal, 'poopin');
 
         foounit.removeKeyword('bazBar');
         expect(scope.bazBar).to(beUndefined);
         expect(foounit.keywords.bazBar).to(beUndefined);
+      });
+    });
+
+    describe('scope', function (){
+      it('mixes in the foounit keywords into the scope object that was passed', function (){
+        var obj = {};
+        footest.scope(obj);
+        expect(obj).to(equal, footest.keywords);
+
+        footest.scope(undefined);
+        expect(footest.getScope()).to(beUndefined);
       });
     });
 
