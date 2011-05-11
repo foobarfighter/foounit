@@ -1,7 +1,5 @@
 if (typeof foounit.browser === 'undefined'){
   foounit.browser = {};
-  // Save off eval in global scope for proper global loading
-  foounit.geval = eval;
 }
 
 foounit.browser.XhrLoaderStrategy = function (){
@@ -42,6 +40,11 @@ foounit.browser.XhrLoaderStrategy = function (){
     return parts[parts.length - 1];
   };
 
+  var geval = function (src){
+    var g = foounit.hostenv.global;
+    return (g.execScript) ? g.execScript(src) : g.eval.call(null, src);
+  };
+
   /**
    * Implements lower level require responsible for syncronously getting code
    * and loading the code in CommonJS format with functional scope.
@@ -72,7 +75,7 @@ foounit.browser.XhrLoaderStrategy = function (){
    */
   this.load = function (path){
     var code = get(path);
-    foounit.geval.call(window, code);
+    geval(window, code);
     return true;
   };
 };
