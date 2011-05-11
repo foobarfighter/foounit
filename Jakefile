@@ -88,12 +88,12 @@ namespace('build', function (params) {
     fs.writeFileSync('dist/foounit.js', concated);
   });
 
-  desc('Builds the core and the node adapter');
-  task('node', ['build:core'], function (params){
-    console.log('--> Building foounit-node.js');
-    var concated = pacman.concat('foounit-node.js');
-    fs.writeFileSync('dist/foounit-node.js', concated);
-  });
+  //desc('Builds the core and the node adapter');
+  //task('node', ['build:core'], function (params){
+  //  console.log('--> Building foounit-node.js');
+  //  var concated = pacman.concat('foounit-node.js');
+  //  fs.writeFileSync('dist/foounit-node.js', concated);
+  //});
 
   desc('Builds the browser adapter');
   task('browser', ['build:core'], function (params){
@@ -111,7 +111,7 @@ namespace('build', function (params) {
   });
 
   desc('Builds all adapter environments');
-  task('all', ['build:core', 'build:node', 'build:browser', 'build:server'], function (){
+  task('all', ['build:core', 'build:browser', 'build:server'], function (){
     console.log('--> Built all adapters');
   });
 

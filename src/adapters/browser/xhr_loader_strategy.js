@@ -1,5 +1,7 @@
 if (typeof foounit.browser === 'undefined'){
   foounit.browser = {};
+  // Save off eval in global scope for proper global loading
+  foounit.geval = eval;
 }
 
 foounit.browser.XhrLoaderStrategy = function (){
@@ -48,7 +50,7 @@ foounit.browser.XhrLoaderStrategy = function (){
     var code = get(path)
       , module = { exports: {} }
       , funcString = '(function (foounit, module, exports, __dirname, __filename){' + code + '});';
-
+  
     var func;
     try {
       // IE sucks shit.
@@ -70,7 +72,7 @@ foounit.browser.XhrLoaderStrategy = function (){
    */
   this.load = function (path){
     var code = get(path);
-    eval(code);
+    foounit.geval.call(window, code);
     return true;
   };
 };
