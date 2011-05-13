@@ -1,4 +1,4 @@
-# foounit
+# foounit ![Project status](http://stillmaintained.com/nvie/gitflow.png)
 
 A functionally scoped BDD style test framework that runs everywhere.
 
