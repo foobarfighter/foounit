@@ -1,4 +1,4 @@
-# foounit
+# foounit ![Project status](http://stillmaintained.com/foobarfighter/foounit.png)
 
 A functionally scoped BDD style test framework that runs everywhere.
 
