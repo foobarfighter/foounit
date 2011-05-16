@@ -1,7 +1,7 @@
 { "name"        : "foounit"
 , "description" : "Cross environment BDD test framework"
 , "tags"        : ["bdd", "unit", "test", "testing", "screw unit", "jasmine"]
-, "repository"  : {"type": "git", "url": "git://github.com/foobarfighter/foounit.git"}
+, "repository"  : {"type": "git", "url": "http://github.com/foobarfighter/foounit.git"}
 , "author"      : "Bob Remeika"
 , "version"     : "0.0.1"
 , "main"        : "./src/adapters/node" 
