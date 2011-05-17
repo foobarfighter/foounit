@@ -24,7 +24,12 @@ if (foounit.hostenv.type == 'node'){
 
   var repo = new MockRepository();
   
-  foounit.addKeyword('mock', function (obj, funcStr, stubFunc) {
+  foounit.addKeyword('mock', function (obj, funcStr, stubFunc){
+    if (arguments.length == 1 && typeof obj == 'function'){
+      obj = { callback: obj };
+      funcStr = 'callback';
+    }
+
     if (!obj[funcStr]){
       throw new Error('"' + funcStr + '" is not a function that can be mocked');
     }
@@ -46,6 +51,8 @@ if (foounit.hostenv.type == 'node'){
     }
 
     obj[funcStr].isMocked = true;
+
+    return obj[funcStr];
   });
 
   foounit.addKeyword('haveBeenCalled', function (){

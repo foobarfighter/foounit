@@ -55,12 +55,32 @@ foounit.add(function (kw){ with(kw){
           expect(args).to(equal, [1,2,3]);
         });
       });
-    });
 
-    describe('withArgs', function (){
-      it('converts an argument list into an array', function (){
-        var arr = foounit.keywords.withArgs(1, 2, 3);
-        expect(arr).to(equal, [1,2,3]);
+      describe('when only argument is a function', function (){
+        var foo, callback;
+
+        before(function (){
+          foo = 'baz';
+          callback = mock(function (){ foo = 'bar' });
+        });
+
+        it('appends mocking data to the function but does not replace the function', function (){
+          callback(1, 2, 3);
+          expect(callback).to(haveBeenCalled, withArgs(1,2,3));
+
+          callback();
+          expect(callback).to(haveBeenCalled, twice);
+
+          expect(function (){
+            expect(callback).to(haveBeenCalled, thrice);
+          }).to(throwError, /mock was called 2 times, but was expected 3 times/);
+        });
+      });
+
+    }); // end of mock
+
+    describe('foounit.resetMocks', function (){
+      xit('resets all mocked functions', function (){
       });
     });
 
