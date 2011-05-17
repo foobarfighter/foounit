@@ -104,6 +104,21 @@ foounit.addKeyword('beTrue', function (){
 });
 
 /**
+ * Asserts that actual is truthy
+ */
+foounit.addKeyword('beTruthy', function (){
+  this.notMatch = function (actual){
+    if (!actual){ return };
+    assert.fail('Expected "' + actual + '" to NOT be truthy');
+  }
+
+  this.match = function (actual){
+    if (actual){ return; }
+    assert.fail('Expected "' + actual + '" to be truthy');
+  }
+});
+
+/**
  * Asserts true === actual
  */
 foounit.addKeyword('beFalse', function (){
@@ -115,6 +130,21 @@ foounit.addKeyword('beFalse', function (){
   // expected is unused
   this.match = function (actual){
     assert.strictEqual(actual, false);
+  }
+});
+
+/**
+ * Asserts that actual is falsy
+ */
+foounit.addKeyword('beFalsy', function (){
+  this.notMatch = function (actual){
+    if (actual){ return; }
+    assert.fail('Expected "' + actual + '" to NOT be falsy');
+  }
+
+  this.match = function (actual){
+    if (!actual){ return; }
+    assert.fail('Expected "' + actual + '" to be falsy');
   }
 });
 

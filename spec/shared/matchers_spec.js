@@ -188,6 +188,65 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
+    describe('.beTruthy', function (){
+      describe('.match', function (){
+        it('asserts that actual is a truthy value', function (){
+          var matcher = new footest.keywords.beTruthy();
+          matcher.match(true);
+          matcher.match('test');
+          matcher.match(1);
+          
+          expect(function (){ matcher.match(false); })
+            .to(throwError, /Expected.*false.*to be truthy/);
+          expect(function (){ matcher.match(null); })
+            .to(throwError, /Expected.*null.*to be truthy/);
+          expect(function (){ matcher.match(''); })
+            .to(throwError, /Expected \\"\\" to be truthy/);
+          expect(function (){ matcher.match(0); })
+            .to(throwError, /Expected.*0.*to be truthy/);
+        });
+      });
+
+      describe('notMatch', function (){
+        it('asserts the actual is NOT a truthy value', function (){
+          var matcher = new footest.keywords.beTruthy();
+          matcher.notMatch(null);
+          matcher.notMatch(false);
+          matcher.notMatch(0);
+          matcher.notMatch(undefined);
+          matcher.notMatch('');
+
+          expect(function (){
+            matcher.notMatch('test');
+          }).to(throwError, /Expected.*to NOT be truthy/);
+        });
+      });
+    });
+
+    describe('beFalsy', function (){
+      describe('.match', function (){
+        it('asserts that actual is a falsy value', function (){
+          var matcher = new footest.keywords.beFalsy();
+          matcher.match(null);
+
+          expect(function (){
+            matcher.match(true);
+          }).to(throwError, /Expected.*to be falsy/);
+        });
+      });
+
+      describe('.notMatch', function (){
+        it('asserts that actual is NOT a falsy value', function (){
+          var matcher = new footest.keywords.beFalsy();
+          matcher.notMatch('test');
+
+          expect(function (){
+            matcher.notMatch(0);
+          }).to(throwError, /Expected.*to NOT be falsy/);
+        });
+      });
+    });
+
     describe('.beFalse', function (){
       describe('.notMatch', function (){
         it('asserts that actual is !== false', function (){
