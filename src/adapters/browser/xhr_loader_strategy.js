@@ -75,7 +75,7 @@ foounit.browser.XhrLoaderStrategy = function (){
    */
   this.load = function (path){
     var code = get(path);
-    geval(window, code);
+    geval(code);
     return true;
   };
 };
