@@ -22,6 +22,9 @@ foounit.addKeyword('xit', function (description, test){
   return example;
 });
 
+/** Alias for xit **/
+foounit.addKeyword('fuckit', foounit.keywords.xit);
+
 /**
  * Defines a before function in the context of the current group
  */
