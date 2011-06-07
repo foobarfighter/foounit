@@ -22,6 +22,15 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
+    describe('fuckit', function (){
+      it('creates a pending example', function (){
+        foo = footest.keywords.fuckit('pending', function (){
+          throw new Error('pending test should not run');
+        });
+        expect(foo.isPending()).to(beTrue);
+      });
+    });
+
     describe('matchers', function (){
       it('mixes them into the keywords', function (){
         var called = false;
