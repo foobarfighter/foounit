@@ -56,7 +56,7 @@ foounit.add(function (kw){ with(kw){
         });
       });
 
-      describe('when only argument is a function', function (){
+      describe('when the only argument is a function', function (){
         var foo, callback;
 
         before(function (){
@@ -67,6 +67,8 @@ foounit.add(function (kw){ with(kw){
         it('appends mocking data to the function but does not replace the function', function (){
           callback(1, 2, 3);
           expect(callback).to(haveBeenCalled, withArgs(1,2,3));
+
+          expect(foo).to(be, 'bar');
 
           callback();
           expect(callback).to(haveBeenCalled, twice);
