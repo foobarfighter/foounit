@@ -28,6 +28,7 @@ if (foounit.hostenv.type == 'node'){
     if (arguments.length == 1 && typeof obj == 'function'){
       obj = { callback: obj };
       funcStr = 'callback';
+      stubFunc = obj.callback;
     }
 
     if (!obj[funcStr]){
