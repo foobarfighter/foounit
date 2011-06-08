@@ -86,3 +86,14 @@ foounit.addKeyword('waitForTimeout', function (func, timeout){
   return block;
 });
 
+
+/**
+ * Adds a RunBlock to the current block queue that fails the test if it throws
+ */
+foounit.addKeyword('run', function (func){
+  var example = foounit.getBuildContext().getCurrentExample()
+    , block = new foounit.Block(func);
+
+  example.enqueue(block);
+  return block;
+});
