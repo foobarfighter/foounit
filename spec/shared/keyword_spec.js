@@ -186,5 +186,39 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
+    describe('.run', function (){
+      var bc;
+      before(function (){
+        footest.setBuildContext(new footest.BuildContext());
+        mock(foounit, 'setTimeout', function (func){ func(); });
+      });
+
+      after(function (){
+        footest.setBuildContext(bc);
+      });
+
+      it('adds a Block to the current block queue', function (){
+        var runBlock1, runBlock2;
+
+        var example = new footest.Example('example', function (){
+          var blockQueue = footest.getBuildContext()
+            .getCurrentExample()
+            .getCurrentBlockQueue();
+
+          footest.keywords.run(function (){
+            expect(foo).to(equal, 'quux');
+          });
+          runBlock1 = blockQueue.dequeue();
+
+          footest.keywords.run(function (){}, 123);
+          runBlock2 = blockQueue.dequeue();
+        });
+
+        example.run();
+        expect(runBlock1.constructor).to(be, footest.Block);
+        expect(runBlock2.constructor).to(be, footest.Block);
+      });
+    });
+
   });
 }});

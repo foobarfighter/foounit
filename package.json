@@ -3,7 +3,7 @@
 , "tags"        : ["bdd", "unit", "test", "testing", "screw unit", "jasmine"]
 , "repository"  : {"type": "git", "url": "http://github.com/foobarfighter/foounit.git"}
 , "author"      : "Bob Remeika"
-, "version"     : "0.0.5"
+, "version"     : "0.0.6"
 , "main"        : "./src/adapters/node" 
 , "dependencies": {
   }
