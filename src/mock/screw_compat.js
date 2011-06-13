@@ -47,7 +47,7 @@ if (foounit.hostenv.type == 'node'){
       f.mostRecentArgs = args.concat();
 
       if (stubFunc){
-        return stubFunc.apply(obj, arguments);
+        return stubFunc.apply(this, arguments);
       }
     }
 

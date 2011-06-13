@@ -54,6 +54,19 @@ foounit.add(function (kw){ with(kw){
           expect(scope).to(be, obj);
           expect(args).to(equal, [1,2,3]);
         });
+
+        it('calls the stub function in "this" scope - issue #16', function (){
+          mock(obj, 'baz', function (){
+            scope = this;
+            args  = arguments;
+            return 456
+          });
+
+          var wrapperObj = { func: obj.baz };
+          wrapperObj.func();
+          expect(wrapperObj.func).to(haveBeenCalled, once);
+          expect(scope).to(be, wrapperObj);
+        });
       });
 
       describe('when the only argument is a function', function (){
