@@ -151,6 +151,21 @@ ul.features li {
 }
 /** /Teaser cells **/
 
+/** Main content **/
+.content.main {
+  margin-top: 30px;
+  padding:    30px;
+  border: 3px dotted #728a8b;
+  background-color: #fff;
+  width: 872px;
+}
+
+.content.main a,
+.content.main a:visited {
+  
+}
+/** /Main content **/
+
 
 
 h1, h3 {
@@ -192,8 +207,7 @@ pre.code {
   margin: 10px 0px 10px 20px;
   background-color: #d1d7d2;
 
-  border-left:   8px #3f7897 solid;
-  border-radius: 5px;
+  border-left:   8px #728a8b solid;
 
   padding: 8px;
   display: block;
