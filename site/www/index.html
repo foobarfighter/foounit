@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>foounit: Test your javascript everywhere!</title>
+  <link href="http://yui.yahooapis.com/2.9.0/build/reset/reset-min.css" rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=Neuton:regular,italic,bold" rel="stylesheet" type="text/css">
+  <link href="resources/main.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+  <!-- center wtf?  IT WORKS and took me 3 seconds... fuck it -->
+    <header>
+      <div class="content">
+        <a href="/index.html"><img id="logo" height="55" width="241" src="resources/images/logo.png"></a>
+        <nav>
+          <a href="">Get Started</a>
+          <a href="">Documentation</a>
+          <a href="">Support</a>
+          <a href="">About</a>
+          <a href="">Source</a>
+        </nav>
+        <div id="download-tag"><span>
+        Version 0.0.7  <strong>Download</strong>
+        </span></div>
+      </div>
+      <div id="header-decoration"></div>
+    </header>
+
+    <div id="teaser">
+      <div class="content">
+        <h1>Test your javascript everywhere!</h1>
+
+        <div class="cell">
+          <h2>{Expressive BDD Syntax}</h2>
+          <div class="cell-content">
+            <div class="frame dark"></div>
+            <div class="text">
+              <br><br>
+              var foounit = require('foounit');<br>
+              <br>
+              describe('this is ta test', function() {<br>
+              &nbsp;&nbsp;it('is only a test', function() {<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;expect(myTest).to(runEverywhere);<br>
+              &nbsp;&nbsp;});<br>
+              });<br>
+              <br>
+              foounit.run();
+            </div>
+          </div>
+        </div>
+
+        <div class="cell">
+          <h2>{Clean easy to use UI}</h2>
+          <div class="cell-content">
+            <div class="frame light"></div>
+            <img src="resources/images/screenshot-node.png" height="223" width="296">
+          </div>
+        </div>
+
+        <div class="cell">
+          <h2>{More Features}</h2>
+          <div class="cell-content light">
+            <div class="frame light"></div>
+            <ul class="features">
+              <li>Asynchronous testing</li>
+              <li>Runs in nodejs and the browser</li>
+              <li>Mocking</li>
+              <li>Continuous Integration</li>
+              <li>Test suites</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div> 
+    <div class="content">
+      Stuff will exist here... and it will be awesome
+    </div>
+</body>
+</html>
