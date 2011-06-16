@@ -24,17 +24,16 @@ nav {
   margin-top: 32px;
 }
 
-nav a {
+/*nav a {
   font: bold 15px Verdana;
   color:          #3a3d40;
   letter-spacing: -1px;
   margin-right:   40px;
   text-decoration: none;
-}
+}*/
 
 nav a:hover {
   color: #fff;
-  background-color: #3a3d40;
 }
 
 
@@ -49,6 +48,32 @@ nav a:hover {
   position: relative;
   margin: auto;
 }
+
+/** Nav Link **/
+nav a {
+  text-decoration: none;
+  color: #3a3d40;
+  font: bold 13px/29px Verdana;
+  display: block;
+  padding: 0 15px;
+}
+
+nav span:hover a {
+  background: url(images/link-hover-left.png) no-repeat;
+  color: #fff;
+}
+
+nav span {
+  display: block;
+  float: left;
+  margin-right: 20px;
+}
+
+nav span:hover {
+  background: url(images/link-hover-right.png) no-repeat right;
+  color: #fff;
+}
+/** /Nav Link **/
 
 /** Download Tag **/
 #download-tag div {
