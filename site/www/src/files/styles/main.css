@@ -206,6 +206,14 @@ ul.features li {
 }
 /** /Main content **/
 
+/** Footer **/
+.content.footer {
+  color: #fff;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+/** /Footer **/
+
 
 
 h1, h3 {
