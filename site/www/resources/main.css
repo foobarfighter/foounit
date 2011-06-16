@@ -51,24 +51,48 @@ nav a:hover {
 }
 
 /** Download Tag **/
-#download-tag span {
+#download-tag div {
   background: url(images/download-tag-left.png) no-repeat;
-  height: 40px;
-  line-height: 22px;
-  margin:  0 3px 0 0;
-  padding: 0 3px 38px 0;
-
-  color: #fff;
+  line-height: 40px;
+  height:  40px;
 }
 
 #download-tag {
+  background: url(images/download-tag-right.png) no-repeat right;
   position: absolute;
-  background: url(images/download-tag-cap.png) no-repeat right;
-  display:  block;
-  top:      89px;
-  right:    0px;
-  height:   39px;
+  top: 89px; right: 0px;
+  height:   40px;
   z-index:  100;
+}
+
+#download-tag div {
+  color:   #fff;
+  padding: 0 17px;
+  display: block;
+  font-size: 16px;
+}
+
+#download-tag .version {
+  float: left;
+  display: block;
+  text-align: right;
+  font-size: 9px;
+  line-height: 14px;
+  margin-top: 5px;
+}
+
+#download-tag .separator {
+  border-left: 1px solid #501e18;
+  border-right: 1px solid #9d6b65;
+  margin-left: 12px;
+  margin-right: 12px;
+}
+
+#download-tag a {
+  float: right;
+  color: #fff;
+  text-decoration: none;
+  text-shadow: #000 2px 2px 0px;
 }
 /** /Download Tag **/
 
@@ -154,15 +178,15 @@ ul.features li {
 /** Main content **/
 .content.main {
   margin-top: 30px;
-  padding:    30px;
-  border: 3px dotted #728a8b;
-  background-color: #fff;
+  margin-bottom: 30px;
+  padding: 30px;
+  border:  3px dotted #728a8b;
+  background-color: #efefef;
   width: 872px;
 }
 
 .content.main a,
 .content.main a:visited {
-  
 }
 /** /Main content **/
 
