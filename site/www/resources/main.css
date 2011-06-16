@@ -4,7 +4,7 @@ html, body {
   color: #636756;
 }
 
-header {
+#header {
   display: block;
   background-color: #94a391;
   height: 89px;
@@ -19,24 +19,6 @@ header {
   width:  100%;
 }
 
-nav {
-  float: right;
-  margin-top: 32px;
-}
-
-/*nav a {
-  font: bold 15px Verdana;
-  color:          #3a3d40;
-  letter-spacing: -1px;
-  margin-right:   40px;
-  text-decoration: none;
-}*/
-
-nav a:hover {
-  color: #fff;
-}
-
-
 #logo {
   background-image: url(images/logo.png);
   margin-top: 17px;
@@ -50,7 +32,16 @@ nav a:hover {
 }
 
 /** Nav Link **/
-nav a {
+#nav {
+  float: right;
+  margin-top: 32px;
+}
+
+#nav a:hover {
+  color: #fff;
+}
+
+#nav a {
   text-decoration: none;
   color: #3a3d40;
   font: bold 13px/29px Verdana;
@@ -58,18 +49,18 @@ nav a {
   padding: 0 15px;
 }
 
-nav span:hover a {
+#nav span:hover a {
   background: url(images/link-hover-left.png) no-repeat;
   color: #fff;
 }
 
-nav span {
+#nav span {
   display: block;
   float: left;
   margin-right: 20px;
 }
 
-nav span:hover {
+#nav span:hover {
   background: url(images/link-hover-right.png) no-repeat right;
   color: #fff;
 }
@@ -145,7 +136,7 @@ nav span:hover {
   margin-right: 22px;
 }
 
-.cell:last-child {
+.cell.last {
   margin-right: 0;
 }
 
@@ -245,10 +236,10 @@ p {
   margin-bottom: 15px;
 }
 
-/*a, a:visited {
+a, a:visited {
   color: #3f7897;
   text-decoration: none;
-}*/
+}
 
 .small { font-size: 14px; }
 
