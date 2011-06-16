@@ -12,7 +12,7 @@ html, body {
 }
 
 #header-decoration {
-  background: url(images/header-decoration.png) repeat-x;
+  background: url(../images/header-decoration.png) repeat-x;
   position: absolute;
   top: 90px;
   height: 6px;
@@ -20,7 +20,7 @@ html, body {
 }
 
 #logo {
-  background-image: url(images/logo.png);
+  background-image: url(../images/logo.png);
   margin-top: 17px;
 }
 
@@ -50,7 +50,7 @@ html, body {
 }
 
 #nav span:hover a {
-  background: url(images/link-hover-left.png) no-repeat;
+  background: url(../images/link-hover-left.png) no-repeat;
   color: #fff;
 }
 
@@ -61,20 +61,20 @@ html, body {
 }
 
 #nav span:hover {
-  background: url(images/link-hover-right.png) no-repeat right;
+  background: url(../images/link-hover-right.png) no-repeat right;
   color: #fff;
 }
 /** /Nav Link **/
 
 /** Download Tag **/
 #download-tag div {
-  background: url(images/download-tag-left.png) no-repeat;
+  background: url(../images/download-tag-left.png) no-repeat;
   line-height: 40px;
   height:  40px;
 }
 
 #download-tag {
-  background: url(images/download-tag-right.png) no-repeat right;
+  background: url(../images/download-tag-right.png) no-repeat right;
   position: absolute;
   top: 89px; right: 0px;
   height:   40px;
@@ -186,7 +186,7 @@ ul.features {
 }
 
 ul.features li {
-  list-style-image: url(images/check-mark.png);
+  list-style-image: url(../images/check-mark.png);
   margin-bottom: 15px;
 }
 /** /Teaser cells **/
