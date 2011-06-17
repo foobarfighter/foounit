@@ -11,4 +11,214 @@ layout: home
   <li><a href="">How to test</a></li>
   <li><a href="">FAQ</a></li>
 </ul>
+
+<br>
+<h1>Syntax Overview</h1>
+
+<h3>The Basics</h3>
+The main keywords in foounit are:
+<pre class="code">
+describe, it, before, after, expect
+</pre>
+
+<p>
+  These are the basic building blocks of BDD style testing.
+</p>
+
+
+<a name="it"></a>
+<a name="example"></a>
+<h3>it (aka example)</h3>
+<p>
+  In BDD speak an <em>it</em> block is an example that defines usage of a particular feature. So let's say we want to test that a string is less than 10 characters.  You might create an <em>it</em> block that looks like this:
+
+  <pre class="code">
+it('returns true', function (){
+  var str = "sml_string";
+
+  // expect is assertion... don't worry about this for now, but this test will pass
+  expect(str.length < 10).to(beTrue);
+});
+  </pre>
+</p>
+
+<p>
+  So you might think that an <em>it</em> block is overkill for a test like this, but also realize that this is a contrived example.  The nice thing about using <em>it</em> is that you are able to label this test with a description for the next developer that touches this code.
+</p>
+
+<p>
+  If you just want to play around with foounit to get an idea for how this will work, you can run something like this.  Create a file called <em>test.js</em> with this code:
+
+  <pre class="code">
+var foounit = require('foounit').globalize();
+
+it('fails the test', function (){
+  expect(true).to(beFalse);
+});
+
+foounit.run();
+  </pre>
+
+  Then run the file with this command:
+  <pre class="code">$ node test.js</pre>
+</p>
+
+<p>
+  This test will fail, but it will give you an idea of what happens when you run an example.
+</p>
+
+
+
+<a name="describe"></a>
+<h3>describe (aka group)</h3>
+
+<p>
+  Internally, <em>describe</em> creates a group of <em><a href="#example">examples</a></em>.  All ths really means to you is that <em>describe</em> actually defines a particular behavior.  Let me explain...
+</p>
+
+<p>
+  Let's say you have a signup form widget that allows you to submit a form when you have a password that is 8 or more characters, but it shows an error message if you have password that is less than 8 characters.  You might have a test that looks like this:
+
+  <pre class="code">
+describe('when the password is 8 or more characters', function (){
+  it('allows you to submit the form', function (){
+    ...
+  });
+});
+
+describe('when the password is less than 8 characters', function (){
+  it('displays an error message', function (){
+    ...
+  });
+});
+  </pre>
+</p>
+
+<p>
+  You can also nest <em>describe</em>s if your code has nested behaviors (or nested <em>if</em> statements).  Nested describes look something like this:
+  
+  <pre class="code">
+describe('when foo is not falsy', function (){
+  describe('when foo is an integer', function (){
+    it('returns true', function (){
+      ...
+    });
+  });
+
+  describe('when foo is a boolean', function (){
+    it('returns false', function (){
+      ...
+    });
+  });
+});
+
+describe('when foo is falsy', function (){
+  it('returns false', function (){
+    ...
+  });
+});
+  </pre>
+</p>
+
+
+<a name="expect"></a>
+<a name="assertion"></a>
+<h3>expect (aka assertion)</h3>
+
+<p>
+  The <em>expect </em> <a href="#keywords">keyword</a> is just another way of creating an assertion.  An assertion is a way to test that a particular value is what you expect that it should be.  Here is a breakdown of how <em>expect</em> works:
+
+  <pre class="code">
+expect(
+  foo    // actual value
+).to(
+  be     // this is a === matcher... more on this later
+  , 100  // expected value
+);
+  </pre>
+</p>
+
+<p>
+  Here are some additional example expectations:
+
+  <pre class="code">
+expect(1).to(beLt, 2);            // passes
+expect(true).to(beFalse);         // fails
+expect([1,2,3]).to(include, 2);   // passes
+  </pre>
+</p>
+
+
+<a name="before"></a>
+<h3>before (aka setup)</h3>
+
+<p>
+  A <em>before</em> block is something that sets up a particular test.  A <em>before</em> block is run once for each group and they can be nested.  <em>before</em> blocks are great for asserting that a test is setup properly before an <em>example</em> is run and for removing clutter from your tests. <em>before</em> blocks can be nested within <em>describe</em>s and are run in order for each <em>example</em>.
+
+  <pre class="code">
+describe('when foo is 1', function (){
+  var foo;
+
+  before(function (){                       // runs first
+    foo = 1;
+  });
+
+  it('does something', function (){
+    ...
+  });
+
+  describe(when foo is 2', function (){
+    before(function (){                     // runs second
+      foo++;
+      expect(foo).to(be, 2);
+    });
+
+    it('does another thing', function (){
+      ...
+    });
+  });
+});
+  </pre>
+
+<a name="after"></a>
+<h3>after (aka teardown)</h3>
+
+<p>
+  <em>after</em> runs after each test.  It's great for cleaning up the environment and it runs even when the test fails.
+</p>
+
+<p>
+  Here is how to use <em>before</em> and <em>after</em> in conjunction to cleanup global variables:
+
+  <pre class="code">
+describe('when the current user is bob', function (){
+  var origUser;
+
+  before(function (){
+    origUser = global.currentUser;        // save off currentUser
+    global.currentUser = 'bob';
+  });
+
+  after(function (){
+    global.currentUser = origUser;        // reset currentUser after the test runs
+  });
+
+  it('does something', function (){
+    ...
+  });
+});
+  </pre>
+
+</p>
+
+
+<p>
+  These <em>keywords</em> are 90% of what you need to write tests in BDD style using foounit.  There is a lot more to foounit than just these keywords but you can get by without learning about additional matchers and asynchronousness if you are just experimenting.  If anthing in this guide is unclear, then please email the group.
+</p>
+
+<h3>Next step...</h3>
+<ul class="index">
+  <li><a href="">Async awesomeness</a></li>
+</ul>
+
 <!-- /Documentation -->

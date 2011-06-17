@@ -214,6 +214,10 @@ ul.features li {
 }
 /** /Footer **/
 
+em {
+  font-style: italic;
+}
+
 
 
 h1, h3 {
