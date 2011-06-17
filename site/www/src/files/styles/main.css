@@ -33,8 +33,10 @@ html, body {
 
 /** Nav Link **/
 #nav {
-  float: right;
-  margin-top: 32px;
+  position: absolute;
+  right: 0px;
+  top: 32px;
+  z-index: 1000;
 }
 
 #nav a:hover {
