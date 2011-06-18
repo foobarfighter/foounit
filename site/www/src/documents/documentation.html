@@ -6,7 +6,7 @@ layout: home
 
 <ul class="index">
   <li><a href="#syntax-overview">Syntax overview</a></li>
-  <li><a href="">Async awesomeness</a></li>
+  <li><a href="#async-awesomeness">Async awesomeness</a></li>
   <li><a href="#matchers">Matchers</a></li>
   <li><a href="">How to test</a></li>
   <li><a href="">FAQ</a></li>
@@ -232,6 +232,55 @@ describe('when the current user is bob', function (){
 
 <br><br>
 
+<!-- Async Awesomeness -->
+<a name="async-awesomeness"></a>
+<h1>Async Awesomeness</h1>
+foounit is a fully asynchronous test runner.  Here is an example:
+
+<pre class="code">
+var successCallback;
+
+before(function (){
+  successCallback = mock(function (data){});
+  $.ajax('http://localhost:5057/data.json', { success: successCallback });
+});
+
+it('gets the data', function (){
+  waitFor(function (){
+    expect(successCallback).to(haveBeenCalled);
+  });
+});
+</pre>
+
+<p>
+  In this example, an xhr request is made to get the JSON data at <em>http://localhost:5057/data.json</em>.  We have mocked the success callback and we wait for the response to succeed and call our callback.  If the request succeeds then the test will pass, but if the request is unsuccessful then the test will fail.  The <em>waitFor</em> keyword waits for the function it is passed to run without failing.  If the <em>waitFor</em> block fails, then it is retried until a timeout is reached.  If the timeout is reached then the test fails and a kitten dies.
+</p>
+
+<p>
+  There's more to asynchronous testing than just <em>waitFor</em> but <em>waitFor</em> will generally get you pretty far.  Another common use-case is to wait for an expectation to be met, then do something else and wait for another expectation.  In this case you can use <em>run</em> to insert yourself into foounit's asynchronous execution queue.  Here is an example:
+
+<pre class="code">
+it('does a lot of async stuff', function (){
+  var foo = '';
+
+  setTimeout(function (){ foo = 'bar'; }, 200);
+
+  // Waits for foo to become 'bar'
+  waitFor(function (){ expect(foo).to(be, 'bar'); });
+
+  // Runs after the waitFor above
+  run(function (){
+    setTimeout(function (){ foo = 'baz'; }, 200);
+  });
+
+  // Waits for foo to become 'baz'
+  waitFor(function (){ expect(foo).to(be, 'baz'); });
+});
+</pre>
+<!-- /Async Awesomness -->
+
+<br><br>
+
 <!-- Matchers -->
 <a name="matchers"></a>
 <h1>Matchers</h1>
@@ -357,7 +406,6 @@ expect(function (){ throw new Error('HEY NOW'); }).to(throwError, /Fuuuuuu/);   
 expect(function (){ /** I don't throw **/ }).to(throwError);                    // fails
 </pre>
 </p>
-
 <!-- /Matchers -->
 
 <!-- /Documentation -->
