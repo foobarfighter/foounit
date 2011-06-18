@@ -21,11 +21,16 @@ layout: home
 <h3>The Basics</h3>
 The main keywords in foounit are:
 <pre class="code">
-describe, it, before, after, expect
+describe, it, before, after, expect, mock
+</pre>
+
+Theres another class of foounit keywords for asynchronous testing, but these are explained in the <a href="#async-awesomeness">async awesomeness</a> section.
+<pre class="code">
+waitFor, run, waitForTimeout
 </pre>
 
 <p>
-  These are the basic building blocks of BDD style testing.
+  These are the basic building blocks of foounit and asynchronous BDD style testing.
 </p>
 
 
@@ -235,7 +240,10 @@ describe('when the current user is bob', function (){
 <!-- Async Awesomeness -->
 <a name="async-awesomeness"></a>
 <h1>Async Awesomeness</h1>
-foounit is a fully asynchronous test runner.  Here is an example:
+foounit is a fully asynchronous test runner.  When a foounit <em>example</em> is created, it runs an asynchronous execution queue so all tests are asynchronous by default.  Each asynchronous <em>keyword</em> adds an item to the queue and does not run until the previous task has completed.
+
+<h3>waitFor</h3>
+There are many cases in which you may want to wait for an asynchronous event to finish before passing or failing a test.  The <em>waitFor</em> keyword will poll until a particular expectation has been met or a timeout occurs.  Here is an example:
 
 <pre class="code">
 var successCallback;
@@ -253,9 +261,11 @@ it('gets the data', function (){
 </pre>
 
 <p>
-  In this example, an xhr request is made to get the JSON data at <em>http://localhost:5057/data.json</em>.  We have mocked the success callback and we wait for the response to succeed and call our callback.  If the request succeeds then the test will pass, but if the request is unsuccessful then the test will fail.  The <em>waitFor</em> keyword waits for the function it is passed to run without failing.  If the <em>waitFor</em> block fails, then it is retried until a timeout is reached.  If the timeout is reached then the test fails and a kitten dies.
+  In this example, an xhr request is made to get the JSON data at <em>http://localhost:5057/data.json</em>.  We have mocked the success callback and we wait for the response to succeed and call our callback to be called.  If the request succeeds then the test will pass, but if the request is unsuccessful then the test will fail.  The <em>waitFor</em> keyword waits for the function it is passed to run without failing.  If the <em>waitFor</em> block fails, then it is retried until a timeout is reached.  If the timeout is reached then the test fails and a kitten dies.
 </p>
 
+
+<h3>run</h3>
 <p>
   There's more to asynchronous testing than just <em>waitFor</em> but <em>waitFor</em> will generally get you pretty far.  Another common use-case is to wait for an expectation to be met, then do something else and wait for another expectation.  In this case you can use <em>run</em> to insert yourself into foounit's asynchronous execution queue.  Here is an example:
 
@@ -277,6 +287,34 @@ it('does a lot of async stuff', function (){
   waitFor(function (){ expect(foo).to(be, 'baz'); });
 });
 </pre>
+
+
+<h3>waitForTimeout</h3>
+<p>
+  foounit can also assert that something never happens with the use of waitForTimeout.  These kinds of tests are generally frowned upon because they slow down a test suite, but sometimes they are valuable enough to offset the downside of slowing down the test suite.
+<p>
+
+<p>
+  <em>waitForTimeout</em> will run a function until a timeout is reached.  The first time the function passes without error, <em>waitForTimeout</em> fails.  Consider this example:
+</p>
+
+<pre class="code">
+it('doesnt get to 1000 fast enough', function (){
+  var foo = 0
+    , inc = function (){ foo++; setTimeout(inc, 200); }
+
+  setTimeout(inc, 200);
+
+  waitForTimeout(function (){
+    expect(foo).to(beGt, 999);
+  });
+});
+</pre>
+
+<p>
+  This example will fail because foo will not reach 1000 in the time that it takes for <em>waitForTimeout</em> to timeout.
+</p>
+
 <!-- /Async Awesomness -->
 
 <br><br>
