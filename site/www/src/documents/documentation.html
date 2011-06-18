@@ -5,14 +5,17 @@ layout: home
 <h1>Documentation</h1>
 
 <ul class="index">
-  <li><a href="">Syntax overview</a></li>
+  <li><a href="#syntax-overview">Syntax overview</a></li>
   <li><a href="">Async awesomeness</a></li>
-  <li><a href="">Matchers</a></li>
+  <li><a href="#matchers">Matchers</a></li>
   <li><a href="">How to test</a></li>
   <li><a href="">FAQ</a></li>
 </ul>
 
 <br>
+
+<!-- Syntax Overview -->
+<a name="syntax-overview"></a>
 <h1>Syntax Overview</h1>
 
 <h3>The Basics</h3>
@@ -148,6 +151,17 @@ expect([1,2,3]).to(include, 2);   // passes
   </pre>
 </p>
 
+<p>
+  Here are some examples of expectations that assert actual and expected do <em>not</em> match:
+
+  <pre class="code">
+expect(1).toNot(be, 2);           // passes
+expect(function (){
+  throw new Error('errar!');
+}).toNot(throwError);             // fails
+  </pre>
+</p>
+
 
 <a name="before"></a>
 <h3>before (aka setup)</h3>
@@ -211,14 +225,139 @@ describe('when the current user is bob', function (){
 
 </p>
 
-
 <p>
   These <em>keywords</em> are 90% of what you need to write tests in BDD style using foounit.  There is a lot more to foounit than just these keywords but you can get by without learning about additional matchers and asynchronousness if you are just experimenting.  If anything in this guide is unclear, then please email the group.
 </p>
+<!-- /Syntax Overview -->
 
-<h3>Next step...</h3>
-<ul class="index">
-  <li><a href="">Async awesomeness</a></li>
-</ul>
+<br><br>
+
+<!-- Matchers -->
+<a name="matchers"></a>
+<h1>Matchers</h1>
+
+<h3>be</h3>
+<p>
+  Asserts that actual === expected.
+<pre class="code">
+expect(1).to(be, 1);                // passes
+expect(undefined).to(be, null);     // fails
+</pre>
+</p>
+
+
+<h3>beGt</h3>
+<p>
+  Assert that actual is greater than expected.
+<pre class="code">
+expect(5).to(beGt, 4);              // passes 
+expect(1).to(beGt, 2);              // fails
+</pre>
+</p>
+
+
+<h3>beFalse</h3>
+<p>
+  Assert that actual is === false.
+<pre class="code">
+expect(false).to(beFalse);          // passes 
+expect(null).to(beFalse);           // fails
+</pre>
+</p>
+
+
+<h3>beFalsy</h3>
+<p>
+  Assert that actual is falsy.
+<pre class="code">
+expect(false).to(beFalsy);          // passes 
+expect(null).to(beFalsy);           // passes
+expect("test").to(beFalsy);         // fails
+</pre>
+</p>
+
+
+<h3>beLt</h3>
+<p>
+  Assert that actual is less than expected.
+<pre class="code">
+expect(1).to(beLt, 2);              // passes 
+expect(5).to(beLt, 4);              // fails
+</pre>
+</p>
+
+
+<h3>beNull</h3>
+<p>
+  Asserts that actual === null.
+<pre class="code">
+expect(null).to(beNull);            // passes
+expect(undefined).to(beNull);       // fails
+</pre>
+</p>
+
+
+<h3>beTruthy</h3>
+<p>
+  Asserts that actual is truthy.
+<pre class="code">
+expect(1).to(beTruthy);             // passes
+expect('').to(beTruthy);            // fails
+expect(true).to(beTruthy);          // passes
+</pre>
+</p>
+
+
+<h3>beUndefined</h3>
+<p>
+  Asserts that actual === undefined.
+<pre class="code">
+expect(null).to(beUndefined);       // fails
+expect(undefined).to(beUndefined);  // passes
+</pre>
+</p>
+
+
+<h3>equal</h3>
+<p>
+  Assert that actual is deeply equal to expected.  This is useful for saying that one object is the same as another but they are referencing different objects.
+<pre class="code">
+expect({ foo: ['bar'] }).to(equal, { foo: ['bar'] });   // passes
+expect({ baz: 1 }).to(equal, { baz: 2 });               // fails
+</pre>
+</p>
+
+
+<h3>include</h3>
+<p>
+  Assert that an array has an element that matches type and object equality of expected.
+<pre class="code">
+expect([1, 2, 3]).to(include, 2);   // passes
+expect([1, 2, 3]).to(include, 10);  // fails
+</pre>
+</p>
+
+
+<h3>match</h3>
+<p>
+  Assert that actual matches a regex.
+<pre class="code">
+expect('foo bar baz').to(match, /bar/);   // passes
+expect('foo bar baz').to(match, /qux/);   // fails
+</pre>
+</p>
+
+<a name="throwError"></a>
+<h3>throwError</h3>
+<p>
+  Asserts that the a function throws an error.  The error message can be matched against to assert that the correct error message was thrown.
+<pre class="code">
+expect(function (){ throw new Error(); }).to(throwError);                       // passes
+expect(function (){ throw new Error('HEY NOW'); }).to(throwError, /Fuuuuuu/);   // fails
+expect(function (){ /** I don't throw **/ }).to(throwError);                    // fails
+</pre>
+</p>
+
+<!-- /Matchers -->
 
 <!-- /Documentation -->
