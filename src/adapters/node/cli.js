@@ -6,7 +6,7 @@ var parser = require('nomnom')
 var TEMPLATE_DIR = pth.join(__dirname, '../../../templates');
 
 function log(){
-  if (module.parent){ return; }
+  //if (module.parent){ return; }
   console.log.apply(console, arguments);
 }
 

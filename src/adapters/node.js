@@ -1,5 +1,5 @@
-var foounit = require('../base')
-  , fsh     = require('../../build/fsh')
+var fsh     = require('fsh')
+  , foounit = require('../base')
   , colors  = require('./node/colors')
   , assert  = require('./node/assert_patch');
 
