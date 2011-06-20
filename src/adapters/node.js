@@ -18,6 +18,11 @@ foounit.mixin(foounit, require('../polling_block'));
 foounit.mixin(foounit, require('../suite'));
 foounit.mixin(foounit, require('../timeout_block'));
 
+// foounit command line interface
+foounit.cli = require('./node/cli').cli;
+// FIXME: This is only exposed for testing purproses
+foounit.generateSuite = require('./node/cli').generateSuite;
+
 var adapter = (function (){
   var sys = require('sys')
     , fs  = require('fs')

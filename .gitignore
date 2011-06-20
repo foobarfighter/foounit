@@ -3,3 +3,5 @@
 dist
 spec/foo-unit.js
 spec/browser/autogen_suite.js
+node_modules
+
