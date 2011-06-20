@@ -29,6 +29,8 @@ foounit.add(function (kw){ with(kw){
   });
 
   describe('generateSuite', function (){
+    var options;
+
     before(function (){
       cleanupAsync();
       run(function (){
@@ -40,10 +42,48 @@ foounit.add(function (kw){ with(kw){
       cleanupAsync();
     });
 
-    it('generates a test suite for a target environment in a directory', function (){
-      var options = { target: 'browser', dir: suitePath };
-      footest.generateSuite(options);
-      expect(pth.join(suitePath, 'suite.js')).to(beFile);
+    describe('when the target is for the browser', function (){
+      it('generates a test suite', function (){
+        run(function (){
+          options = { target: 'browser', dir: suitePath };
+          footest.generateSuite(options);
+        });
+
+        // FIXME: ugh... isFileSync is actually async.  fsh sucks ass.
+        waitFor(function (){
+          expect(fs.isFileSync(pth.join(suitePath, 'suite.js'))).to(beTrue);
+        });
+      });
     });
+
+    describe('when the target is for node', function (){
+      it('generates a test suite', function (){
+        run(function (){
+          options = { target: 'node', dir: suitePath };
+          footest.generateSuite(options);
+        });
+
+        // FIXME: ugh... isFileSync is actually async.  fsh sucks ass.
+        waitFor(function (){
+          expect(fs.isFileSync(pth.join(suitePath, 'suite.js'))).to(beTrue);
+        });
+      });
+    });
+
+
+    describe('when the target is for node,browser', function (){
+      it('generates a test suite', function (){
+        run(function (){
+          options = { target: 'node, browser', dir: suitePath };
+          footest.generateSuite(options);
+        });
+
+        // FIXME: ugh... isFileSync is actually async.  fsh sucks ass.
+        waitFor(function (){
+          expect(fs.isFileSync(pth.join(suitePath, 'suite.js'))).to(beTrue);
+        });
+      });
+    });
+
   });
 }});

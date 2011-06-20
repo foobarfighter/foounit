@@ -5,6 +5,11 @@ var parser = require('nomnom')
 
 var TEMPLATE_DIR = pth.join(__dirname, '../../../templates');
 
+function log(){
+  if (module.parent){ return; }
+  console.log.apply(console, arguments);
+}
+
 exports.generateSuite = function (options){
   // Trim and normalize.  Turns "node, browser" into "browser-node"
   var target = _(options.target.split(',').sort()).map(function (t){
@@ -19,9 +24,17 @@ exports.generateSuite = function (options){
   }
 
   // Copy all template files
+  var files = fs.findSync(templateDir, '.*');
+  _.each(files, function (file){
+    var postfix  = file.substr(templateDir.length+1)
+      , destFile = pth.join(options.dir, postfix)
+      , destPath = pth.dirname(destFile);
+  
+    log('--> creating file: ', destFile);
+    fs.mkdirpSync(destPath, 0777);
+    fs.copyFileSync(file, destFile);
+  });
 
-
-  console.log(target);
   //var templateDir = pth.join(TEMPLATE_DIR, '
 }
 
