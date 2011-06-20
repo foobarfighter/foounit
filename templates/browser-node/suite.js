@@ -23,5 +23,5 @@ try {
 })(foounit);
 
 
-foounit.getSuite().addFile(':spec/example_spec');
+foounit.getSuite().addFile(':spec/example-spec');
 foounit.getSuite().run();

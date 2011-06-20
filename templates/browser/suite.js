@@ -9,6 +9,6 @@
   foounit.mount('spec', __dirname);
 
   foounit.browser.setLoaderStrategy(new foounit.browser.XhrLoaderStrategy());
-  foounit.getSuite().addFile('example_spec');
+  foounit.getSuite().addFile('example-spec');
   foounit.getSuite().run();
 })(foounit);
