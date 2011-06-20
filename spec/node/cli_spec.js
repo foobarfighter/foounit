@@ -42,48 +42,40 @@ foounit.add(function (kw){ with(kw){
       cleanupAsync();
     });
 
-    describe('when the target is for the browser', function (){
-      it('generates a test suite', function (){
-        run(function (){
-          options = { target: 'browser', dir: suitePath };
-          footest.generateSuite(options);
-        });
+    describe('when the target directory already exists', function (){
+      it('fails and does not generate the suite', function (){
+        var path = pth.join(suitePath, 'spec');
+        fs.mkdirSync(path, 0777);
 
-        // FIXME: ugh... isFileSync is actually async.  fsh sucks ass.
-        waitFor(function (){
-          expect(fs.isFileSync(pth.join(suitePath, 'suite.js'))).to(beTrue);
-        });
+        expect(function (){
+          options = { target: 'node', dir: path };
+          footest.generateSuite(options);
+        }).to(throwError, /Destination directory already exists/);
       });
     });
 
-    describe('when the target is for node', function (){
-      it('generates a test suite', function (){
-        run(function (){
-          options = { target: 'node', dir: suitePath };
-          footest.generateSuite(options);
-        });
+    // Dynamic test generation for each target
+    var targets = ['browser', 'node, browser', 'node'];
 
-        // FIXME: ugh... isFileSync is actually async.  fsh sucks ass.
-        waitFor(function (){
-          expect(fs.isFileSync(pth.join(suitePath, 'suite.js'))).to(beTrue);
-        });
-      });
-    });
+    for (var i = 0, ii = targets.length; i < ii; ++i){
+      var target  = targets[i];
 
+      describe('when the target is for the ' + target, function (){
+        it('generates a test suite', function (){
+          var path = pth.join(suitePath, 'spec');
 
-    describe('when the target is for node,browser', function (){
-      it('generates a test suite', function (){
-        run(function (){
-          options = { target: 'node, browser', dir: suitePath };
-          footest.generateSuite(options);
-        });
+          run(function (){
+            options = { target: target, dir: path };
+            footest.generateSuite(options);
+          });
 
-        // FIXME: ugh... isFileSync is actually async.  fsh sucks ass.
-        waitFor(function (){
-          expect(fs.isFileSync(pth.join(suitePath, 'suite.js'))).to(beTrue);
+          // FIXME: ugh... isFileSync is actually async.  fsh sucks ass.
+          waitFor(function (){
+            expect(fs.isFileSync(pth.join(path, 'suite.js'))).to(beTrue);
+          });
         });
       });
-    });
+    }
 
   });
 }});

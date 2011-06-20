@@ -3,10 +3,11 @@ var parser = require('nomnom')
   , fs = require('fsh')
   , pth = require('path');
 
-var TEMPLATE_DIR = pth.join(__dirname, '../../../templates');
+var TEMPLATE_DIR = pth.join(__dirname, '../../../templates')
+  , _options = { log: false };;
 
 function log(){
-  //if (module.parent){ return; }
+  if (!_options.log){ return; }
   console.log.apply(console, arguments);
 }
 
@@ -21,6 +22,12 @@ exports.generateSuite = function (options){
   if (!fs.isDirectorySync(templateDir)){
     throw new Error('Could not locate suite template for: "' + options.target +
       '". Run `foounit generate --help` to see a list of available targets.');
+  }
+
+  if (fs.existsSync(options.dir)){
+    throw new Error('Destination directory already exists... sheepishly ' +
+      'bailing out.  Run `foounit generate` with the --dir option to specify ' +
+      'an alternate directory.');
   }
 
   // Copy all template files
@@ -40,7 +47,9 @@ exports.generateSuite = function (options){
 
 
 // Run script if executed via the cmd line
-exports.cli = function (){
+exports.cli = function (options){
+  _options = options || _options;
+
   parser.command('generate')
     .help('Generate a foounit test suite')
     .opts({
