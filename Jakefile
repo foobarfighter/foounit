@@ -1,6 +1,7 @@
 var fs = require('fs')
   , fsh = require('fsh')
   , pth = require('path')
+  , exec = require('child_process').exec
   , PacMan = require('./build/pacman').PacMan;
 
 var generateBrowserSuite = function (){
@@ -116,9 +117,43 @@ namespace('build', function (params) {
   });
 
   desc('Builds all adapter environments');
-  task('all', ['build:core', 'build:browser', 'build:server', 'build:templates'], function (){
+  task('all', ['build:core', 'build:browser', 'build:server'], function (){
     console.log('--> Built all adapters');
   });
 
 });
+
+namespace('site', function (){
+  desc('Update generator templates and package bundles for the website');
+  task('update', ['build:all'], function (){
+    var version = process.env.VERSION;
+
+    if (!version){
+      throw new Error('Could not package without VERSION environment variable');
+    }
+
+    console.log('--> generating website');
+
+    exec('cd site/www && docpad generate',
+      function (error, stdout, stderr){
+        var files = fsh.findSync(__dirname + '/site/www/out', /\.(html|js)$/);
+        for (var i = 0, ii = files.length; i < ii; ++i){
+          var content = fs.readFileSync(files[i]);
+          content.toString().replace(/\$version/, version);
+          fs.writeFileSync(files[i], content);
+        }
+      });
+
+    //log('packaging ' + srcpkg);
+
+    //var srcpkg = 'foounit-' + version + '-src.tar.gz'
+    //exec('tar cvfz ' + srcpkg + ' *', function (error){
+    //  if (error){ throw new Error('Error while packaging: ', error); }
+    //});
+
+
+  });
+});
+
+
 
