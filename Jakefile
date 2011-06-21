@@ -121,7 +121,8 @@ namespace('site', function (){
     return version;
   }
 
-  desc('generate', ['build:all'], function (){
+  desc('Generates the website and substitutes the version numbers');
+  task('generate', ['build:all'], function (){
     console.log('--> generating website');
 
     var version = checkVersion();
