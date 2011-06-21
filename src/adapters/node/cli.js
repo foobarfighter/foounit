@@ -43,10 +43,34 @@ exports.generateSuite = function (options){
   });
 }
 
+exports.serve = function (options){
+  var connect;
+
+  try {
+    connect = require('connect');
+  } catch (e){
+    throw new Error('connect is required for `foounit serve`. ' +
+      'Run `npm install connect` to install connect.');
+  }
+
+  log('--> Static web server is started on port ' + options.port);
+  connect(connect.static('.')).listen(options.port, 'localhost');
+}
+
 
 // Run script if executed via the cmd line
 exports.cli = function (options){
   _options = options || _options;
+
+  parser.command('serve')
+    .help('Starts a file server in the current directory')
+    .opts({
+      port: {
+        string:     '-p PORT, --port=PORT',
+        help:       'Server port',
+        default:    5057
+      }
+    });
 
   parser.command('generate')
     .help('Generate a foounit test suite')
@@ -70,6 +94,9 @@ exports.cli = function (options){
   switch (cmd){
     case 'generate':
       exports.generateSuite(options);
+      break;
+    case 'serve':
+      exports.serve(options);
       break;
     default:
       throw new Error('Unspecified command: "' + cmd +
