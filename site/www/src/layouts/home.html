@@ -20,10 +20,10 @@
         <div id="download-tag">
           <div>
             <span class="version">
-              Version 0.0.7<br>Updated: Today
+              Version $version<br>Updated: Today
             </span>
             <span class="separator"></span>
-            <a href="http://search.npmjs.org/#/foounit">Download</a>
+            <a href="download.html">Download</a>
           </div>
         </div>
       </div>
@@ -42,7 +42,7 @@
               <br><br>
               var foounit = require('foounit');<br>
               <br>
-              describe('this is ta test', function() {<br>
+              describe('this is ta test', function(){<br>
               &nbsp;&nbsp;it('is only a test', function() {<br>
               &nbsp;&nbsp;&nbsp;&nbsp;expect(myTest).to(runEverywhere);<br>
               &nbsp;&nbsp;});<br>
@@ -84,5 +84,18 @@
     <div class="content footer" style="text-align: center">
       Site designed by <a href="http://jeejkang.com">James Kang</a> and <a href="http://heatherkphillips.com">Heather Phillips</a>
     </div>
+
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-24092210-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+     })();
+    </script>
+
 </body>
 </html>

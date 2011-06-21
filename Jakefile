@@ -1,10 +1,11 @@
 var fs = require('fs')
   , fsh = require('fsh')
   , pth = require('path')
+  , exec = require('child_process').exec
   , PacMan = require('./build/pacman').PacMan;
 
 var generateBrowserSuite = function (){
-  console.log('calling generateBrowserSuite');
+  console.log('--> generating browser suite');
   var files = [];
 
   files = files.concat(fsh.findSync(__dirname + '/spec/shared', /.*_spec.js$/));
@@ -18,10 +19,6 @@ var generateBrowserSuite = function (){
   }
 
   fs.writeFileSync(__dirname + '/spec/browser/autogen_suite.js', content);
-};
-
-var restartLoaderService = function (){
-  console.log('calling restartLoaderService');
 };
 
 
@@ -45,7 +42,6 @@ namespace('spec', function (){
 
   task('browser', ['build:all'], function (){
     generateBrowserSuite();
-    restartLoaderService();
   });
 
   task('server',  ['build:all'], function (){
@@ -108,17 +104,49 @@ namespace('build', function (params) {
     fs.writeFileSync('templates/browser-node/foounit/foounit-browser.js', concated);
   });
 
-  desc('Build the server bundle');
-  task('server', ['build:core'], function (param){
-    console.log('--> Building foounit-server.js');
-    var concated = pacman.concat('foounit-server.js');
-    fs.writeFileSync('dist/foounit-server.js', concated);
-  });
-
   desc('Builds all adapter environments');
-  task('all', ['build:core', 'build:browser', 'build:server', 'build:templates'], function (){
+  task('all', ['build:core', 'build:browser'], function (){
     console.log('--> Built all adapters');
   });
 
 });
+
+namespace('site', function (){
+  var checkVersion = function (){
+    var version = process.env.VERSION;
+
+    if (!version){
+      throw new Error('Could not package without VERSION environment variable');
+    }
+    return version;
+  }
+
+  desc('Generates the website and substitutes the version numbers');
+  task('generate', ['build:all'], function (){
+    console.log('--> generating website');
+
+    var version = checkVersion();
+
+    exec('cd site/www && docpad generate',
+      function (error, stdout, stderr){
+        var files = fsh.findSync(__dirname + '/site/www/out', /\.(html|js)$/);
+
+        for (var i = 0, ii = files.length; i < ii; ++i){
+          var content = fs.readFileSync(files[i]);
+          content = content.toString().replace(/\$version/g, version);
+          fs.writeFileSync(files[i], content);
+          console.log('--> replaced content in: ', files[i]);
+        }
+
+        complete();
+      });
+  }, true);
+
+
+  desc('Update generator templates and package bundles for the website');
+  task('update', ['build:all', 'site:generate'], function (){
+  });
+});
+
+
 
