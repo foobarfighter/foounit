@@ -41,8 +41,6 @@ exports.generateSuite = function (options){
     fs.mkdirpSync(destPath, 0777);
     fs.copyFileSync(file, destFile);
   });
-
-  //var templateDir = pth.join(TEMPLATE_DIR, '
 }
 
 
