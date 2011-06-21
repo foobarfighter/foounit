@@ -1,5 +1,5 @@
-var foounit = require('../base')
-  , fsh     = require('../../build/fsh')
+var fsh     = require('fsh')
+  , foounit = require('../base')
   , colors  = require('./node/colors')
   , assert  = require('./node/assert_patch');
 
@@ -17,6 +17,11 @@ foounit.mixin(foounit, require('../mock/screw_compat'));
 foounit.mixin(foounit, require('../polling_block'));
 foounit.mixin(foounit, require('../suite'));
 foounit.mixin(foounit, require('../timeout_block'));
+
+// foounit command line interface
+foounit.cli = require('./node/cli').cli;
+// FIXME: This is only exposed for testing purproses
+foounit.generateSuite = require('./node/cli').generateSuite;
 
 var adapter = (function (){
   var sys = require('sys')

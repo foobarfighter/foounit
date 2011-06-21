@@ -1,5 +1,6 @@
 var fs = require('fs')
-  , fsh = require('./build/fsh')
+  , fsh = require('fsh')
+  , pth = require('path')
   , PacMan = require('./build/pacman').PacMan;
 
 var generateBrowserSuite = function (){
@@ -86,20 +87,25 @@ namespace('build', function (params) {
     console.log('--> Building foounit.js');
     var concated = pacman.concat('foounit.js');
     fs.writeFileSync('dist/foounit.js', concated);
-  });
 
-  //desc('Builds the core and the node adapter');
-  //task('node', ['build:core'], function (params){
-  //  console.log('--> Building foounit-node.js');
-  //  var concated = pacman.concat('foounit-node.js');
-  //  fs.writeFileSync('dist/foounit-node.js', concated);
-  //});
+    // Write to template dirs
+    fsh.mkdirpSync(pth.join(__dirname, 'templates/browser/foounit'), 0777);
+    fs.writeFileSync('templates/browser/foounit/foounit.js', concated);
+    fsh.mkdirpSync(pth.join(__dirname, 'templates/browser-node/foounit'), 0777);
+    fs.writeFileSync('templates/browser-node/foounit/foounit.js', concated);
+  });
 
   desc('Builds the browser adapter');
   task('browser', ['build:core'], function (params){
     console.log('--> Building foounit-browser.js');
     var concated = pacman.concat('foounit-browser.js');
     fs.writeFileSync('dist/foounit-browser.js', concated);
+
+    // Write to template dirs
+    fsh.mkdirpSync('templates/browser/foounit', 0777);
+    fs.writeFileSync('templates/browser/foounit/foounit-browser.js', concated);
+    fsh.mkdirpSync('templates/browser-node/foounit', 0777);
+    fs.writeFileSync('templates/browser-node/foounit/foounit-browser.js', concated);
   });
 
   desc('Build the server bundle');
@@ -107,11 +113,10 @@ namespace('build', function (params) {
     console.log('--> Building foounit-server.js');
     var concated = pacman.concat('foounit-server.js');
     fs.writeFileSync('dist/foounit-server.js', concated);
-    
   });
 
   desc('Builds all adapter environments');
-  task('all', ['build:core', 'build:browser', 'build:server'], function (){
+  task('all', ['build:core', 'build:browser', 'build:server', 'build:templates'], function (){
     console.log('--> Built all adapters');
   });
 
