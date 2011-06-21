@@ -4,12 +4,16 @@ layout: home
 <!-- Documentation -->
 <h1>Documentation</h1>
 
+<p>
+  Hopefully these docs help you out, but if they don't then please <a href="https://github.com/foobarfighter/foounit/issues/new">file a bug</a>.  Documentation bugs will be treated with high priority.
+</p>
+
 <ul class="index">
   <li><a href="#syntax-overview">Syntax overview</a></li>
   <li><a href="#async-awesomeness">Async awesomeness</a></li>
   <li><a href="#matchers">Matchers</a></li>
-  <li><a href="">How to test</a></li>
-  <li><a href="">FAQ</a></li>
+  <li><a href="#suites">Suites</a></li>
+  <li><a href="#loader">Loading files</a></li>
 </ul>
 
 <br>
@@ -29,16 +33,12 @@ There's another class of foounit keywords for asynchronous testing, but these ar
 waitFor, run, waitForTimeout
 </pre>
 
-<p>
-  These are the basic foounit building blocks.
-</p>
-
 
 <a name="it"></a>
 <a name="example"></a>
 <h3>it (aka example)</h3>
 <p>
-  In BDD-speak an <em>it</em> block is an example that defines usage of a particular feature. So let's say we want to test that a string is less than 10 characters.  You might create an <em>it</em> block that looks like this:
+  In BDD-speak an <em>it</em> block is an example that defines usage of a feature. So let's say we want to test that a string is less than 10 characters.  You might create an <em>it</em> block that looks like this:
 
   <pre class="code">
 it('returns true', function (){
@@ -51,11 +51,11 @@ it('returns true', function (){
 </p>
 
 <p>
-  You might think that an <em>it</em> block is overkill for a test like this, but this is a contrived example.  The nice thing about using <em>it</em> blocks are that you are able provide descriptions for the next developer working on the code.
+  You might think that an <em>it</em> block is overkill for a test like this, but this is a contrived example.  The nice thing about using an <em>it</em> block is that you can provide documentation for the next developer working on the code.
 </p>
 
 <p>
-  If you just want to play around with foounit, you can try this example.  Create a file called <em>test.js</em> with this code:
+  If you want to experiment, you can try this example.  Create a file called <em>test.js</em> with this code:
 
   <pre class="code">
 var foounit = require('foounit').globalize();
@@ -231,7 +231,7 @@ describe('when the current user is bob', function (){
 </p>
 
 <p>
-  These <em>keywords</em> are 90% of what you need to write tests in BDD-style using foounit.  There is a lot more to foounit than just these keywords but you can get by without learning about additional matchers and asynchronous testing if you are just experimenting.  If anything in this guide is unclear, then please email <a href="http://groups.google.com/group/foounit">group</a>.
+  These <em>keywords</em> are 90% of what you need to write tests in BDD-style using foounit.  There is a lot more to foounit than just these keywords but you can get by without learning about additional matchers and asynchronous testing if you are just experimenting.
 </p>
 <!-- /Syntax Overview -->
 
@@ -243,7 +243,7 @@ describe('when the current user is bob', function (){
 foounit is a fully asynchronous test runner.  When a foounit <em>example</em> is created, it runs an asynchronous execution queue so all tests are asynchronous by default.  Each asynchronous <em>keyword</em> adds an item to the queue and does not run until the previous task has completed.
 
 <h3>waitFor</h3>
-There are many cases in which you may want to wait for an asynchronous event to finish before passing or failing a test.  The <em>waitFor</em> keyword will poll until a particular expectation has been met or a timeout occurs.  Here is an example:
+There are many cases in which you may want to wait for an asynchronous event to finish before passing or failing a test.  The <em>waitFor</em> keyword will poll until a expectation has been met or a timeout occurs.  Here is an example:
 
 <pre class="code">
 var successCallback;
@@ -291,7 +291,7 @@ it('does a lot of async stuff', function (){
 
 <h3>waitForTimeout</h3>
 <p>
-  foounit can also assert that something never happens with the use of waitForTimeout.  These kinds of tests are generally frowned upon because they slow down a test suite, but sometimes they are valuable enough to offset the downside of slowing down the test suite.
+  foounit can assert that something never happens with the use of waitForTimeout.  These kinds of tests are generally frowned upon because they slow down a test suite, but sometimes they are valuable enough to offset the downside of slowing down the test suite.
 <p>
 
 <p>
@@ -445,5 +445,19 @@ expect(function (){ /** I don't throw **/ }).to(throwError);                    
 </pre>
 </p>
 <!-- /Matchers -->
+
+
+<!-- Suites -->
+<a name="suites"></a>
+<h1>Suites</h1>
+<p>TODOC</p>
+<!-- /Suites -->
+
+
+<!-- Loading files -->
+<a name="loader"></a>
+<h1>Loading files</h1>
+<p>TODOC</p>
+<!-- /Loading files -->
 
 <!-- /Documentation -->
