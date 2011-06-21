@@ -61,20 +61,48 @@ foounit.add(function (kw){ with(kw){
       var target  = targets[i];
 
       describe('when the target is for the ' + target, function (){
-        it('generates a test suite', function (){
-          var path = pth.join(suitePath, 'spec');
+        var path;
 
-          run(function (){
+        before(function (){
+          path = pth.join(suitePath, 'spec');
+        });
+
+        describe('when there is no suite option', function (){
+          before(function (){
             options = { target: target, dir: path };
-            footest.generateSuite(options);
           });
 
-          // FIXME: ugh... isFileSync is actually async.  fsh sucks ass.
-          waitFor(function (){
-            expect(fs.isFileSync(pth.join(path, 'suite.js'))).to(beTrue);
+          it('generates a minimal test', function (){
+            run(function (){
+              footest.generateSuite(options);
+            });
+
+            waitFor(function (){
+              expect(fs.isFileSync(pth.join(path, 'example-spec.js'))).to(beTrue);
+              expect(fs.isFileSync(pth.join(path, 'suite.js'))).toNot(beTrue);
+            });
+          });
+        });
+
+        describe('when the suite option is passed', function (){
+          before(function (){
+            options = { target: target, dir: path, suite: true };
+          });
+
+          it('generates a test suite', function (){
+
+            run(function (){
+              footest.generateSuite(options);
+            });
+
+            // FIXME: ugh... isFileSync is actually async.  fsh sucks ass.
+            waitFor(function (){
+              expect(fs.isFileSync(pth.join(path, 'suite.js'))).to(beTrue);
+            });
           });
         });
       });
+
     }
 
   });

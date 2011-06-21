@@ -17,11 +17,20 @@ exports.generateSuite = function (options){
     return t.replace(/^\s+|\s+$/, '');
   }).join('-');
 
+  if (options.suite){
+    target += '-suite';
+  }
+
   var templateDir = pth.join(TEMPLATE_DIR, target);
 
   if (!fs.isDirectorySync(templateDir)){
-    throw new Error('Could not locate suite template for: "' + options.target +
-      '". Run `foounit generate --help` to see a list of available targets.');
+    if (options.suite){
+      throw new Error('Could not locate suite template for: "' + options.target +
+        '". Run `foounit generate --help` to see a list of available targets.');
+    } else {
+      throw new Error('Could not locate template for: "' + options.target +
+        '". Run `foounit generate --help` to see a list of available targets.');
+    }
   }
 
   if (fs.existsSync(options.dir)){
@@ -84,6 +93,11 @@ exports.cli = function (options){
         string:   '-d dir, --dir=DIRECTORY',
         help:     'Directory where the suite shold be generated',
         default:  './spec'
+      },
+      suite: {
+        boolean:  '-s, --suite',
+        help:     'Generate a test suite and an example',
+        default:  false
       }
     });
 
