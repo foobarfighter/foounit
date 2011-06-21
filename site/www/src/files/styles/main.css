@@ -1,0 +1,278 @@
+html, body {
+  background-color: #3a3d40;
+  font-family: 'neuton', serif;
+  color: #636756;
+}
+
+#header {
+  display: block;
+  background-color: #94a391;
+  height: 89px;
+  border-bottom: 1px solid #687466;
+}
+
+#header-decoration {
+  background: url(../images/header-decoration.png) repeat-x;
+  position: absolute;
+  top: 90px;
+  height: 6px;
+  width:  100%;
+}
+
+#logo {
+  background-image: url(../images/logo.png);
+  margin-top: 17px;
+}
+
+.content {
+  width: 932px;
+  text-align: left;
+  position: relative;
+  margin: auto;
+}
+
+/** Nav Link **/
+#nav {
+  position: absolute;
+  right: 0px;
+  top: 32px;
+  z-index: 1000;
+}
+
+#nav a:hover {
+  color: #fff;
+}
+
+#nav a {
+  text-decoration: none;
+  color: #3a3d40;
+  font: bold 13px/29px Verdana;
+  display: block;
+  padding: 0 15px;
+}
+
+#nav span:hover a {
+  background: url(../images/link-hover-left.png) no-repeat;
+  color: #fff;
+}
+
+#nav span {
+  display: block;
+  float: left;
+  margin-right: 20px;
+}
+
+#nav span:hover {
+  background: url(../images/link-hover-right.png) no-repeat right;
+  color: #fff;
+}
+/** /Nav Link **/
+
+/** Download Tag **/
+#download-tag div {
+  background: url(../images/download-tag-left.png) no-repeat;
+  line-height: 40px;
+  height:  40px;
+}
+
+#download-tag {
+  background: url(../images/download-tag-right.png) no-repeat right;
+  position: absolute;
+  top: 89px; right: 0px;
+  height:   40px;
+  z-index:  100;
+}
+
+#download-tag div {
+  color:   #fff;
+  padding: 0 17px;
+  display: block;
+  font-size: 16px;
+}
+
+#download-tag .version {
+  float: left;
+  display: block;
+  text-align: right;
+  font-size: 9px;
+  line-height: 14px;
+  margin-top: 5px;
+}
+
+#download-tag .separator {
+  border-left: 1px solid #501e18;
+  border-right: 1px solid #9d6b65;
+  margin-left: 12px;
+  margin-right: 12px;
+}
+
+#download-tag a {
+  float: right;
+  color: #fff;
+  text-decoration: none;
+  text-shadow: #000 2px 2px 0px;
+}
+/** /Download Tag **/
+
+/** Teaser **/
+#teaser {
+  background-color: #e6d9b8;
+  height: 400px;
+  border-bottom: 4px #27292c solid;
+
+  padding: 60px 0 0 0;
+}
+
+
+#teaser h2 {
+  font-weight: bold;
+  color: #636756;
+  margin-bottom: 25px;
+}
+/** /Teaser **/
+
+/** Teaser cells **/
+.cell {
+  float:  left;
+  width:  296px;
+  margin-right: 22px;
+}
+
+.cell.last {
+  margin-right: 0;
+}
+
+.cell-content {
+  background-color: #728a8b;
+  width:  296px;
+  height: 223px;
+  position: relative;
+}
+
+.cell-content.light {
+  background-color: #f7eece;
+}
+
+.cell-content .frame {
+  width:   278px;
+  height:  205px;
+  position: absolute;
+  top: 5px; left: 5px;
+  border: 4px dotted;
+}
+
+.frame.dark {
+  border-color: #3a3d40;
+}
+
+.frame .light {
+  border-color: #728a8b;
+}
+
+.cell-content .text {
+  padding: 15px;
+  font-size: 11px;
+  color:   #fff;
+  font-family: monaco, monospace;
+}
+
+.cell-content .features {
+  padding: 15px;
+  color:   #888974;
+  font-family: verdana;
+  font-weight: bold;
+}
+
+ul.features {
+  margin-left: 32px;
+}
+
+ul.features li {
+  list-style-image: url(../images/check-mark.png);
+  margin-bottom: 15px;
+}
+/** /Teaser cells **/
+
+/** Main content **/
+.content.main {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding: 30px;
+  border:  3px dotted #728a8b;
+  background-color: #efefef;
+  width: 872px;
+}
+
+.content.main a,
+.content.main a:visited {
+}
+/** /Main content **/
+
+/** Footer **/
+.content.footer {
+  color: #fff;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+/** /Footer **/
+
+em {
+  font-style: italic;
+}
+
+
+
+h1, h3 {
+  font-family:   'neuton', serif;
+  font-weight:   bold;
+  font-size:     24px;
+  margin-bottom: 25px;
+  letter-spacing: 1px;
+}
+
+h1 {
+  font-weight: bold;
+  color: #666;
+}
+
+h2 {
+  color: #666;
+  letter-spacing: 1px;
+}
+
+h3 {
+  margin-top: 25px;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+p {
+  margin-bottom: 15px;
+}
+
+a, a:visited {
+  color: #3f7897;
+  text-decoration: none;
+}
+
+.small { font-size: 14px; }
+
+pre.code {
+  margin: 10px 0px 10px 20px;
+  background-color: #d1d7d2;
+
+  border-left:   8px #728a8b solid;
+
+  padding: 8px;
+  display: block;
+  font-size: 14px;
+}
+
+ul.index {
+  font-size: 14px;
+}
+
+ul.index li {
+  list-style:  disc;
+  margin-left: 24px;
+}

@@ -1,0 +1,182 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>foounit: Test your javascript everywhere!</title>
+  <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/reset/reset-min.css">
+  <link  href="http://fonts.googleapis.com/css?family=Neuton:regular,italic" rel="stylesheet" type="text/css">
+
+  <style>
+    html, body {
+      background-color: #e7dfd0;
+      font-family: 'Neuton', serif;
+      color: #636756;
+      width: 1200px;
+    }
+
+    h1, h3 {
+      color: #636756;
+      font-family:   'Neuton', serif;
+      font-weight:   bold;
+      font-size:     24px;
+      margin-bottom: 25px;
+    }
+
+    h3 {
+      margin-top: 25px;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    p {
+      margin-bottom: 15px;
+    }
+
+    a, a:visited {
+      color: #3f7897;
+      text-decoration: none;
+    }
+
+    .small { font-size: 14px; }
+
+    .content {
+      margin-top:  -6px;
+      padding:     37px 20px 37px 37px;
+      border-left: 18px solid #636756;
+      height:      100%;
+    }
+
+    pre.code {
+      margin: 10px 0px 10px 20px;
+      background-color: #d1d7d2;
+
+      border-left:   8px #3f7897 solid;
+      border-radius: 5px;
+
+      padding: 8px;
+      display: block;
+      font-size: 14px;
+    }
+
+    ul.index {
+      font-size: 14px;
+    }
+
+    ul.index li {
+      list-style:  disc;
+      margin-left: 24px;
+    }
+  </style>
+</head>
+<body>
+  <img src="mock-header.png" height="478" width="1200"/><br/>
+  <div class="content">
+
+    <!-- Getting Started -->
+    <h1>Getting Started</h1>
+
+    <p>
+      First install foounit with npm:
+      <pre class="code">$ npm install foounit</pre>
+    </p>
+    <br/>
+
+    <p>Then follow these steps to run tests...</p>
+
+    <ul class="index">
+      <li><a href="">in nodejs</a></li>
+      <li><a href="">in the browser</a></li>
+      <li><a href="">on code that is shared between the client and the server</a>
+    </ul>
+
+
+    <h3>In nodejs</h3>
+
+    <p>
+      Generate a sample suite in the spec directory:
+      <pre class="code">$ foounit generate --type=node spec</pre>
+    </p>
+
+    <p>
+      Run the test:
+      <pre class="code">$ node spec/example_spec.js</pre>
+    </p>
+
+    <h3>In the browser</h3>
+
+    <p>
+      Generate a sample suite in the spec directory:
+      <pre class="code">$ foounit generate --type=browser spec</pre>
+    </p>
+
+    <p>
+      Start a web server in the directory where the suite was created:
+      <pre class="code">$ foounit-server --spec=spec</pre>
+    <p>
+
+    <p>
+      Open a web browser at <a href="">http://localhost:5057/spec/suite.html</a>
+    </p>
+
+
+    <h3>Shared client and server code</h3>
+
+    <p>
+      Generate a sample suite in the spec directory:
+      <pre class="code">$ foounit generate --type=browser,node spec</pre>
+      <i>foounit is smart enough to know that when multiple environments are specified that it should create a shared directory for multi-environment testing</i>
+    </p>
+
+    <p>
+      Run the tests for each environment by following the directions in the previous steps.
+    </p>
+
+    <!-- /Getting Started -->
+
+    <!-- About -->
+    <br/>
+    <br/>
+
+    <h1>About</h1>
+
+    <p>
+    foounit is an asynchronous BDD-style javascript test framework aimed at making cross-environment javascript testing simple.  foounit is designed to make testing code that is shared between the server and the client less of a chore.  It supports both commonjs loading and global scope loading of script files for immediate test dependencies in all environments.  Test files are loaded in a functionally scoped environment to help minimize test pollution when running your suite.  Test syntax is influenced heavily by Screw Unit,  Jasmine and rspec.</p>
+
+    <p>
+      foounit is the love child of Bob Remeika (<a href="http://bobremeika.com">me</a>).  It was <a href="http://twitter.com/#!/foobarfighter/status/71670398349099008">written out of spite</a> while consuming large amounts of alcohol.  If you notice some bad code within foounit, it's definitely due to alcohol abuse.  I'm not even going to try to pretend that I *meant* to do that.  If you want to help with code quality then <a href="https://github.com/foobarfighter/foounit">patches are accepted</a>.
+    </p>
+
+    <p>
+      A common question that I get is why didn't I just use Jasmine.  See the <a href="#/faq/jasmine">FAQ</a>.
+    </p>
+
+    <p>
+      foounit is currently used at <a href="http://www.yammer.com">Yammer Inc.</a> as the primary test harness for a core component of our client/server side architecture called yamjs.
+    </p>
+
+    <p>
+      foounit is a <a href="http://dojofoundation.org/">Dojo Foundation</a> project and is licensed under the Dojo Foundation License.  This basically <a href="http://dojofoundation.org/about/hundredpoint">means</a> that no One Company owns the project and the code is gauranteed to be IP Free (free as in beer).  This is another reason <a href="#/faq/jasmine">why I didn't want to use Jasmine</a>.
+    </p>
+
+    <p>
+      This website was created by <a href="http://www.heatherkphillips.com/">Heather Phillips</a> (Yammer) and the logo was created by James Kang (Yammer).
+    </p>
+    <!-- /About -->
+
+    <!-- Documentation -->
+    <br/>
+    <br/>
+
+    <h1>Documentation</h1>
+    
+    <ul class="index">
+      <li><a href="">Syntax overview</a></li>
+      <li><a href="">Async awesomeness</a></li>
+      <li><a href="">Matchers</a></li>
+      <li><a href="">How to test</a></li>
+      <li><a href="">FAQ</a></li>
+    </ul>
+    <!-- /Documentation -->
+
+  </div>
+</body>
+</html>

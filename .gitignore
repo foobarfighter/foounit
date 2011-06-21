@@ -3,3 +3,6 @@
 dist
 spec/foo-unit.js
 spec/browser/autogen_suite.js
+node_modules
+site/www/out
+site/docpad

@@ -1,0 +1,65 @@
+---
+layout: home
+---
+<!-- Getting Started -->
+<h1>Getting Started</h1>
+
+<p>
+  First install foounit with npm:
+  <pre class="code">$ npm install foounit</pre>
+</p>
+<br/>
+
+<p>Then follow these steps to run tests...</p>
+
+<ul class="index">
+  <li><a href="#node">in nodejs</a></li>
+  <li><a href="#browser">in the browser</a></li>
+  <li><a href="#shared">on code that is shared between the client and the server</a>
+</ul>
+
+
+<a name="node"></a>
+<h3>In nodejs</h3>
+
+<p>
+  Generate a sample suite in the spec directory:
+  <pre class="code">$ foounit generate --target=node --dir=spec</pre>
+</p>
+
+<p>
+  Run the test:
+  <pre class="code">$ node spec/suite.js</pre>
+</p>
+
+<a name="browser"></a>
+<h3>In the browser</h3>
+
+<p>
+  Generate a sample suite in the spec directory:
+  <pre class="code">$ foounit generate --target=browser --dir=spec</pre>
+</p>
+
+<p>
+  Start a web server in the directory where the suite was created:
+  <pre class="code">$ foounit serve</pre>
+<p>
+
+<p>
+  Open a web browser at <a href="">http://localhost:5057/spec/runner.html</a>
+</p>
+
+
+<a name="shared"></a>
+<h3>Shared client and server code</h3>
+
+<p>
+  Generate a sample suite in the spec directory:
+  <pre class="code">$ foounit generate --target=browser,node --dir=spec</pre>
+  <i>foounit is smart enough to know that when multiple environments are specified that it should create a shared directory for multi-environment testing</i>
+</p>
+
+<p>
+  Run the tests for each environment by following the directions in the previous steps.
+</p>
+<!-- /Getting Started -->

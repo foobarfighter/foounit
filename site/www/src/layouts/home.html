@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>foounit: Test your javascript everywhere!</title>
+  <link href="http://yui.yahooapis.com/2.9.0/build/reset/reset-min.css" rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=Neuton:regular,italic,bold" rel="stylesheet" type="text/css">
+  <link href="styles/main.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div id="header">
+      <div class="content">
+        <a href="/index.html"><img id="logo" height="55" width="241" src="images/logo.png"></a>
+        <div id="nav">
+          <span><a href="/get-started.html">Get Started</a></span>
+          <span><a href="/documentation.html">Documentation</a></span>
+          <span><a href="/support.html">Support</a></span>
+          <span><a href="http://github.com/foobarfighter/foounit">Source</a></span>
+          <span><a href="/about.html">About</a></span>
+        </div>
+        <div id="download-tag">
+          <div>
+            <span class="version">
+              Version $version<br>Updated: Today
+            </span>
+            <span class="separator"></span>
+            <a href="download.html">Download</a>
+          </div>
+        </div>
+      </div>
+      <div id="header-decoration"></div>
+    </div>
+
+    <div id="teaser">
+      <div class="content">
+        <h1>Test your javascript everywhere!</h1>
+
+        <div class="cell">
+          <h2>{Expressive BDD Syntax}</h2>
+          <div class="cell-content">
+            <div class="frame dark"></div>
+            <div class="text">
+              <br><br>
+              var foounit = require('foounit');<br>
+              <br>
+              describe('this is ta test', function(){<br>
+              &nbsp;&nbsp;it('is only a test', function() {<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;expect(myTest).to(runEverywhere);<br>
+              &nbsp;&nbsp;});<br>
+              });<br>
+              <br>
+              foounit.run();
+            </div>
+          </div>
+        </div>
+
+        <div class="cell">
+          <h2>{Clean easy to use UI}</h2>
+          <div class="cell-content">
+            <div class="frame light"></div>
+            <img src="images/screenshot-node.png" height="223" width="296">
+          </div>
+        </div>
+
+        <div class="cell last">
+          <h2>{More Features}</h2>
+          <div class="cell-content light">
+            <div class="frame light"></div>
+            <ul class="features">
+              <li>Asynchronous testing</li>
+              <li>Runs in nodejs and the browser</li>
+              <li>Mocking</li>
+              <li>Continuous Integration</li>
+              <li>Test suites</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content main">
+      <%- @content %>
+    </div>
+
+    <div class="content footer" style="text-align: center">
+      Site designed by <a href="http://jeejkang.com">James Kang</a> and <a href="http://heatherkphillips.com">Heather Phillips</a>
+    </div>
+
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-24092210-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+     })();
+    </script>
+
+</body>
+</html>

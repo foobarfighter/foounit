@@ -16,13 +16,6 @@
     , "src/mock/screw_compat.js"
   ]
 
-  , "foounit-node.js": [
-    { "file": "build/fsh.js", "scope": "function", "variable": "fsh" }
-    , { "file": "src/adapters/node/assert_patch.js", "scope": "function", "variable": "assertPatch" }
-    , "src/adapters/node/colors.js"
-    , "src/adapters/node.js"
-  ]
-
   , "foounit-browser.js": [
     "src/adapters/browser/json2.js"
     , "src/adapters/browser/ui.js"
@@ -32,7 +25,4 @@
     , "src/adapters/browser.js"
   ]
 
-  , "foounit-server.js": [
-    "src/server.js"
-  ]
 }
