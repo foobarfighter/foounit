@@ -1,0 +1,55 @@
+{
+	"name": "balupton.docpad",
+	"version": "0.1.0",
+	"description": "Benjamin Lupton's Website",
+	"homepage": "https://github.com/balupton/balupton.site",
+	"keywords": [
+		"balupton",
+		"benjamin lupton",
+		"website",
+		"nowpad",
+		"docpad",
+		"filepad"
+	],
+	"author": {
+		"name": "Benjamin Lupton",
+		"email": "b@lupton.cc",
+		"web": "http://balupton.com"
+	},
+	"maintainers": [
+		{
+			"name": "Benjamin Lupton",
+			"email": "b@lupton.cc",
+			"web": "http://balupton.com"
+		}
+	],
+	"contributors": [
+		{
+			"name": "Benjamin Lupton",
+			"email": "b@lupton.cc",
+			"web": "http://balupton.com"
+		}
+	],
+	"bugs": {
+		"web": "https://github.com/balupton/balupton.docpad/issues"
+	},
+	"licenses": [
+		{
+			"type": "MIT",
+			"url": "http://creativecommons.org/licenses/MIT/"
+		}
+	],
+	"repository" : {
+		"type" : "git",
+		"url" : "http://github.com/balupton/balupton.docpad.git"
+	},
+	"dependencies": {
+		"coffee-script": ">=0.1.0",
+		"express": ">=2.3.2",
+		"docpad": ">=0.1.0",
+		"filepad": ">=0.1.0"
+	},
+	"engines" : {
+		"node": ">=0.4.0"
+	}
+}

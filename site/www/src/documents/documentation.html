@@ -1,0 +1,449 @@
+---
+layout: home
+---
+<!-- Documentation -->
+<h1>Documentation</h1>
+
+<ul class="index">
+  <li><a href="#syntax-overview">Syntax overview</a></li>
+  <li><a href="#async-awesomeness">Async awesomeness</a></li>
+  <li><a href="#matchers">Matchers</a></li>
+  <li><a href="">How to test</a></li>
+  <li><a href="">FAQ</a></li>
+</ul>
+
+<br>
+
+<!-- Syntax Overview -->
+<a name="syntax-overview"></a>
+<h1>Syntax Overview</h1>
+
+<h3>The Basics</h3>
+The main keywords in foounit are:
+<pre class="code">
+describe, it, before, after, expect, mock
+</pre>
+
+Theres another class of foounit keywords for asynchronous testing, but these are explained in the <a href="#async-awesomeness">async awesomeness</a> section.
+<pre class="code">
+waitFor, run, waitForTimeout
+</pre>
+
+<p>
+  These are the basic building blocks of foounit and asynchronous BDD style testing.
+</p>
+
+
+<a name="it"></a>
+<a name="example"></a>
+<h3>it (aka example)</h3>
+<p>
+  In BDD speak an <em>it</em> block is an example that defines usage of a particular feature. So let's say we want to test that a string is less than 10 characters.  You might create an <em>it</em> block that looks like this:
+
+  <pre class="code">
+it('returns true', function (){
+  var str = "sml_string";
+
+  // expect is assertion... don't worry about this for now, but this test will pass
+  expect(str.length < 10).to(beTrue);
+});
+  </pre>
+</p>
+
+<p>
+  So you might think that an <em>it</em> block is overkill for a test like this, but also realize that this is a contrived example.  The nice thing about using <em>it</em> is that you are able to label this test with a description for the next developer that touches this code.
+</p>
+
+<p>
+  If you just want to play around with foounit to get an idea for how this will work, you can run something like this.  Create a file called <em>test.js</em> with this code:
+
+  <pre class="code">
+var foounit = require('foounit').globalize();
+
+it('fails the test', function (){
+  expect(true).to(beFalse);
+});
+
+foounit.run();
+  </pre>
+
+  Then run the file with this command:
+  <pre class="code">$ node test.js</pre>
+</p>
+
+<p>
+  This test will fail, but it will give you an idea of what happens when you run an example.
+</p>
+
+
+
+<a name="describe"></a>
+<h3>describe (aka group)</h3>
+
+<p>
+  Internally, <em>describe</em> creates a group of <em><a href="#example">examples</a></em>.  All ths really means to you is that <em>describe</em> actually defines a particular behavior.  Let me explain...
+</p>
+
+<p>
+  Let's say you have a signup form widget that allows you to submit a form when you have a password that is 8 or more characters, but it shows an error message if you have password that is less than 8 characters.  You might have a test that looks like this:
+
+  <pre class="code">
+describe('when the password is 8 or more characters', function (){
+  it('allows you to submit the form', function (){
+    ...
+  });
+});
+
+describe('when the password is less than 8 characters', function (){
+  it('displays an error message', function (){
+    ...
+  });
+});
+  </pre>
+</p>
+
+<p>
+  You can also nest <em>describe</em>s if your code has nested behaviors (or nested <em>if</em> statements).  Nested describes look something like this:
+  
+  <pre class="code">
+describe('when foo is not falsy', function (){
+  describe('when foo is an integer', function (){
+    it('returns true', function (){
+      ...
+    });
+  });
+
+  describe('when foo is a boolean', function (){
+    it('returns false', function (){
+      ...
+    });
+  });
+});
+
+describe('when foo is falsy', function (){
+  it('returns false', function (){
+    ...
+  });
+});
+  </pre>
+</p>
+
+
+<a name="expect"></a>
+<a name="assertion"></a>
+<h3>expect (aka assertion)</h3>
+
+<p>
+  The <em>expect </em> <a href="#keywords">keyword</a> is just another way of creating an assertion.  An assertion is a way to test that a particular value is what you expect that it should be.  Here is a breakdown of how <em>expect</em> works:
+
+  <pre class="code">
+expect(
+  foo    // actual value
+).to(
+  be     // this is a === matcher... more on this later
+  , 100  // expected value
+);
+  </pre>
+</p>
+
+<p>
+  Here are some additional example expectations:
+
+  <pre class="code">
+expect(1).to(beLt, 2);            // passes
+expect(true).to(beFalse);         // fails
+expect([1,2,3]).to(include, 2);   // passes
+  </pre>
+</p>
+
+<p>
+  Here are some examples of expectations that assert actual and expected do <em>not</em> match:
+
+  <pre class="code">
+expect(1).toNot(be, 2);           // passes
+expect(function (){
+  throw new Error('errar!');
+}).toNot(throwError);             // fails
+  </pre>
+</p>
+
+
+<a name="before"></a>
+<h3>before (aka setup)</h3>
+
+<p>
+  A <em>before</em> block is something that sets up a particular test.  A <em>before</em> block is run once for each group and they can be nested.  <em>before</em> blocks are great for asserting that a test is setup properly before an <em>example</em> is run and for removing clutter from your tests. <em>before</em> blocks can be nested within <em>describe</em>s and are run in order for each <em>example</em>.
+
+  <pre class="code">
+describe('when foo is 1', function (){
+  var foo;
+
+  before(function (){                       // runs first
+    foo = 1;
+  });
+
+  it('does something', function (){
+    ...
+  });
+
+  describe(when foo is 2', function (){
+    before(function (){                     // runs second
+      foo++;
+      expect(foo).to(be, 2);
+    });
+
+    it('does another thing', function (){
+      ...
+    });
+  });
+});
+  </pre>
+
+<a name="after"></a>
+<h3>after (aka teardown)</h3>
+
+<p>
+  <em>after</em> runs after each test.  It's great for cleaning up the environment and it runs even when the test fails.
+</p>
+
+<p>
+  Here is how to use <em>before</em> and <em>after</em> in conjunction to cleanup global variables:
+
+  <pre class="code">
+describe('when the current user is bob', function (){
+  var origUser;
+
+  before(function (){
+    origUser = global.currentUser;        // save off currentUser
+    global.currentUser = 'bob';
+  });
+
+  after(function (){
+    global.currentUser = origUser;        // reset currentUser after the test runs
+  });
+
+  it('does something', function (){
+    ...
+  });
+});
+  </pre>
+
+</p>
+
+<p>
+  These <em>keywords</em> are 90% of what you need to write tests in BDD style using foounit.  There is a lot more to foounit than just these keywords but you can get by without learning about additional matchers and asynchronousness if you are just experimenting.  If anything in this guide is unclear, then please email the group.
+</p>
+<!-- /Syntax Overview -->
+
+<br><br>
+
+<!-- Async Awesomeness -->
+<a name="async-awesomeness"></a>
+<h1>Async Awesomeness</h1>
+foounit is a fully asynchronous test runner.  When a foounit <em>example</em> is created, it runs an asynchronous execution queue so all tests are asynchronous by default.  Each asynchronous <em>keyword</em> adds an item to the queue and does not run until the previous task has completed.
+
+<h3>waitFor</h3>
+There are many cases in which you may want to wait for an asynchronous event to finish before passing or failing a test.  The <em>waitFor</em> keyword will poll until a particular expectation has been met or a timeout occurs.  Here is an example:
+
+<pre class="code">
+var successCallback;
+
+before(function (){
+  successCallback = mock(function (data){});
+  $.ajax('http://localhost:5057/data.json', { success: successCallback });
+});
+
+it('gets the data', function (){
+  waitFor(function (){
+    expect(successCallback).to(haveBeenCalled);
+  });
+});
+</pre>
+
+<p>
+  In this example, an xhr request is made to get the JSON data at <em>http://localhost:5057/data.json</em>.  We have mocked the success callback and we wait for the response to succeed and call our callback to be called.  If the request succeeds then the test will pass, but if the request is unsuccessful then the test will fail.  The <em>waitFor</em> keyword waits for the function it is passed to run without failing.  If the <em>waitFor</em> block fails, then it is retried until a timeout is reached.  If the timeout is reached then the test fails and a kitten dies.
+</p>
+
+
+<h3>run</h3>
+<p>
+  There's more to asynchronous testing than just <em>waitFor</em> but <em>waitFor</em> will generally get you pretty far.  Another common use-case is to wait for an expectation to be met, then do something else and wait for another expectation.  In this case you can use <em>run</em> to insert yourself into foounit's asynchronous execution queue.  Here is an example:
+
+<pre class="code">
+it('does a lot of async stuff', function (){
+  var foo = '';
+
+  setTimeout(function (){ foo = 'bar'; }, 200);
+
+  // Waits for foo to become 'bar'
+  waitFor(function (){ expect(foo).to(be, 'bar'); });
+
+  // Runs after the waitFor above
+  run(function (){
+    setTimeout(function (){ foo = 'baz'; }, 200);
+  });
+
+  // Waits for foo to become 'baz'
+  waitFor(function (){ expect(foo).to(be, 'baz'); });
+});
+</pre>
+
+
+<h3>waitForTimeout</h3>
+<p>
+  foounit can also assert that something never happens with the use of waitForTimeout.  These kinds of tests are generally frowned upon because they slow down a test suite, but sometimes they are valuable enough to offset the downside of slowing down the test suite.
+<p>
+
+<p>
+  <em>waitForTimeout</em> will run a function until a timeout is reached.  The first time the function passes without error, <em>waitForTimeout</em> fails.  Consider this example:
+</p>
+
+<pre class="code">
+it('doesnt get to 1000 fast enough', function (){
+  var foo = 0
+    , inc = function (){ foo++; setTimeout(inc, 200); }
+
+  setTimeout(inc, 200);
+
+  waitForTimeout(function (){
+    expect(foo).to(beGt, 999);
+  });
+});
+</pre>
+
+<p>
+  This example will fail because foo will not reach 1000 in the time that it takes for <em>waitForTimeout</em> to timeout.
+</p>
+
+<!-- /Async Awesomness -->
+
+<br><br>
+
+<!-- Matchers -->
+<a name="matchers"></a>
+<h1>Matchers</h1>
+
+<h3>be</h3>
+<p>
+  Asserts that actual === expected.
+<pre class="code">
+expect(1).to(be, 1);                // passes
+expect(undefined).to(be, null);     // fails
+</pre>
+</p>
+
+
+<h3>beGt</h3>
+<p>
+  Assert that actual is greater than expected.
+<pre class="code">
+expect(5).to(beGt, 4);              // passes 
+expect(1).to(beGt, 2);              // fails
+</pre>
+</p>
+
+
+<h3>beFalse</h3>
+<p>
+  Assert that actual is === false.
+<pre class="code">
+expect(false).to(beFalse);          // passes 
+expect(null).to(beFalse);           // fails
+</pre>
+</p>
+
+
+<h3>beFalsy</h3>
+<p>
+  Assert that actual is falsy.
+<pre class="code">
+expect(false).to(beFalsy);          // passes 
+expect(null).to(beFalsy);           // passes
+expect("test").to(beFalsy);         // fails
+</pre>
+</p>
+
+
+<h3>beLt</h3>
+<p>
+  Assert that actual is less than expected.
+<pre class="code">
+expect(1).to(beLt, 2);              // passes 
+expect(5).to(beLt, 4);              // fails
+</pre>
+</p>
+
+
+<h3>beNull</h3>
+<p>
+  Asserts that actual === null.
+<pre class="code">
+expect(null).to(beNull);            // passes
+expect(undefined).to(beNull);       // fails
+</pre>
+</p>
+
+
+<h3>beTruthy</h3>
+<p>
+  Asserts that actual is truthy.
+<pre class="code">
+expect(1).to(beTruthy);             // passes
+expect('').to(beTruthy);            // fails
+expect(true).to(beTruthy);          // passes
+</pre>
+</p>
+
+
+<h3>beUndefined</h3>
+<p>
+  Asserts that actual === undefined.
+<pre class="code">
+expect(null).to(beUndefined);       // fails
+expect(undefined).to(beUndefined);  // passes
+</pre>
+</p>
+
+
+<h3>equal</h3>
+<p>
+  Assert that actual is deeply equal to expected.  This is useful for saying that one object is the same as another but they are referencing different objects.
+<pre class="code">
+expect({ foo: ['bar'] }).to(equal, { foo: ['bar'] });   // passes
+expect({ baz: 1 }).to(equal, { baz: 2 });               // fails
+</pre>
+</p>
+
+
+<h3>include</h3>
+<p>
+  Assert that an array has an element that matches type and object equality of expected.
+<pre class="code">
+expect([1, 2, 3]).to(include, 2);   // passes
+expect([1, 2, 3]).to(include, 10);  // fails
+</pre>
+</p>
+
+
+<h3>match</h3>
+<p>
+  Assert that actual matches a regex.
+<pre class="code">
+expect('foo bar baz').to(match, /bar/);   // passes
+expect('foo bar baz').to(match, /qux/);   // fails
+</pre>
+</p>
+
+<a name="throwError"></a>
+<h3>throwError</h3>
+<p>
+  Asserts that the a function throws an error.  The error message can be matched against to assert that the correct error message was thrown.
+<pre class="code">
+expect(function (){ throw new Error(); }).to(throwError);                       // passes
+expect(function (){ throw new Error('HEY NOW'); }).to(throwError, /Fuuuuuu/);   // fails
+expect(function (){ /** I don't throw **/ }).to(throwError);                    // fails
+</pre>
+</p>
+<!-- /Matchers -->
+
+<!-- /Documentation -->
