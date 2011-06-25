@@ -41,6 +41,26 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
+    describe('.addMatcher/.removeMatcher', function (){
+      it('adds a matcher to the keywords as well as to the expectations', function (){
+        foounit.addMatcher('beRainbow', function (){
+          this.match = function (){ return true; }
+          this.notMatch = function () { throw new Error('expected'); }
+        });
+
+        expect('unicorn eating').toBeRainbow();
+        expect('unicorn eating').to(beRainbow);
+        expect(function (){ expect('x').toNotBeRainbow(); }).to(throwError, /expected/);
+        expect(function (){ expect('x').toNot(beRainbow); }).to(throwError, /expected/);
+
+        foounit.removeMatcher('beRainbow');
+
+        expect(typeof foounit.Expectation.prototype.toBeRainbow).toNot(be, 'function');
+        expect(typeof foounit.Expectation.prototype.toNotBeRainbow).toNot(be, 'function');
+        expect(typeof beRainbow).to(be, 'undefined');
+      });
+    });
+
     describe('scope', function (){
       it('mixes in the foounit keywords into the scope object that was passed', function (){
         var obj = {};
