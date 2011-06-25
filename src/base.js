@@ -283,7 +283,44 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
   foounit.removeKeyword = function (keyword){
     delete foounit.keywords[keyword];
     if (_kwScope){ delete _kwScope[keyword]; }
-  }
+  };
+
+  (function (){
+
+    // Return a matcher keyword suffix
+    // keyword = haveBeenCalled returns HaveBeenCalled
+    var sfix = function (keyword) {
+      return keyword.substr(0, 1).toUpperCase() + keyword.substr(1)
+    };
+
+    /**
+     * Adds a matcher
+     */
+    foounit.addMatcher = function (matcherKeyword, definition){
+      foounit.addKeyword(matcherKeyword, definition);   // Add the keyword to the kw scope
+
+      var suffix = sfix(matcherKeyword)
+        , instance = new definition()
+        , proto = foounit.Expectation.prototype;
+      
+      proto['to'    + suffix] = instance.match;
+      proto['toNot' + suffix] = instance.notMatch;
+    }
+
+    /**
+      * Removes a matcher
+      */
+    foounit.removeMatcher = function (matcherKeyword){
+      foounit.removeKeyword(matcherKeyword);            // Remove the keyword from the kw scope
+
+      var suffix = sfix(matcherKeyword)
+        , proto = foounit.Expectation.prototype;
+      
+      delete proto['to'    + suffix];
+      delete proto['toNot' + suffix];
+    }
+
+  })();
 
   /**
    * Puts all of the foounit keywords in the global scope
