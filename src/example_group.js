@@ -1,6 +1,7 @@
-foounit.ExampleGroup = function (description, builder){
+foounit.ExampleGroup = function (description, builder, pending){
   this._description = description;
   this._builder = builder;
+  this._pending = pending;
   this._before = null;
   this._after = null;
   this._examples = [];
@@ -17,10 +18,16 @@ foounit.mixin(foounit.ExampleGroup.prototype, {
   }
 
   , addExample: function (example){
+    if (this.isPending()){
+      example.setStatus(foounit.Example.prototype.PENDING);
+    }
     this._examples.push(example);
   }
 
   , addGroup: function (group){
+    if (this.isPending()){
+      group.setPending(true);
+    }
     this._groups.push(group);
   }
 
@@ -46,5 +53,13 @@ foounit.mixin(foounit.ExampleGroup.prototype, {
 
   , getDescription: function (){
     return this._description;
+  }
+
+  , isPending: function (){
+    return this._pending;
+  }
+
+  , setPending: function (bool){
+    this._pending = bool;
   }
 });

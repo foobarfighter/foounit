@@ -31,6 +31,13 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
+    describe('xdescribe', function (){
+      it('creats a pending group', function (){
+        foo = footest.keywords.xdescribe('pending', function (){});
+        expect(foo.isPending()).to(beTrue);
+      });
+    });
+
     describe('matchers', function (){
       it('mixes them into the keywords', function (){
         var called = false;

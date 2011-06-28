@@ -129,6 +129,22 @@ describe('when foo is falsy', function (){
 </p>
 
 
+<a name=xdescribe"></a>
+<h3>xdescribe (aka group)</h3>
+
+<p>
+  Creates a pending group.  All groups and examples nested within a pending group will be marked as pending.  This can be used to mark an entire set of tests as pending.
+</p>
+
+<pre class="code">
+xdescribe('example group', function (){
+  it('runs some test', function (){   // This example will be marked as pending and will not run
+    ...
+  });
+});
+</pre>
+
+
 <a name="expect"></a>
 <a name="assertion"></a>
 <h3>expect (aka assertion)</h3>
