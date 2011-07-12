@@ -63,7 +63,11 @@ exports.serve = function (options){
   }
 
   log('--> Static web server is started on port ' + options.port);
-  connect(connect.static('.')).listen(options.port, 'localhost');
+  log('--> Hosting from root directory: ' + process.cwd());
+  connect(
+    connect.logger()
+  , connect.static(process.cwd())
+  ).listen(options.port, 'localhost');
 }
 
 
@@ -96,7 +100,7 @@ exports.cli = function (options){
       },
       suite: {
         boolean:  '-s, --suite',
-        help:     'Generate a test suite and an example',
+        help:     'Generate a test suite for hosting multiple test files',
         default:  false
       }
     });
