@@ -283,7 +283,44 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
   foounit.removeKeyword = function (keyword){
     delete foounit.keywords[keyword];
     if (_kwScope){ delete _kwScope[keyword]; }
-  }
+  };
+
+  (function (){
+
+    // Return a matcher keyword suffix
+    // keyword = haveBeenCalled returns HaveBeenCalled
+    var sfix = function (keyword) {
+      return keyword.substr(0, 1).toUpperCase() + keyword.substr(1)
+    };
+
+    /**
+     * Adds a matcher
+     */
+    foounit.addMatcher = function (matcherKeyword, definition){
+      foounit.addKeyword(matcherKeyword, definition);   // Add the keyword to the kw scope
+
+      var suffix = sfix(matcherKeyword)
+        , instance = new definition()
+        , proto = foounit.Expectation.prototype;
+      
+      proto['to'    + suffix] = instance.match;
+      proto['toNot' + suffix] = instance.notMatch;
+    }
+
+    /**
+      * Removes a matcher
+      */
+    foounit.removeMatcher = function (matcherKeyword){
+      foounit.removeKeyword(matcherKeyword);            // Remove the keyword from the kw scope
+
+      var suffix = sfix(matcherKeyword)
+        , proto = foounit.Expectation.prototype;
+      
+      delete proto['to'    + suffix];
+      delete proto['toNot' + suffix];
+    }
+
+  })();
 
   /**
    * Puts all of the foounit keywords in the global scope
@@ -956,7 +993,7 @@ if (foounit.hostenv.type == 'node'){
 /**
  * Asserts that a function throws an error
  */
-foounit.addKeyword('throwError', function (){
+foounit.addMatcher('throwError', function (){
   this.match = function (actual, expected){
     // actual == block
     // expected == error
@@ -973,7 +1010,7 @@ foounit.addKeyword('throwError', function (){
 /**
  * Asserts type and object
  */
-foounit.addKeyword('be', function (){
+foounit.addMatcher('be', function (){
   this.match = function (actual, expected){
     assert.strictEqual(actual, expected);
   }
@@ -986,7 +1023,7 @@ foounit.addKeyword('be', function (){
 /**
  * Asserts that actual === null
  */
-foounit.addKeyword('beNull', function (){
+foounit.addMatcher('beNull', function (){
   this.match = function (actual){
     assert.strictEqual(actual, null);
   }
@@ -999,7 +1036,7 @@ foounit.addKeyword('beNull', function (){
 /**
  * Asserts that actual === undefined
  */
-foounit.addKeyword('beUndefined', function (){
+foounit.addMatcher('beUndefined', function (){
   this.match = function (actual){
     assert.strictEqual(actual, undefined);
   }
@@ -1012,7 +1049,7 @@ foounit.addKeyword('beUndefined', function (){
 /**
  * Assert that actual is greater than expected
  */
-foounit.addKeyword('beGt', function (){
+foounit.addMatcher('beGt', function (){
   this.match = function (actual, expected){
     if (actual > expected){ return; }
     assert.fail(actual, expected, null, '>');
@@ -1027,7 +1064,7 @@ foounit.addKeyword('beGt', function (){
 /**
  * Assert that actual is less than expected
  */
-foounit.addKeyword('beLt', function (){
+foounit.addMatcher('beLt', function (){
   this.match = function (actual, expected){
     if (actual < expected){ return; }
     assert.fail(actual, expected, null, '<');
@@ -1042,7 +1079,7 @@ foounit.addKeyword('beLt', function (){
 /**
  * Asserts true === actual
  */
-foounit.addKeyword('beTrue', function (){
+foounit.addMatcher('beTrue', function (){
   // expected is unused
   this.notMatch = function (actual){
     assert.notStrictEqual(actual, true);
@@ -1057,7 +1094,7 @@ foounit.addKeyword('beTrue', function (){
 /**
  * Asserts that actual is truthy
  */
-foounit.addKeyword('beTruthy', function (){
+foounit.addMatcher('beTruthy', function (){
   this.notMatch = function (actual){
     if (!actual){ return };
     assert.fail('Expected "' + actual + '" to NOT be truthy');
@@ -1072,7 +1109,7 @@ foounit.addKeyword('beTruthy', function (){
 /**
  * Asserts true === actual
  */
-foounit.addKeyword('beFalse', function (){
+foounit.addMatcher('beFalse', function (){
   // expected is unused
   this.notMatch = function (actual){
     assert.notStrictEqual(actual, false);
@@ -1087,7 +1124,7 @@ foounit.addKeyword('beFalse', function (){
 /**
  * Asserts that actual is falsy
  */
-foounit.addKeyword('beFalsy', function (){
+foounit.addMatcher('beFalsy', function (){
   this.notMatch = function (actual){
     if (actual){ return; }
     assert.fail('Expected "' + actual + '" to NOT be falsy');
@@ -1102,7 +1139,7 @@ foounit.addKeyword('beFalsy', function (){
 /**
  * Asserts deep equality
  */
-foounit.addKeyword('equal', function (){
+foounit.addMatcher('equal', function (){
   var pSlice = Array.prototype.slice;
 
   var isArguments = function (value){
@@ -1134,7 +1171,7 @@ foounit.addKeyword('equal', function (){
 /**
  * Asserts that actual has an element that === expected
  */
-foounit.addKeyword('include', function (){
+foounit.addMatcher('include', function (){
   var find = function (actual, expected){
     if (!expected || (expected.constructor != Array && !expected.callee)){
       expected = [expected];
@@ -1165,7 +1202,7 @@ foounit.addKeyword('include', function (){
   }
 });
 
-foounit.addKeyword('match', function (){
+foounit.addMatcher('match', function (){
   this.notMatch = function (actual, expected){
     if (!expected.exec(actual)){ return; }
     assert.fail(actual, expected, null, expected + ' matches');

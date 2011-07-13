@@ -1,4 +1,8 @@
-// require your source here
+foounit.require(':spec/spec-helper');
+
+// Include your source file here
+// foounit.load(':src/example.js');     // loads a file in global scope
+// foounit.require(':src/example.js');  // loads a file in functional scope
 
 describe('this is a group', function (){
   var foo;
@@ -13,9 +17,5 @@ describe('this is a group', function (){
 
   it('passes', function (){
     expect(foo.bar).to(be, 123);
-  });
-
-  xit('is pending', function (){
-    throw new Error('this doesnt fail');
   });
 });

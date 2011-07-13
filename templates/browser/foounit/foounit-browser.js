@@ -1176,5 +1176,12 @@ foounit.browser.XhrLoaderStrategy = function (){
     };
   })();
 
+  /**
+   * Convenience method for building and executing tests
+   */
+  foounit.run = function (){
+    foounit.execute(foounit.build());
+  };
+
 })(foounit);
 
