@@ -42,6 +42,14 @@ namespace('spec', function (){
 
   task('browser', ['build:all'], function (){
     generateBrowserSuite();
+    
+    var connect = require('connect');
+    var port = process.env.FOOUNIT_PORT || 5057;
+
+    console.log('You can now run your tests by opening http://localhost:' + port + '/spec/browser/suite_runner.html in your browser');
+    connect(connect.static(__dirname)).listen(port, 'localhost');
+    console.log('Static web server is started');
+    
   });
 
   task('server',  ['build:all'], function (){
