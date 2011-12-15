@@ -6,3 +6,6 @@ spec/browser/autogen_suite.js
 node_modules
 site/www/out
 site/docpad
+*.iml
+*.ipr
+*.iws

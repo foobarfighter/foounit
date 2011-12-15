@@ -1037,9 +1037,26 @@ foounit.browser.XhrLoaderStrategy = function (){
     return parts[parts.length - 1];
   };
 
-  var geval = function (src){
+  var geval = function (src, hint){
     var g = foounit.hostenv.global;
+    src = appendHint(src, hint);
     return (g.execScript) ? g.execScript(src) : g.eval.call(null, src);
+  };
+
+  var leval = function (src, hint){
+    src = appendHint(src, hint);
+
+    var ret;
+    if (document.all){        // IE is slightly different
+      eval('ret = ' + src);
+    } else {
+      ret = eval(src);
+    }
+    return ret;
+  };
+
+  var appendHint = function (src, hint){
+    return src + "\r\n////@ sourceURL=" + hint;
   };
 
   /**
@@ -1051,14 +1068,8 @@ foounit.browser.XhrLoaderStrategy = function (){
       , module = { exports: {} }
       , funcString = '(function (foounit, module, exports, __dirname, __filename){' + code + '});';
   
-    var func;
     try {
-      // IE sucks shit.
-      if (document.all){
-        eval('func = ' + funcString);
-      } else {
-        func = eval(funcString);
-      }
+      var func = leval(funcString, path);
       func.call({}, foounit, module, module.exports, dirname(path), basename(path));
     } catch (e){
       console.error('Failed to load path: ' + path + ': ' + e.message, e);
@@ -1072,7 +1083,7 @@ foounit.browser.XhrLoaderStrategy = function (){
    */
   this.load = function (path){
     var code = get(path);
-    geval(code);
+    geval(code, path);
     return true;
   };
 };

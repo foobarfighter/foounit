@@ -806,9 +806,7 @@ foounit.mixin(foounit.Example.prototype, {
     this._descriptions = descriptions;
   }
 
-  , getBefores: function (){
-    return this._befores;
-  }
+  , getBefores: function (){ return this._befores; }
 
   , setAfters: function (afters){
     this._afters = afters;
@@ -821,10 +819,15 @@ foounit.mixin(foounit.Example.prototype, {
   , getTest: function (){
     return this._test;
   }
+
+  , setStatus: function (code){
+    this._status = code;
+  }
 });
-foounit.ExampleGroup = function (description, builder){
+foounit.ExampleGroup = function (description, builder, pending){
   this._description = description;
   this._builder = builder;
+  this._pending = pending;
   this._before = null;
   this._after = null;
   this._examples = [];
@@ -841,10 +844,16 @@ foounit.mixin(foounit.ExampleGroup.prototype, {
   }
 
   , addExample: function (example){
+    if (this.isPending()){
+      example.setStatus(foounit.Example.prototype.PENDING);
+    }
     this._examples.push(example);
   }
 
   , addGroup: function (group){
+    if (this.isPending()){
+      group.setPending(true);
+    }
     this._groups.push(group);
   }
 
@@ -870,6 +879,14 @@ foounit.mixin(foounit.ExampleGroup.prototype, {
 
   , getDescription: function (){
     return this._description;
+  }
+
+  , isPending: function (){
+    return this._pending;
+  }
+
+  , setPending: function (bool){
+    this._pending = bool;
   }
 });
 foounit.Expectation = function (actual){
@@ -930,7 +947,6 @@ foounit.addKeyword('after', function (func){
   group.setAfter(func);
 });
 
-
 /**
  * Defines a group in the BuildContext
  */
@@ -944,6 +960,24 @@ foounit.addKeyword('describe', function (description, builder){
   context.setCurrentGroup(group);
   group.build();
   context.setCurrentGroup(parentGroup);
+});
+
+/*
+ * Defines a pending group in the BuildContext.
+ * All examples and nested groups within this group will
+ * be marked as pending.
+ */
+foounit.addKeyword('xdescribe', function (description, builder){
+  var context = foounit.getBuildContext()
+    , parentGroup = context.getCurrentGroup()
+    , group = new foounit.ExampleGroup(description, builder, true);
+
+  parentGroup.addGroup(group);
+
+  context.setCurrentGroup(group);
+  group.build();
+  context.setCurrentGroup(parentGroup);
+  return group;
 });
 
 /**
