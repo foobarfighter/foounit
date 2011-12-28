@@ -4,10 +4,11 @@
 , "repository"  : {"type": "git", "url": "http://github.com/foobarfighter/foounit.git"}
 , "author"      : "Bob Remeika"
 , "version"     : "0.1.0"
-, "main"        : "./src/adapters/node" 
+, "main"        : "./src/adapters/node"
 , "bin"         : "./bin/foounit"
 , "dependencies": {
     "nomnom" : ">=0.5.0",
-    "fsh"    : "=0.0.2"
+    "fsh"    : "=0.0.2",
+    "underscore": ""
   }
 }
