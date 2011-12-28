@@ -26,7 +26,10 @@ foounit.generateSuite = require('./node/cli').generateSuite;
 var adapter = (function (){
   var sys = require('sys')
     , fs  = require('fs')
-    , runInThisContext = process.binding('evals').Script.runInThisContext;
+    , runInThisContext = (
+        process.binding('evals').Script || // older node versions
+        require('vm') // newer node versions
+      ).runInThisContext;
 
   // Private variables
   var self = {},  _specdir;
