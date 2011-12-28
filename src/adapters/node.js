@@ -24,12 +24,18 @@ foounit.cli = require('./node/cli').cli;
 foounit.generateSuite = require('./node/cli').generateSuite;
 
 var adapter = (function (){
-  var sys = require('sys')
+  var puts
     , fs  = require('fs')
     , runInThisContext = (
         process.binding('evals').Script || // older node versions
         require('vm') // newer node versions
       ).runInThisContext;
+
+  try {
+    puts = require('util').puts;
+  } catch (e) {
+    puts = require('sys').puts;
+  }
 
   // Private variables
   var self = {},  _specdir;
@@ -55,7 +61,7 @@ var adapter = (function (){
   self.load = function (path){
     path = foounit.translatePath(path) + '.js';
     var code = fs.readFileSync(path);
-    runInThisContext(code, path, true); 
+    runInThisContext(code, path, true);
   }
 
   /**
@@ -85,7 +91,7 @@ var adapter = (function (){
     if (example.isFailure()){
       colors.putsRed('F');
       colors.putsRed(example.getFullDescription());
-      sys.puts(new Array(example.getFullDescription().length+1).join('='));
+      puts(new Array(example.getFullDescription().length+1).join('='));
       colors.highlightSpecs(example.getException().stack);
     } else if (example.isSuccess()){
       colors.printGreen('.');
