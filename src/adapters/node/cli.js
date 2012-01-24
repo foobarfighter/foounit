@@ -4,7 +4,7 @@ var parser = require('nomnom')
   , pth = require('path');
 
 var TEMPLATE_DIR = pth.join(__dirname, '../../../templates')
-  , _options = { log: false };;
+  , _options = { log: false };
 
 function log(){
   if (!_options.log){ return; }
@@ -99,7 +99,8 @@ exports.cli = function (options){
         default:  './spec'
       },
       suite: {
-        boolean:  '-s, --suite',
+        abbr:     's',
+        flag:     true,
         help:     'Generate a test suite for hosting multiple test files',
         default:  false
       }
