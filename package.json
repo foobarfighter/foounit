@@ -9,6 +9,7 @@
 , "dependencies": {
     "nomnom" : "=1.5.1",
     "fsh"    : "=0.0.2",
+    "connect": "=1.8.5",
     "underscore": ""
   }
 }
