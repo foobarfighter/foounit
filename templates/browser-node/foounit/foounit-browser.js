@@ -483,7 +483,9 @@ if (typeof foounit.ui == 'undefined'){
 }
 
 (function (ui){
-  var _body, _index = 0, _autoScrolling = true;
+  var _body, _index = 0, _autoScrolling = true, errors = []
+    , logAll = window.location.hash.indexOf("all") > -1
+  
 
   var _createTitleNode = function (title, index, className){
     var titleDiv = document.createElement('div');
@@ -616,6 +618,7 @@ if (typeof foounit.ui == 'undefined'){
       _progressBar.fail(_index);
       _scroller.bottom();
       ++_index;
+      errors.push(example);
     } catch (e){
       alert('foounit.ui.onFailure: ' + e.message);
     }
@@ -624,9 +627,11 @@ if (typeof foounit.ui == 'undefined'){
   /**
    * Called when the runner runs an example that succeeds
    */
-  ui.onSuccess = function (example){
+  ui.onSuccess = function (example){    
     try {
-      _body.appendChild(_createSuccessNode(example, _index));
+      if (logAll){
+        _body.appendChild(_createSuccessNode(example, _index));
+      }  
       _progressBar.success(_index);
       _scroller.bottom();
       ++_index;
