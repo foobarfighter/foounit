@@ -483,9 +483,7 @@ if (typeof foounit.ui == 'undefined'){
 }
 
 (function (ui){
-  var _body, _index = 0
-    , _autoScrolling = window.location.search.indexOf("foounit.ui.autoScroll=true") > -1
-    , _logAll = window.location.search.indexOf("foounit.ui.log=all") > -1;
+  var _body, _index = 0, _autoScrolling = true;
 
   var _createTitleNode = function (title, index, className){
     var titleDiv = document.createElement('div');
@@ -584,15 +582,11 @@ if (typeof foounit.ui == 'undefined'){
     }
 
     this.bottom = function (){
-      if (_autoScrolling){
-        window.scroll(0, 1000000);
-      }
+      window.scroll(0, 1000000);
     }
 
     this.top = function (){
-      if (_autoScrolling){
-        window.scroll(0, 0);
-      }
+      window.scroll(0, 0);
     }
 
   }
@@ -632,9 +626,7 @@ if (typeof foounit.ui == 'undefined'){
    */
   ui.onSuccess = function (example){
     try {
-      if (_logAll){
-        _body.appendChild(_createSuccessNode(example, _index));
-      }
+      _body.appendChild(_createSuccessNode(example, _index));
       _progressBar.success(_index);
       _scroller.bottom();
       ++_index;
@@ -668,7 +660,7 @@ if (typeof foounit.ui == 'undefined'){
         info.pending.length + ' pending, ' +
         info.totalCount     + ' total');
 
-      _progressBar.log('>> foounit runtime: ' + info.runMillis + 'ms');
+      _progressBar.log('>> foounit runtime: ', info.runMillis + 'ms');
       _scroller.top();
     } catch (e){
       alert('foounit.ui.onFinish: ' + e.message);
@@ -1045,26 +1037,9 @@ foounit.browser.XhrLoaderStrategy = function (){
     return parts[parts.length - 1];
   };
 
-  var geval = function (src, hint){
+  var geval = function (src){
     var g = foounit.hostenv.global;
-    src += appendHint(src, hint);
-    return (g.execScript) ? g.execScript(src) : g.eval.call(g, src);
-  };
-
-  var leval = function (src, hint){
-    src = appendHint(src, hint);
-
-    var ret;
-    if (document.all){        // IE is slightly different
-    eval('ret = ' + src);
-    } else {
-    ret = eval(src);
-    }
-    return ret;
-  };
-
-  var appendHint = function (src, hint){
-    return src + "\r\n////@ sourceURL=" + hint;
+    return (g.execScript) ? g.execScript(src) : g.eval.call(null, src);
   };
 
   /**
@@ -1076,8 +1051,14 @@ foounit.browser.XhrLoaderStrategy = function (){
       , module = { exports: {} }
       , funcString = '(function (foounit, module, exports, __dirname, __filename){' + code + '});';
   
+    var func;
     try {
-      var func = leval(funcString, path);
+      // IE sucks shit.
+      if (document.all){
+        eval('func = ' + funcString);
+      } else {
+        func = eval(funcString);
+      }
       func.call({}, foounit, module, module.exports, dirname(path), basename(path));
     } catch (e){
       console.error('Failed to load path: ' + path + ': ' + e.message, e);
@@ -1091,7 +1072,7 @@ foounit.browser.XhrLoaderStrategy = function (){
    */
   this.load = function (path){
     var code = get(path);
-    geval(code, path);
+    geval(code);
     return true;
   };
 };
@@ -1194,13 +1175,6 @@ foounit.browser.XhrLoaderStrategy = function (){
       }
     };
   })();
-
-  /**
-   * Convenience method for building and executing tests
-   */
-  foounit.run = function (){
-    foounit.execute(foounit.build());
-  };
 
 })(foounit);
 

@@ -3,7 +3,9 @@ if (typeof foounit.ui == 'undefined'){
 }
 
 (function (ui){
-  var _body, _index = 0, _autoScrolling = true;
+  var _body, _index = 0
+    , _autoScrolling = window.location.search.indexOf("foounit.ui.autoScroll=true") > -1
+    , _logAll = window.location.search.indexOf("foounit.ui.log=all") > -1;
 
   var _createTitleNode = function (title, index, className){
     var titleDiv = document.createElement('div');
@@ -102,11 +104,15 @@ if (typeof foounit.ui == 'undefined'){
     }
 
     this.bottom = function (){
-      window.scroll(0, 1000000);
+      if (_autoScrolling){
+        window.scroll(0, 1000000);
+      }
     }
 
     this.top = function (){
-      window.scroll(0, 0);
+      if (_autoScrolling){
+        window.scroll(0, 0);
+      }
     }
 
   }
@@ -146,7 +152,9 @@ if (typeof foounit.ui == 'undefined'){
    */
   ui.onSuccess = function (example){
     try {
-      _body.appendChild(_createSuccessNode(example, _index));
+      if (_logAll){
+        _body.appendChild(_createSuccessNode(example, _index));
+      }
       _progressBar.success(_index);
       _scroller.bottom();
       ++_index;
@@ -180,7 +188,7 @@ if (typeof foounit.ui == 'undefined'){
         info.pending.length + ' pending, ' +
         info.totalCount     + ' total');
 
-      _progressBar.log('>> foounit runtime: ', info.runMillis + 'ms');
+      _progressBar.log('>> foounit runtime: ' + info.runMillis + 'ms');
       _scroller.top();
     } catch (e){
       alert('foounit.ui.onFinish: ' + e.message);

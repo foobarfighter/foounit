@@ -283,44 +283,7 @@ foounit = typeof foounit === 'undefined' ?  {} : foounit;
   foounit.removeKeyword = function (keyword){
     delete foounit.keywords[keyword];
     if (_kwScope){ delete _kwScope[keyword]; }
-  };
-
-  (function (){
-
-    // Return a matcher keyword suffix
-    // keyword = haveBeenCalled returns HaveBeenCalled
-    var sfix = function (keyword) {
-      return keyword.substr(0, 1).toUpperCase() + keyword.substr(1)
-    };
-
-    /**
-     * Adds a matcher
-     */
-    foounit.addMatcher = function (matcherKeyword, definition){
-      foounit.addKeyword(matcherKeyword, definition);   // Add the keyword to the kw scope
-
-      var suffix = sfix(matcherKeyword)
-        , instance = new definition()
-        , proto = foounit.Expectation.prototype;
-      
-      proto['to'    + suffix] = instance.match;
-      proto['toNot' + suffix] = instance.notMatch;
-    }
-
-    /**
-      * Removes a matcher
-      */
-    foounit.removeMatcher = function (matcherKeyword){
-      foounit.removeKeyword(matcherKeyword);            // Remove the keyword from the kw scope
-
-      var suffix = sfix(matcherKeyword)
-        , proto = foounit.Expectation.prototype;
-      
-      delete proto['to'    + suffix];
-      delete proto['toNot' + suffix];
-    }
-
-  })();
+  }
 
   /**
    * Puts all of the foounit keywords in the global scope
@@ -806,7 +769,9 @@ foounit.mixin(foounit.Example.prototype, {
     this._descriptions = descriptions;
   }
 
-  , getBefores: function (){ return this._befores; }
+  , getBefores: function (){
+    return this._befores;
+  }
 
   , setAfters: function (afters){
     this._afters = afters;
@@ -819,15 +784,10 @@ foounit.mixin(foounit.Example.prototype, {
   , getTest: function (){
     return this._test;
   }
-
-  , setStatus: function (code){
-    this._status = code;
-  }
 });
-foounit.ExampleGroup = function (description, builder, pending){
+foounit.ExampleGroup = function (description, builder){
   this._description = description;
   this._builder = builder;
-  this._pending = pending;
   this._before = null;
   this._after = null;
   this._examples = [];
@@ -844,16 +804,10 @@ foounit.mixin(foounit.ExampleGroup.prototype, {
   }
 
   , addExample: function (example){
-    if (this.isPending()){
-      example.setStatus(foounit.Example.prototype.PENDING);
-    }
     this._examples.push(example);
   }
 
   , addGroup: function (group){
-    if (this.isPending()){
-      group.setPending(true);
-    }
     this._groups.push(group);
   }
 
@@ -879,14 +833,6 @@ foounit.mixin(foounit.ExampleGroup.prototype, {
 
   , getDescription: function (){
     return this._description;
-  }
-
-  , isPending: function (){
-    return this._pending;
-  }
-
-  , setPending: function (bool){
-    this._pending = bool;
   }
 });
 foounit.Expectation = function (actual){
@@ -947,6 +893,7 @@ foounit.addKeyword('after', function (func){
   group.setAfter(func);
 });
 
+
 /**
  * Defines a group in the BuildContext
  */
@@ -960,24 +907,6 @@ foounit.addKeyword('describe', function (description, builder){
   context.setCurrentGroup(group);
   group.build();
   context.setCurrentGroup(parentGroup);
-});
-
-/*
- * Defines a pending group in the BuildContext.
- * All examples and nested groups within this group will
- * be marked as pending.
- */
-foounit.addKeyword('xdescribe', function (description, builder){
-  var context = foounit.getBuildContext()
-    , parentGroup = context.getCurrentGroup()
-    , group = new foounit.ExampleGroup(description, builder, true);
-
-  parentGroup.addGroup(group);
-
-  context.setCurrentGroup(group);
-  group.build();
-  context.setCurrentGroup(parentGroup);
-  return group;
 });
 
 /**
@@ -1027,7 +956,7 @@ if (foounit.hostenv.type == 'node'){
 /**
  * Asserts that a function throws an error
  */
-foounit.addMatcher('throwError', function (){
+foounit.addKeyword('throwError', function (){
   this.match = function (actual, expected){
     // actual == block
     // expected == error
@@ -1044,7 +973,7 @@ foounit.addMatcher('throwError', function (){
 /**
  * Asserts type and object
  */
-foounit.addMatcher('be', function (){
+foounit.addKeyword('be', function (){
   this.match = function (actual, expected){
     assert.strictEqual(actual, expected);
   }
@@ -1057,7 +986,7 @@ foounit.addMatcher('be', function (){
 /**
  * Asserts that actual === null
  */
-foounit.addMatcher('beNull', function (){
+foounit.addKeyword('beNull', function (){
   this.match = function (actual){
     assert.strictEqual(actual, null);
   }
@@ -1070,7 +999,7 @@ foounit.addMatcher('beNull', function (){
 /**
  * Asserts that actual === undefined
  */
-foounit.addMatcher('beUndefined', function (){
+foounit.addKeyword('beUndefined', function (){
   this.match = function (actual){
     assert.strictEqual(actual, undefined);
   }
@@ -1083,7 +1012,7 @@ foounit.addMatcher('beUndefined', function (){
 /**
  * Assert that actual is greater than expected
  */
-foounit.addMatcher('beGt', function (){
+foounit.addKeyword('beGt', function (){
   this.match = function (actual, expected){
     if (actual > expected){ return; }
     assert.fail(actual, expected, null, '>');
@@ -1098,7 +1027,7 @@ foounit.addMatcher('beGt', function (){
 /**
  * Assert that actual is less than expected
  */
-foounit.addMatcher('beLt', function (){
+foounit.addKeyword('beLt', function (){
   this.match = function (actual, expected){
     if (actual < expected){ return; }
     assert.fail(actual, expected, null, '<');
@@ -1113,7 +1042,7 @@ foounit.addMatcher('beLt', function (){
 /**
  * Asserts true === actual
  */
-foounit.addMatcher('beTrue', function (){
+foounit.addKeyword('beTrue', function (){
   // expected is unused
   this.notMatch = function (actual){
     assert.notStrictEqual(actual, true);
@@ -1128,7 +1057,7 @@ foounit.addMatcher('beTrue', function (){
 /**
  * Asserts that actual is truthy
  */
-foounit.addMatcher('beTruthy', function (){
+foounit.addKeyword('beTruthy', function (){
   this.notMatch = function (actual){
     if (!actual){ return };
     assert.fail('Expected "' + actual + '" to NOT be truthy');
@@ -1143,7 +1072,7 @@ foounit.addMatcher('beTruthy', function (){
 /**
  * Asserts true === actual
  */
-foounit.addMatcher('beFalse', function (){
+foounit.addKeyword('beFalse', function (){
   // expected is unused
   this.notMatch = function (actual){
     assert.notStrictEqual(actual, false);
@@ -1158,7 +1087,7 @@ foounit.addMatcher('beFalse', function (){
 /**
  * Asserts that actual is falsy
  */
-foounit.addMatcher('beFalsy', function (){
+foounit.addKeyword('beFalsy', function (){
   this.notMatch = function (actual){
     if (actual){ return; }
     assert.fail('Expected "' + actual + '" to NOT be falsy');
@@ -1173,7 +1102,7 @@ foounit.addMatcher('beFalsy', function (){
 /**
  * Asserts deep equality
  */
-foounit.addMatcher('equal', function (){
+foounit.addKeyword('equal', function (){
   var pSlice = Array.prototype.slice;
 
   var isArguments = function (value){
@@ -1205,7 +1134,7 @@ foounit.addMatcher('equal', function (){
 /**
  * Asserts that actual has an element that === expected
  */
-foounit.addMatcher('include', function (){
+foounit.addKeyword('include', function (){
   var find = function (actual, expected){
     if (!expected || (expected.constructor != Array && !expected.callee)){
       expected = [expected];
@@ -1236,7 +1165,7 @@ foounit.addMatcher('include', function (){
   }
 });
 
-foounit.addMatcher('match', function (){
+foounit.addKeyword('match', function (){
   this.notMatch = function (actual, expected){
     if (!expected.exec(actual)){ return; }
     assert.fail(actual, expected, null, expected + ' matches');

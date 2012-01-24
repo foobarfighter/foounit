@@ -201,9 +201,7 @@ foounit.mixin(foounit.Example.prototype, {
     this._descriptions = descriptions;
   }
 
-  , getBefores: function (){
-    return this._befores;
-  }
+  , getBefores: function (){ return this._befores; }
 
   , setAfters: function (afters){
     this._afters = afters;
@@ -215,5 +213,9 @@ foounit.mixin(foounit.Example.prototype, {
 
   , getTest: function (){
     return this._test;
+  }
+
+  , setStatus: function (code){
+    this._status = code;
   }
 });

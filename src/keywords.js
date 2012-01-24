@@ -41,7 +41,6 @@ foounit.addKeyword('after', function (func){
   group.setAfter(func);
 });
 
-
 /**
  * Defines a group in the BuildContext
  */
@@ -55,6 +54,24 @@ foounit.addKeyword('describe', function (description, builder){
   context.setCurrentGroup(group);
   group.build();
   context.setCurrentGroup(parentGroup);
+});
+
+/*
+ * Defines a pending group in the BuildContext.
+ * All examples and nested groups within this group will
+ * be marked as pending.
+ */
+foounit.addKeyword('xdescribe', function (description, builder){
+  var context = foounit.getBuildContext()
+    , parentGroup = context.getCurrentGroup()
+    , group = new foounit.ExampleGroup(description, builder, true);
+
+  parentGroup.addGroup(group);
+
+  context.setCurrentGroup(group);
+  group.build();
+  context.setCurrentGroup(parentGroup);
+  return group;
 });
 
 /**

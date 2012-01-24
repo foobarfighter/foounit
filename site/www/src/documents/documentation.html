@@ -4,12 +4,16 @@ layout: home
 <!-- Documentation -->
 <h1>Documentation</h1>
 
+<p>
+  Hopefully these docs help you out, but if they don't then please <a href="https://github.com/foobarfighter/foounit/issues/new">file a bug</a>.  Documentation bugs will be treated with high priority.
+</p>
+
 <ul class="index">
   <li><a href="#syntax-overview">Syntax overview</a></li>
   <li><a href="#async-awesomeness">Async awesomeness</a></li>
   <li><a href="#matchers">Matchers</a></li>
-  <li><a href="">How to test</a></li>
-  <li><a href="">FAQ</a></li>
+  <li><a href="#suites">Suites</a></li>
+  <li><a href="#loader">Loading files</a></li>
 </ul>
 
 <br>
@@ -24,21 +28,17 @@ The main keywords in foounit are:
 describe, it, before, after, expect, mock
 </pre>
 
-Theres another class of foounit keywords for asynchronous testing, but these are explained in the <a href="#async-awesomeness">async awesomeness</a> section.
+There's another class of foounit keywords for asynchronous testing, but these are explained in the <a href="#async-awesomeness">async awesomeness</a> section.
 <pre class="code">
 waitFor, run, waitForTimeout
 </pre>
-
-<p>
-  These are the basic building blocks of foounit and asynchronous BDD style testing.
-</p>
 
 
 <a name="it"></a>
 <a name="example"></a>
 <h3>it (aka example)</h3>
 <p>
-  In BDD speak an <em>it</em> block is an example that defines usage of a particular feature. So let's say we want to test that a string is less than 10 characters.  You might create an <em>it</em> block that looks like this:
+  In BDD-speak an <em>it</em> block is an example that defines usage of a feature. So let's say we want to test that a string is less than 10 characters.  You might create an <em>it</em> block that looks like this:
 
   <pre class="code">
 it('returns true', function (){
@@ -51,11 +51,11 @@ it('returns true', function (){
 </p>
 
 <p>
-  So you might think that an <em>it</em> block is overkill for a test like this, but also realize that this is a contrived example.  The nice thing about using <em>it</em> is that you are able to label this test with a description for the next developer that touches this code.
+  You might think that an <em>it</em> block is overkill for a test like this, but this is a contrived example.  The nice thing about using an <em>it</em> block is that you can provide documentation for the next developer working on the code.
 </p>
 
 <p>
-  If you just want to play around with foounit to get an idea for how this will work, you can run something like this.  Create a file called <em>test.js</em> with this code:
+  If you want to experiment, you can try this example.  Create a file called <em>test.js</em> with this code:
 
   <pre class="code">
 var foounit = require('foounit').globalize();
@@ -81,11 +81,11 @@ foounit.run();
 <h3>describe (aka group)</h3>
 
 <p>
-  Internally, <em>describe</em> creates a group of <em><a href="#example">examples</a></em>.  All ths really means to you is that <em>describe</em> actually defines a particular behavior.  Let me explain...
+  Internally, <em>describe</em> creates a group of <em><a href="#example">examples</a></em>.  <em>describe</em>s describe a group of related behavior.
 </p>
 
 <p>
-  Let's say you have a signup form widget that allows you to submit a form when you have a password that is 8 or more characters, but it shows an error message if you have password that is less than 8 characters.  You might have a test that looks like this:
+  Let's say you have a signup form widget that lets you submit a form when you have a password that is 8 or more characters, but it shows an error message if you have password that is less than 8 characters.  You'll have a test that looks like this:
 
   <pre class="code">
 describe('when the password is 8 or more characters', function (){
@@ -103,7 +103,7 @@ describe('when the password is less than 8 characters', function (){
 </p>
 
 <p>
-  You can also nest <em>describe</em>s if your code has nested behaviors (or nested <em>if</em> statements).  Nested describes look something like this:
+  You can nest <em>describe</em>s if your code has nested behaviors (or nested <em>if</em> statements).  Nested describes look something like this:
   
   <pre class="code">
 describe('when foo is not falsy', function (){
@@ -129,12 +129,28 @@ describe('when foo is falsy', function (){
 </p>
 
 
+<a name=xdescribe"></a>
+<h3>xdescribe (aka group)</h3>
+
+<p>
+  Creates a pending group.  All groups and examples nested within a pending group will be marked as pending.  This can be used to mark an entire set of tests as pending.
+</p>
+
+<pre class="code">
+xdescribe('example group', function (){
+  it('runs some test', function (){   // This example will be marked as pending and will not run
+    ...
+  });
+});
+</pre>
+
+
 <a name="expect"></a>
 <a name="assertion"></a>
 <h3>expect (aka assertion)</h3>
 
 <p>
-  The <em>expect </em> <a href="#keywords">keyword</a> is just another way of creating an assertion.  An assertion is a way to test that a particular value is what you expect that it should be.  Here is a breakdown of how <em>expect</em> works:
+  The <em>expect </em> <a href="#keywords">keyword</a> creates an assertion.  An assertion tests that a value is the value you expect it to be.  Here is a breakdown of how <em>expect</em> works:
 
   <pre class="code">
 expect(
@@ -172,7 +188,7 @@ expect(function (){
 <h3>before (aka setup)</h3>
 
 <p>
-  A <em>before</em> block is something that sets up a particular test.  A <em>before</em> block is run once for each group and they can be nested.  <em>before</em> blocks are great for asserting that a test is setup properly before an <em>example</em> is run and for removing clutter from your tests. <em>before</em> blocks can be nested within <em>describe</em>s and are run in order for each <em>example</em>.
+  A <em>before</em> block is a function that sets up a test.  A <em>before</em> block is run once for each group, and it can exist within nested groups.  <em>before</em> blocks are great for asserting that a test is setup properly before an <em>example</em> runs, and they remove clutter from your tests. Nested groups will run <em>before</em> blocks in the order in which the groups are nested.
 
   <pre class="code">
 describe('when foo is 1', function (){
@@ -203,7 +219,7 @@ describe('when foo is 1', function (){
 <h3>after (aka teardown)</h3>
 
 <p>
-  <em>after</em> runs after each test.  It's great for cleaning up the environment and it runs even when the test fails.
+  <em>after</em> runs after each test.  It should be used for cleaning up the previous test and it runs regardless of whether the example passes or fails.
 </p>
 
 <p>
@@ -231,7 +247,7 @@ describe('when the current user is bob', function (){
 </p>
 
 <p>
-  These <em>keywords</em> are 90% of what you need to write tests in BDD style using foounit.  There is a lot more to foounit than just these keywords but you can get by without learning about additional matchers and asynchronousness if you are just experimenting.  If anything in this guide is unclear, then please email the group.
+  These <em>keywords</em> are 90% of what you need to write tests in BDD-style using foounit.  There is a lot more to foounit than just these keywords but you can get by without learning about additional matchers and asynchronous testing if you are just experimenting.
 </p>
 <!-- /Syntax Overview -->
 
@@ -243,7 +259,7 @@ describe('when the current user is bob', function (){
 foounit is a fully asynchronous test runner.  When a foounit <em>example</em> is created, it runs an asynchronous execution queue so all tests are asynchronous by default.  Each asynchronous <em>keyword</em> adds an item to the queue and does not run until the previous task has completed.
 
 <h3>waitFor</h3>
-There are many cases in which you may want to wait for an asynchronous event to finish before passing or failing a test.  The <em>waitFor</em> keyword will poll until a particular expectation has been met or a timeout occurs.  Here is an example:
+There are many cases in which you may want to wait for an asynchronous event to finish before passing or failing a test.  The <em>waitFor</em> keyword will poll until a expectation has been met or a timeout occurs.  Here is an example:
 
 <pre class="code">
 var successCallback;
@@ -261,13 +277,13 @@ it('gets the data', function (){
 </pre>
 
 <p>
-  In this example, an xhr request is made to get the JSON data at <em>http://localhost:5057/data.json</em>.  We have mocked the success callback and we wait for the response to succeed and call our callback to be called.  If the request succeeds then the test will pass, but if the request is unsuccessful then the test will fail.  The <em>waitFor</em> keyword waits for the function it is passed to run without failing.  If the <em>waitFor</em> block fails, then it is retried until a timeout is reached.  If the timeout is reached then the test fails and a kitten dies.
+  In this example, an xhr request is made to get the JSON data at <em>http://localhost:5057/data.json</em>.  We have mocked the success callback and we wait for the response to succeed and call our callback.  If the request succeeds then the test will pass, but if the request is unsuccessful then the test will fail.  The <em>waitFor</em> keyword waits for the function it is passed to run without failing.  If the <em>waitFor</em> block fails, then it is retried until a timeout is reached.  If the timeout is reached then the test fails and a kitten dies.
 </p>
 
 
 <h3>run</h3>
 <p>
-  There's more to asynchronous testing than just <em>waitFor</em> but <em>waitFor</em> will generally get you pretty far.  Another common use-case is to wait for an expectation to be met, then do something else and wait for another expectation.  In this case you can use <em>run</em> to insert yourself into foounit's asynchronous execution queue.  Here is an example:
+  There's more to asynchronous testing than just <em>waitFor</em> but <em>waitFor</em> will generally get you pretty far.  Another common use-case is to wait for an expectation to be met, then do something else and wait for another expectation.  In this case you can use <em>run</em> to insert a block into foounit's asynchronous execution queue.  Here is an example:
 
 <pre class="code">
 it('does a lot of async stuff', function (){
@@ -291,7 +307,7 @@ it('does a lot of async stuff', function (){
 
 <h3>waitForTimeout</h3>
 <p>
-  foounit can also assert that something never happens with the use of waitForTimeout.  These kinds of tests are generally frowned upon because they slow down a test suite, but sometimes they are valuable enough to offset the downside of slowing down the test suite.
+  foounit can assert that something never happens with the use of waitForTimeout.  These kinds of tests are generally frowned upon because they slow down a test suite, but sometimes they are valuable enough to offset the downside of slowing down the test suite.
 <p>
 
 <p>
@@ -437,7 +453,7 @@ expect('foo bar baz').to(match, /qux/);   // fails
 <a name="throwError"></a>
 <h3>throwError</h3>
 <p>
-  Asserts that the a function throws an error.  The error message can be matched against to assert that the correct error message was thrown.
+  Asserts that the a function throws an error.  The error message can be matched with a regex to assert that the correct error message was thrown.
 <pre class="code">
 expect(function (){ throw new Error(); }).to(throwError);                       // passes
 expect(function (){ throw new Error('HEY NOW'); }).to(throwError, /Fuuuuuu/);   // fails
@@ -445,5 +461,19 @@ expect(function (){ /** I don't throw **/ }).to(throwError);                    
 </pre>
 </p>
 <!-- /Matchers -->
+
+
+<!-- Suites -->
+<a name="suites"></a>
+<h1>Suites</h1>
+<p>TODOC</p>
+<!-- /Suites -->
+
+
+<!-- Loading files -->
+<a name="loader"></a>
+<h1>Loading files</h1>
+<p>TODOC</p>
+<!-- /Loading files -->
 
 <!-- /Documentation -->

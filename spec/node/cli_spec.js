@@ -39,7 +39,7 @@ foounit.add(function (kw){ with(kw){
     });
 
     after(function (){
-      cleanupAsync();
+      //cleanupAsync();
     });
 
     describe('when the target directory already exists', function (){
@@ -58,24 +58,52 @@ foounit.add(function (kw){ with(kw){
     var targets = ['browser', 'node, browser', 'node'];
 
     for (var i = 0, ii = targets.length; i < ii; ++i){
-      var target  = targets[i];
+      (function (target){   // generate tests
 
-      describe('when the target is for the ' + target, function (){
-        it('generates a test suite', function (){
-          var path = pth.join(suitePath, 'spec');
+        describe('when the target is for the ' + target, function (){
+          var path;
 
-          run(function (){
-            options = { target: target, dir: path };
-            footest.generateSuite(options);
+          before(function (){
+            path = pth.join(suitePath, 'spec');
           });
 
-          // FIXME: ugh... isFileSync is actually async.  fsh sucks ass.
-          waitFor(function (){
-            expect(fs.isFileSync(pth.join(path, 'suite.js'))).to(beTrue);
+          describe('when there is no suite option', function (){
+            before(function (){
+              options = { target: target, dir: path };
+            });
+
+            it('generates a minimal test', function (){
+              run(function (){
+                footest.generateSuite(options);
+              });
+
+              waitFor(function (){
+                expect(fs.isFileSync(pth.join(path, 'example-spec.js'))).to(beTrue);
+                expect(fs.isFileSync(pth.join(path, 'suite.js'))).toNot(beTrue);
+              });
+            });
+          });
+
+          describe('when the suite option is passed', function (){
+            before(function (){
+              options = { target: target, dir: path, suite: true };
+            });
+
+            it('generates a test suite', function (){
+              run(function (){
+                footest.generateSuite(options);
+              });
+
+              // FIXME: ugh... isFileSync is actually async.  fsh sucks ass.
+              waitFor(function (){
+                expect(fs.isFileSync(pth.join(path, 'suite.js'))).to(beTrue);
+              });
+            });
           });
         });
-      });
-    }
+
+      })(targets[i]);
+    }  // end of generated tests
 
   });
 }});
