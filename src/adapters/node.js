@@ -28,6 +28,7 @@ var adapter = (function (){
     , fs  = require('fs')
     , runInThisContext = (
         process.binding('evals').Script || // older node versions
+        process.binding('evals').NodeScript || // Handle node v0.6
         require('vm') // newer node versions
       ).runInThisContext;
 
