@@ -1,4 +1,4 @@
-var f = require('foounit');
+var f = require('foounit').globalize();
 
 // require your source here
 
