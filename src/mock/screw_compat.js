@@ -56,6 +56,10 @@ if (foounit.hostenv.type == 'node'){
     return obj[funcStr];
   });
 
+  foounit.addKeyword('mockEmpty', function (){
+    return foounit.keywords.mock(function (){});
+  });
+
   foounit.addKeyword('haveBeenCalled', function (){
     var equalMatcher = new foounit.keywords.equal();
 
