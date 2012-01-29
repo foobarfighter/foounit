@@ -88,8 +88,7 @@ foounit.addKeyword('waitFor', function (func, timeout){
   var example = foounit.getBuildContext().getCurrentExample()
     , block = new foounit.PollingBlock(func, timeout || foounit.settings.waitForTimeout);
   
-  example.enqueue(block);
-  return block;
+  return example.enqueue(block);
 });
 
 /**
@@ -99,8 +98,7 @@ foounit.addKeyword('waitForTimeout', function (func, timeout){
   var example = foounit.getBuildContext().getCurrentExample()
     , block = new foounit.TimeoutBlock(func, timeout || foounit.settings.waitForTimeout);
 
-  example.enqueue(block);
-  return block;
+  return example.enqueue(block);
 });
 
 
@@ -111,6 +109,18 @@ foounit.addKeyword('run', function (func){
   var example = foounit.getBuildContext().getCurrentExample()
     , block = new foounit.Block(func);
 
-  example.enqueue(block);
-  return block;
+  return example.enqueue(block);
 });
+
+/**
+ * Adds a deferred block to the current block queue that fails when fail() is called
+ * or complete() is not called within the timeout .
+ */
+foounit.addKeyword('defer', function (func, timeout){
+  var example = foounit.getBuildContext().getCurrentExample()
+    , block = new foounit.TimedDeferredBlock(func, timeout);
+
+  return example.enqueue(block);
+});
+
+

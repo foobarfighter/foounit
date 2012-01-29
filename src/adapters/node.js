@@ -13,9 +13,10 @@ foounit.mixin(foounit, require('../example_group'));
 foounit.mixin(foounit, require('../expectation'));
 foounit.mixin(foounit, require('../keywords'));
 foounit.mixin(foounit, require('../matchers'));
+foounit.mixin(foounit, require('../suite'));
 foounit.mixin(foounit, require('../mock/screw_compat'));
 foounit.mixin(foounit, require('../polling_block'));
-foounit.mixin(foounit, require('../suite'));
+foounit.mixin(foounit, require('../timed_deferred_block'));
 foounit.mixin(foounit, require('../timeout_block'));
 
 // foounit command line interface
