@@ -1,7 +1,7 @@
 foounit.PollingBlock = function (func, timeout){
   this._func = func;
   this._tasks = [];
-  this._timeout = timeout;
+  this._timeout = timeout == null ? foounit.settings.waitForTimeout : timeout;
   this._exception = undefined;
   this._pollInterval = 50;
 };

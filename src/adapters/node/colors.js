@@ -4,8 +4,8 @@ try {
   puts = require('util').puts;
   print =  require('util').print;
 } catch (e) {
-  puts = require('sys').puts;
-  print =  require('sys').print;
+  puts = require('util').puts;
+  print =  require('util').print;
 }
 
 exports.putsRed = function (str){
@@ -32,7 +32,7 @@ exports.highlightSpecs = function (stack){
   var lines = stack.split("\n");
   for (var i = 0, ii = lines.length; i < ii; ++i){
     var line = lines[i];
-    if (line.match(/_spec\.js/)){
+    if (line.match(/spec\.js/)){
       exports.printYellow(line + "\n");
     } else {
       puts(line);

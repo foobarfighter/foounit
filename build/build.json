@@ -8,6 +8,7 @@
     , "src/block.js"
     , "src/polling_block.js"
     , "src/timeout_block.js"
+    , "src/timed_deferred_block.js"
     , "src/example.js"
     , "src/example_group.js"
     , "src/expectation.js"

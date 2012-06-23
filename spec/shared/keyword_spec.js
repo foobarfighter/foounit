@@ -227,5 +227,36 @@ foounit.add(function (kw){ with(kw){
       });
     });
 
+    describe('defer', function (){
+      var bc;
+      before(function (){
+        footest.setBuildContext(new footest.BuildContext());
+        mock(footest, 'setTimeout', function (func){ func(); });
+      });
+
+      after(function (){
+        footest.setBuildContext(bc);
+      });
+
+      it('enqueues a TimedDeferredBlock', function (){
+        var block, called;
+
+        var example = new footest.Example('example', function (){
+          var blockQueue = footest.getBuildContext()
+            .getCurrentExample()
+            .getCurrentBlockQueue();
+
+          block = footest.keywords.defer(function (block){
+            called = true;
+            expect(typeof block.complete).to(equal, 'function');
+          });
+        });
+
+        example.run();
+        expect(called).to(beTrue);
+      });
+    });
+
+
   });
 }});
