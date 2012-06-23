@@ -36,7 +36,7 @@ var adapter = (function (){
   try {
     puts = require('util').puts;
   } catch (e) {
-    puts = require('sys').puts;
+    puts = require('util').puts;
   }
 
   // Private variables

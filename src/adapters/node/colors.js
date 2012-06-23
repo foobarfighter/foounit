@@ -4,8 +4,8 @@ try {
   puts = require('util').puts;
   print =  require('util').print;
 } catch (e) {
-  puts = require('sys').puts;
-  print =  require('sys').print;
+  puts = require('util').puts;
+  print =  require('util').print;
 }
 
 exports.putsRed = function (str){
