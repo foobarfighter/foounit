@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/foobarfighter/foounit.png)](http://travis-ci.org/foobarfighter/foounit)
 # foounit ![Project status](http://stillmaintained.com/foobarfighter/foounit.png)
 
 A functionally scoped BDD style test framework that runs everywhere.

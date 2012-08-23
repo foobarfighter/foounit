@@ -9,6 +9,7 @@ foounit.mixin(foounit.WorkQueue.prototype, {
 
   , enqueue: function (task){
     this._tasks.push(task);
+    return task;
   }
 
   , enqueueAll: function (tasks){
